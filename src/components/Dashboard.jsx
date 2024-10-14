@@ -17,7 +17,7 @@ function Dashboard(){
                 </div>
                 <div className='totalfund'>
                 <h2>Total Funds</h2>
-                <h2>8,000B</h2>
+                <h2>8,000฿</h2>
 
                 </div>
                 <div className='paticipant'>

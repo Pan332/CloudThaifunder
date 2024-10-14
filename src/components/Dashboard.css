@@ -1,37 +1,75 @@
-
-.header{
+.header {
     text-align: center;
-}
-.main-text{
-font-size: 46px;
-margin-bottom: 0;
-
-}
-.text{
-font-size: 18px;
-
-}
-.visualization {
-    justify-content: center;
-    font-size: 20px;
-    display: flex;
-    position: relative;
-    gap: 400px;
-    right: 30px;
+    margin-bottom: 20px;
   }
-.totalcampaign{
+  
+  .main-text {
+    font-size: 46px;
+    margin-bottom: 0;
+  }
+  
+  .text {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .visualization {
+    display: flex;
+    justify-content: center;
+    gap: 150px; /* Adjusted to ensure better spacing on larger screens */
+    font-size: 20px;
+    margin-bottom: 40px;
+  }
+  
+  /* Individual blocks for campaigns, funds, and participants */
+  .totalcampaign, .totalfund, .paticipant {
     text-align: center;
-    position: relative;
-}
-.totalfund{
-    text-align: center;
-    position: relative;
-
-
-}
-.paticipant{
-    text-align: center;
-    position: relative;
-
-
-}
+    padding: 20px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    width: 250px; /* Fixed width for consistent size */
+  }
+  
+  /* Media query for tablets and smaller screens */
+  @media (max-width: 768px) {
+    .visualization {
+      flex-direction: column; /* Stack the sections vertically */
+      align-items: center;
+      gap: 20px; /* Reduced gap between items */
+    }
+  
+    .main-text {
+      font-size: 36px; /* Adjust the heading size */
+    }
+  
+    .text {
+      font-size: 16px; /* Adjust the description size */
+    }
+  
+    .totalcampaign, .totalfund, .paticipant {
+      width: 100%; /* Make the blocks take full width */
+      max-width: 350px; /* Add a max width to avoid stretching too much */
+    }
+  }
+  
+  /* Media query for mobile phones */
+  @media (max-width: 480px) {
+    .main-text {
+      font-size: 30px;
+    }
+  
+    .text {
+      font-size: 14px;
+    }
+  
+    .visualization {
+      gap: 15px;
+    }
+  
+    .totalcampaign, .totalfund, .paticipant {
+      font-size: 18px; /* Reduce font size to fit on smaller screens */
+      width: 100%; /* Full width on very small screens */
+      padding: 15px; /* Adjust padding for smaller screens */
+    }
+  }
+  
