@@ -1,18 +1,29 @@
-import React from 'react'
+import React from 'react';
 import './Card.css'; 
 
-function Card() {
-  return (
+function Card({ title, name, image, description, goal, raised, timeRemaining }) {
+  const progressPercentage = Math.min((raised / goal) * 100, 100);
 
-       <a href="/"  className='card'>
-         <img className='card-img' src="src\picture\ann-danilina-qgfakkITxQ0-unsplash.jpg" alt="campaign logo" />
-         <p className='card-name'> Campaign Name</p>
-       </a>
-       
-      
-     
-  
-  )
+  return (
+    <div className="campaign-card">
+      <img src={image} alt={title} className="campaign-image" />
+      <div className="card-content">
+        <h2 className="campaign-title">{title}</h2>
+        <p className="campaign-owner">By {name}</p>
+        <p className="campaign-description">{description.substring(0, 100)}...</p>
+        <div className="campaign-goal">
+          <p>Raised: {raised.toLocaleString()}</p>
+          <p>Goal: {goal.toLocaleString()}</p>
+
+        </div>
+        <div className="progress-bar-container">
+          <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+          <span className="progress-percentage">{Math.round(progressPercentage)}%</span>
+        </div>
+        <p className="time-remaining">{timeRemaining} days left</p>
+      </div>
+    </div>
+  );
 }
 
-export default Card
+export default Card;

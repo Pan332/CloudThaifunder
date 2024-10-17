@@ -2,13 +2,23 @@ import './Dashboard.css'; // Optional: for custom styling
 
 function Dashboard(){
     return(
-        <div className="dashboard">
-            <div className='header'>
-            <h1 className='main-text'>Fundraiser</h1>
-            <p className='text'>For charities no fee.</p>
+    <div className="dashboard">
+        <div className='headers'>
+            <div className='pic'>
+                <h1 className='overlay-text'>Fundraiser</h1>
+                <p className='overlay-text2'>For charities No fee.</p>
+                <div className='pic'>
+                    <h1 className='overlay-text'>Fundraiser</h1>
+                    <p className='overlay-text2'>For charities No fee.</p>
+                        <div className='custom-search-container'>
+                            <input type="text"className='custom-search-input'placeholder='Search campaigns'aria-label='Search'/>
+                            <button className='custom-search-button'>
+                            <i className="fas fa-search"></i>
+                            </button>
+                        </div>
+                </div>
             </div>
-            <hr />
-           
+        </div>
             <div className='visualization'>
                 <div className='totalcampaign'>
                 <h2>Total Campaigns</h2>
@@ -27,7 +37,7 @@ function Dashboard(){
             </div>
        
             
-         <hr />
+         <hr/>
 
         </div>
     );

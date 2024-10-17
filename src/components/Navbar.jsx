@@ -33,7 +33,7 @@ const Navbar = () => {
         <div className="navbar-center">
           <ul className={isMobileMenuOpen ? "navbar-links mobile-open" : "navbar-links"}>
             <li className="navbar-item">
-            <Link to='/Charities'>Charity funding</Link>
+            <Link to='/Charities'>Charity Campaign</Link>
             </li>
             <li 
               className="navbar-item" 

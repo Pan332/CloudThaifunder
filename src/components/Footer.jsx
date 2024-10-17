@@ -15,7 +15,7 @@ const Footer = () => {
           <FaFacebook size={30} />
         </a>
       </div>
-      <p style={styles.text}>© 2024 Your Website. All rights reserved.</p>
+      <p style={styles.text}>© 2024 Thaifunder. All rights reserved.</p>
     </footer>
   );
 };

@@ -1,3 +1,4 @@
+
 .trend-campaign,.taking-off,.feature-campaign,.categories{
     text-align: center;
     padding: 10px;
@@ -6,4 +7,27 @@
 .trend-text,.taking-off-text,.feature-campaign-text,.category-text{
     font-size: 36px;
 }
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust this based on how many cards per row you want */
+    gap: 20px; /* Adds space between the cards */
+    padding: 20px;
+    justify-content: center; /* Center the card horizontally */
+    align-items: center; /* Center the card vertically */
+}
 
+/* For medium screens (e.g., tablets) */
+@media (max-width: 1024px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+    justify-content: center; /* Center the cards horizontally on medium screens */
+  }
+}
+
+/* For small screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+  .card-container {
+    grid-template-columns: 1fr; /* 1 card per row (vertical layout) */
+    justify-content: center; /* Center the card horizontally on small screens */
+  }
+}

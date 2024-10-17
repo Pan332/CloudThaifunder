@@ -1,11 +1,45 @@
-.header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
+
+.headers {
+  
+  text-align: center;
+  margin-bottom: 20px;
+ 
+  
+  
+}
+.overlay-text {
+  position: absolute;
+  top: 8%; /* Vertically center the text */
+  left: 50%; /* Horizontally center the text */
+  transform: translate(-50%, -50%); /* Ensure it's centered perfectly */
+  font-size: 46px;
+  color: white;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds shadow for better contrast */
+}
+.overlay-text2 {
+  position: absolute;
+  top: 27%; /* Vertically center the text */
+  left: 50%; /* Horizontally center the text */
+  transform: translate(-50%, -50%); /* Ensure it's centered perfectly */
+  font-size: 18px;
+  color: white;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds shadow for better contrast */
+}
+.pic{
+  position: relative;
+  width: 100%;
+  height: 350px; /* Default height */
+  background-image: url('https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?cs=srgb&dl=pexels-pixabay-257360.jpg&fm=jpg');
+  background-size: cover;
+  background-position: center;
+  color: black;
+}
+
+
   
   .main-text {
     font-size: 46px;
-    margin-bottom: 0;
+    margin-bottom: 20px;
   }
   
   .text {
@@ -18,6 +52,8 @@
     justify-content: center;
     gap: 150px; /* Adjusted to ensure better spacing on larger screens */
     font-size: 20px;
+    margin-top: 40px;
+
     margin-bottom: 40px;
   }
   
@@ -25,9 +61,62 @@
   .totalcampaign, .totalfund, .paticipant {
     text-align: center;
     padding: 20px;
-    border: 1.5px solid #ddd;
-    border-radius: 8px;
+    border: 2px solid #aa6464;
+    border-radius: 10px;
     width: 250px; /* Fixed width for consistent size */
+  }
+  .custom-search-container {
+    position: absolute;
+    left: 42%;
+    top: 37%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #535252; /* Dark background color */
+    border-radius: 50px; /* Rounded edges */
+    padding: 5px 15px; /* Add some padding for space */
+    width: 280px; /* Default width for desktop */
+    margin: 20px auto; /* Center it on the page */
+  }
+  
+  .custom-search-input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    color: white; /* Text color */
+    font-size: 16px;
+    padding: 10px;
+    width: 85%;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .custom-search-button {
+    border: none;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .custom-search-button:hover {
+    color: #ddd;
+  }
+  
+  .custom-search-input::placeholder {
+    color: white;
+    opacity: 0.7;
+  }
+  
+  .fas.fa-search {
+    font-size: 18px;
+  }
+  .text-overlay {
+    position: absolute;
+    top: -250%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
   }
   
   /* Media query for tablets and smaller screens */
@@ -36,6 +125,7 @@
       flex-direction: column; /* Stack the sections vertically */
       align-items: center;
       gap: 20px; /* Reduced gap between items */
+      
     }
   
     .main-text {
@@ -49,6 +139,12 @@
     .totalcampaign, .totalfund, .paticipant {
       width: 100%; /* Make the blocks take full width */
       max-width: 350px; /* Add a max width to avoid stretching too much */
+    }
+    .custom-search-container {
+      width: 250px; /* Adjust width for tablet */
+      left: 50%; /* Adjust positioning */
+      top: 40%;
+      transform: translateX(-50%);
     }
   }
   
@@ -71,5 +167,24 @@
       width: 100%; /* Full width on very small screens */
       padding: 15px; /* Adjust padding for smaller screens */
     }
+    .custom-search-container {
+      width: 200px; /* Adjust width for smaller screens */
+      left: 50%; /* Ensure it's centered */
+      top: 40%; /* Adjust the vertical position */
+      transform: translateX(-50%);
+    }
+  
+    .custom-search-input {
+      font-size: 14px; /* Adjust text size for mobile */
+    }
+  
+    .custom-search-button {
+      padding: 8px; /* Adjust padding for smaller screens */
+    }
+  
+    .fas.fa-search {
+      font-size: 16px; /* Adjust icon size for mobile */
+    }
   }
+
   
