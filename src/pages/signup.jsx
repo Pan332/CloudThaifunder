@@ -5,6 +5,9 @@ const SignupForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [phone, setPhone] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('user'); // Default to 'user'
   const [signupMessage, setSignupMessage] = useState('');
@@ -17,8 +20,14 @@ const SignupForm = () => {
       return;
     }
 
+    const port = import.meta.env.VITE_API_URL; // No need to check again
+    if (!port) {
+      setSignupMessage('API URL is not defined');
+      return;
+    }
+
     try {
-      const response = await fetch('http://localhost:5173/auth/signup', {
+      const response = await fetch(`${port}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +62,6 @@ const SignupForm = () => {
               <a style={{ color: '#242424', textDecoration: 'none', fontWeight: 600 }} href="/login">Login?</a>{' '}
               <a href="/" style={{ color: '#242424', textDecoration: 'none', fontWeight: 600 }}>Go Back?</a>
             </p>
-
             <input
               type="text"
               value={username}
