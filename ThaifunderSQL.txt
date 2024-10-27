@@ -1,0 +1,151 @@
+-- Create Database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS Thaifunder;
+USE Thaifunder;
+
+-- Create Users table
+CREATE TABLE Users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create Campaigns table
+CREATE TABLE Campaigns (
+    campaign_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    goal_amount DECIMAL(10, 2) NOT NULL,
+    raised_amount DECIMAL(10, 2) DEFAULT 0,
+    created_by INT NOT NULL,
+    status ENUM('pending', 'verified', 'completed') NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES Users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create Donations table
+CREATE TABLE Donations (
+    donation_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    campaign_id INT NOT NULL,
+    user_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    donation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create Verification table
+CREATE TABLE Verifications (
+    verification_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    campaign_id INT NOT NULL,
+    verifier_id INT NOT NULL,
+    status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+    verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (verifier_id) REFERENCES Users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create Reports table
+CREATE TABLE Reports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    campaign_id INT NOT NULL,
+    document_url VARCHAR(255) NOT NULL,
+    approved_by INT,
+    report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (approved_by) REFERENCES Users(user_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+-- Create Audits table
+CREATE TABLE Audits (
+    audit_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    campaign_id INT NOT NULL,
+    audit_document_url VARCHAR(255) NOT NULL,
+    audit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create Comments table
+CREATE TABLE Comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    campaign_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create Payments table
+CREATE TABLE Payments (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    donation_id INT NOT NULL,
+    payment_method ENUM('credit_card', 'bank_transfer', 'paypal') NOT NULL,
+    payment_status ENUM('pending', 'completed', 'failed') NOT NULL,
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (donation_id) REFERENCES Donations(donation_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create CampaignCategories table
+CREATE TABLE CampaignCategories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    category_name VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- Create CampaignCategoryMapping table (Many-to-Many relationship between Campaigns and CampaignCategories)
+CREATE TABLE CampaignCategoryMapping (
+    campaign_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (campaign_id, category_id),
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES CampaignCategories(category_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create Badges table
+CREATE TABLE Badges (
+    badge_id INT AUTO_INCREMENT PRIMARY KEY,  -- Changed SERIAL to INT AUTO_INCREMENT
+    badge_name VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT NOT NULL
+);
+
+-- Create UserBadges table (Many-to-Many relationship between Users and Badges)
+CREATE TABLE UserBadges (
+    user_id INT NOT NULL,
+    badge_id INT NOT NULL,
+    earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, badge_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (badge_id) REFERENCES Badges(badge_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
