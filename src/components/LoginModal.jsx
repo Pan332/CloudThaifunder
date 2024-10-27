@@ -1,11 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const LoginModal = ({ closeModal }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
   // Function to handle closing modal when clicking outside the modal content
   const handleOverlayClick = (e) => {
-    // Close the modal only if the click was on the overlay (not inside the modal)
     if (e.target === e.currentTarget) {
       closeModal();
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent form submission
+    setError(''); // Reset error message
+
+    if (!username || !password) {
+      setError('Please fill in both fields.');
+      return;
+    }
+
+    // Perform login request to backend
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Handle successful login (e.g., store tokens, redirect)
+        console.log('Login successful:', data);
+        closeModal();
+      } else {
+        // Show error message from backend
+        setError(data.message || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred. Please try again.');
     }
   };
 
@@ -13,12 +51,15 @@ const LoginModal = ({ closeModal }) => {
     <div style={modalStyles.overlay} onClick={handleOverlayClick}>
       <div style={modalStyles.modal}>
         <h2>Login</h2>
-        <form>
+        {error && <p style={modalStyles.error}>{error}</p>}
+        <form onSubmit={handleLogin}>
           <div style={modalStyles.formGroup}>
             <input 
-              type="email" 
+              type="text" 
               placeholder="Username" 
               style={modalStyles.inputField}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div style={modalStyles.formGroup}>
@@ -26,6 +67,8 @@ const LoginModal = ({ closeModal }) => {
               type="password" 
               placeholder="Password" 
               style={modalStyles.inputField}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div style={modalStyles.buttonGroup}>
@@ -35,13 +78,14 @@ const LoginModal = ({ closeModal }) => {
               Login
             </button>
             <button 
+              type="button" // Prevent form submission on Close button
               onClick={closeModal} 
               style={modalStyles.closeButton}>
               Close
             </button>
           </div>
           <div style={modalStyles.registerLink}>
-            <a href="/register" style={modalStyles.link}>Register</a>
+            <a href="signup.jsx" style={modalStyles.link}>Register</a>
           </div>
         </form>
       </div>
@@ -116,6 +160,10 @@ const modalStyles = {
     color: '#007BFF',
     textDecoration: 'none',
     fontSize: '14px',
+  },
+  error: {
+    color: 'red',
+    marginBottom: '10px',
   },
 };
 
