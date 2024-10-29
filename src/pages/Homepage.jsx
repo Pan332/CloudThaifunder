@@ -19,7 +19,8 @@ const campaigns = [
     description: "Help us protect the rainforests by supporting our campaign. We are looking to raise funds to ...",
     goal: 10000,
     raised: 7500,
-    timeRemaining: 15
+    timeRemaining: 15,
+    
   },
   {
     title: "Clean Water for All",

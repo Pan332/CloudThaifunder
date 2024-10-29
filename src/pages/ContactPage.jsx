@@ -26,7 +26,7 @@ function ContactPage() {
     contactPage: {
       textAlign: 'center',
       padding: '20px',
-      marginBottom: '230px'
+      marginBottom: '230px',
 
     },
     team: {

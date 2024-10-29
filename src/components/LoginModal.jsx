@@ -17,7 +17,7 @@ const LoginModal = ({ closeModal }) => {
           <div style={modalStyles.formGroup}>
             <input 
               type="email" 
-              placeholder="Username" 
+              placeholder="Email" 
               style={modalStyles.inputField}
             />
           </div>
@@ -41,7 +41,7 @@ const LoginModal = ({ closeModal }) => {
             </button>
           </div>
           <div style={modalStyles.registerLink}>
-            <a href="/register" style={modalStyles.link}>Register</a>
+            <a href="/RegisterPage" style={modalStyles.link}>Register</a>
           </div>
         </form>
       </div>
