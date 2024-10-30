@@ -1,11 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const LoginModal = ({ closeModal }) => {
-  // Function to handle closing modal when clicking outside the modal content
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [showWelcome, setShowWelcome] = useState(false); // State for welcome message
+
   const handleOverlayClick = (e) => {
-    // Close the modal only if the click was on the overlay (not inside the modal)
     if (e.target === e.currentTarget) {
       closeModal();
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!username || !password) {
+      setError('Please fill in both fields.');
+      return;
+    }
+
+    try {
+      const port = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${port}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
+        setShowWelcome(true); // Show welcome message
+        setTimeout(() => {
+          setShowWelcome(false);
+          closeModal(); // Close modal after welcome message
+        }, 3000); // Hide after 3 seconds
+      } else {
+        setError(data.message || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred. Please try again.');
     }
   };
 
@@ -13,35 +54,44 @@ const LoginModal = ({ closeModal }) => {
     <div style={modalStyles.overlay} onClick={handleOverlayClick}>
       <div style={modalStyles.modal}>
         <h2>Login</h2>
-        <form>
+        {error && <p style={modalStyles.error}>{error}</p>}
+        {showWelcome && <p style={modalStyles.welcome}>Welcome to Thaifunder!</p>}
+        <form onSubmit={handleLogin}>
           <div style={modalStyles.formGroup}>
             <input 
-              type="email" 
-              placeholder="Email" 
+              id="username"
+              type="text" 
+              placeholder="Username" 
               style={modalStyles.inputField}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
             />
           </div>
           <div style={modalStyles.formGroup}>
             <input 
+              id="password"
               type="password" 
               placeholder="Password" 
               style={modalStyles.inputField}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <div style={modalStyles.buttonGroup}>
-            <button 
-              type="submit" 
-              style={modalStyles.button}>
+            <button type="submit" style={modalStyles.button}>
               Login
             </button>
             <button 
+              type="button" 
               onClick={closeModal} 
               style={modalStyles.closeButton}>
               Close
             </button>
           </div>
           <div style={modalStyles.registerLink}>
-            <a href="/RegisterPage" style={modalStyles.link}>Register</a>
+            <a href="signup" style={modalStyles.link}>Register</a>
           </div>
         </form>
       </div>
@@ -49,7 +99,7 @@ const LoginModal = ({ closeModal }) => {
   );
 };
 
-// Styles for modal and overlay
+// Styles for modal, overlay, and welcome message
 const modalStyles = {
   overlay: {
     position: 'fixed',
@@ -101,7 +151,7 @@ const modalStyles = {
   closeButton: {
     width: '48%',
     padding: '10px',
-    backgroundColor: '#FF4136', // Red color for the Close button
+    backgroundColor: '#FF4136',
     border: 'none',
     color: '#fff',
     cursor: 'pointer',
@@ -116,6 +166,20 @@ const modalStyles = {
     color: '#007BFF',
     textDecoration: 'none',
     fontSize: '14px',
+  },
+  error: {
+    color: 'red',
+    marginBottom: '10px',
+  },
+  welcome: {
+    color: 'green',
+    fontSize: '18px',
+    marginBottom: '10px',
+    animation: 'fadeIn 1s ease-in-out', // Add fade-in animation
+  },
+  '@keyframes fadeIn': {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
   },
 };
 

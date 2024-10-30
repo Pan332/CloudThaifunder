@@ -1,6 +1,53 @@
 import React from 'react';
+import { useState } from 'react';
 
 const RegisterPage = () => {
+  
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [phone, setPhone] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('user'); // Default to 'user'
+  const [signupMessage, setSignupMessage] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (password !== confirmPassword) {
+      setSignupMessage('Passwords do not match');
+      return;
+    }
+
+    const port = import.meta.env.VITE_API_URL; // No need to check again
+    if (!port) {
+      setSignupMessage('API URL is not defined');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${port}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password, role }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Sign up Successful');
+        setSignupMessage('Sign up successful');
+      } else {
+        setSignupMessage(data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSignupMessage('Error during sign up');
+    }
+  };
   return (
     <div style={styles.container}>
       <div style={styles.formContainer}>
@@ -8,8 +55,10 @@ const RegisterPage = () => {
         <form>
           <div style={styles.formGroup}>
             <input 
-              type="email" 
-              placeholder="Email" 
+              type="text" 
+              value={username}
+              placeholder="Username" 
+              onChange={(e) => setUsername(e.target.value)}
               style={styles.inputField} 
               required
             />
@@ -19,6 +68,9 @@ const RegisterPage = () => {
               type="password" 
               placeholder="Password" 
               style={styles.inputField} 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+
               required
             />
           </div>
@@ -26,6 +78,20 @@ const RegisterPage = () => {
             <input 
               type="password" 
               placeholder="Confirm Password" 
+              style={styles.inputField} 
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <input 
+              type="email" 
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+
               style={styles.inputField} 
               required
             />
@@ -48,48 +114,36 @@ const RegisterPage = () => {
           </div>
           <div style={styles.formGroup}>
             <input 
-              type="number" 
-              placeholder="Age" 
-              style={styles.inputField} 
-              min="1"
-              required
-            />
-          </div>
-   
-          <div style={styles.formGroup}>
-            <select style={styles.inputField} required>
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div style={styles.formGroup}>
-            <input 
-              type="text" 
-              placeholder="Address" 
-              style={styles.inputField} 
-              required
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <input 
               type="text" 
               placeholder="Phone" 
               style={styles.inputField} 
               required
             />
           </div>
+          
+          
+          <div style={styles.formGroup}>
+            <input 
+              type="int" 
+              placeholder="Age" 
+              style={styles.inputField} 
+              required
+              min={0}
+            />
+          </div>
+      
             
         
           <div style={styles.buttonGroup}>
-            <button type="submit" style={styles.button}>
+            <button id="signupButton" type="submit" style={styles.button}>
               Register
             </button>
           </div>
           <div style={styles.loginLink}>
             <a href="/" style={styles.link}>Go back to Homepage?</a>
           </div>
+          <div id="signupMessage">{signupMessage}</div>
+
         </form>
       </div>
     </div>
