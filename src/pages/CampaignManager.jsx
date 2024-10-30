@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import './CampaignManager.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,30 +26,28 @@ const CampaignManager = () => {
       navigate('/');
       return;
     }
-  
+
     try {
       const response = await fetch(`${port}/auth/validate-token`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-  
+
       if (response.status !== 200) {
         throw new Error('Failed to validate token');
       }
-  
+
       const contentType = response.headers.get("content-type");
       let data;
-      
-      // Check if response has JSON content
+
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
         setCampaigns(data.campaigns);
       } else {
-        // Handle non-JSON responses (e.g., plain text)
         const text = await response.text();
         console.warn("Received non-JSON response:", text);
       }
-  
+
     } catch (error) {
       console.error('Error validating token:', error);
       setError('An error occurred while fetching campaigns.');
@@ -58,7 +56,7 @@ const CampaignManager = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleCreateCampaign = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('access_token');
 
@@ -68,11 +66,8 @@ const CampaignManager = () => {
     }
 
     try {
-      const method = editingCampaignId ? 'PUT' : 'POST';
-      const url = editingCampaignId ? `${port}/campaign/updatecampaign` : `${port}/campaign/createcampaign`;
-
-      const response = await fetch(url, {
-        method,
+      const response = await fetch(`${port}/campaign/createcampaign`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -81,18 +76,52 @@ const CampaignManager = () => {
           title,
           description,
           goal_amount: goalAmount,
-          campaign_id: editingCampaignId
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to submit campaign');
+      if (!response.ok) throw new Error('Failed to create campaign');
 
       resetForm();
-      setSuccess(editingCampaignId ? 'Campaign updated successfully!' : 'Campaign created successfully!');
+      setSuccess('Campaign created successfully!');
       checkAuthAndFetchCampaigns();
     } catch (error) {
-      console.error('Error submitting campaign:', error);
-      setError('An error occurred while submitting the campaign.');
+      console.error('Error creating campaign:', error);
+      setError('An error occurred while creating the campaign.');
+    }
+  };
+
+  const handleUpdateCampaign = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      setError('You are not authenticated. Please log in.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${port}/campaign/updatecampaign`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          goal_amount: goalAmount,
+          campaign_id: editingCampaignId,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update campaign');
+
+      resetForm();
+      setSuccess('Campaign updated successfully!');
+      checkAuthAndFetchCampaigns();
+    } catch (error) {
+      console.error('Error updating campaign:', error);
+      setError('An error occurred while updating the campaign.');
     }
   };
 
@@ -133,6 +162,13 @@ const CampaignManager = () => {
     setSuccess('');
   };
 
+  const handleEdit = (campaign) => {
+    setTitle(campaign.title);
+    setDescription(campaign.description);
+    setGoalAmount(campaign.goal_amount);
+    setEditingCampaignId(campaign.campaign_id);
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -140,11 +176,30 @@ const CampaignManager = () => {
       <h2>Manage Campaigns</h2>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
-      <form onSubmit={handleSubmit} className="campaign-form">
-        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
-        <input type="number" value={goalAmount} onChange={(e) => setGoalAmount(e.target.value)} placeholder="Goal Amount" required />
-        <button type="submit">{editingCampaignId ? 'Update' : 'Create'} Campaign</button>
+      <form onSubmit={editingCampaignId ? handleUpdateCampaign : handleCreateCampaign} className="campaign-form">
+        <input 
+          type="text" 
+          value={title} 
+          onChange={(e) => setTitle(e.target.value)} 
+          placeholder="Title" 
+          required 
+        />
+        <textarea 
+          value={description} 
+          onChange={(e) => setDescription(e.target.value)} 
+          placeholder="Description" 
+          required 
+        />
+        <input 
+          type="number" 
+          value={goalAmount} 
+          onChange={(e) => setGoalAmount(e.target.value)} 
+          placeholder="Goal Amount" 
+          required 
+        />
+        <button type="submit">
+          {editingCampaignId ? 'Update' : 'Create'} Campaign
+        </button>
       </form>
 
       <ul className="campaign-list">
