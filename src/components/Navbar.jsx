@@ -67,7 +67,7 @@ const Navbar = () => {
         </div>
 
         <div className="campaign-section">
-          <a href="/" className="createBtn">Create Campaign</a>
+          <a href="./campaign" className="createBtn">Create Campaign</a>
           <a className="login" onClick={openLoginModal}>Login</a> {/* Open modal on click */}
         </div>
 

@@ -1,10 +1,11 @@
-import express from 'express'; // Use import instead of require
+import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import checkconnection from './routes/check-connection.js';
+import campaignRoutes from './routes/campaign.js';
 
 dotenv.config({ path: './.env' });
 
@@ -23,6 +24,8 @@ app.use(cors({
 // Routes
 app.use('/auth', authRoutes);
 app.use('/', checkconnection);
+app.use('/campaign', campaignRoutes);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
