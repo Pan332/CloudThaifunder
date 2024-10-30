@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import checkconnection from './routes/check-connection.js';
 import campaignRoutes from './routes/campaign.js';
+import userView from './routes/view.js';
 
 dotenv.config({ path: './.env' });
 
@@ -25,6 +26,7 @@ app.use(cors({
 app.use('/auth', authRoutes);
 app.use('/', checkconnection);
 app.use('/campaign', campaignRoutes);
+app.use('/view',userView);
 
 
 // Error handling middleware

@@ -5,14 +5,19 @@ import Footer from '../components/Footer.jsx';
 import './ViewInfo.css'; // Import custom CSS for styling
 
 function ViewInfo() {
+  const port = import.meta.env.VITE_API_URL;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
     address: '',
+    city: '',
+    postcode: ''
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState('');
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('access_token');
 
@@ -20,16 +25,27 @@ function ViewInfo() {
     if (!isLoggedIn) {
       setIsModalVisible(true);
     } else {
-      fetch('/api/user-info', {
+      fetch(`${port}/view/user-info`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       })
-      .then(response => response.json())
-      .then(data => setUserInfo(data))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch user info');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          setUserInfo(data.data);
+        } else {
+          console.error(data.message);
+        }
+      })
       .catch(error => console.error('Error fetching user info:', error));
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, port]);
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
@@ -49,7 +65,8 @@ function ViewInfo() {
   };
 
   const handleUpdate = () => {
-    fetch('/api/update-user-info', {
+    console.log('Updating user info with:', userInfo); // Ensure userInfo is correctly populated
+    fetch(`${port}/view/update-user-info`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -57,10 +74,21 @@ function ViewInfo() {
       },
       body: JSON.stringify(userInfo)
     })
-    .then(response => response.json())
+    .then(response => {
+      console.log('Response Status:', response.status); // Log response status
+      if (!response.ok) {
+        throw new Error('Failed to update user info');
+      }
+      return response.json();
+    })
     .then(data => {
-      console.log('User info updated:', data);
-      setIsEditing(false);
+      console.log('Server Response:', data); // Log the response data
+      if (data.success) {
+        setIsEditing(false);
+        setUpdateMessage('User information updated successfully!');
+      } else {
+        console.error(data.message);
+      }
     })
     .catch(error => console.error('Error updating user info:', error));
   };
@@ -103,7 +131,7 @@ function ViewInfo() {
           <div className="profile-card">
             <div className="profile-header">
               <img src="" alt="" />
-              <h1>{userInfo.name || "User Name"}</h1>
+              <h1>{userInfo.first_name || "User Name"}</h1>
               <button className="btn-edit" onClick={handleEditToggle}>Edit</button>
             </div>
 
@@ -113,20 +141,20 @@ function ViewInfo() {
                 <label>First Name</label>
                 <input className='inp'
                   type="text"
-                  name="fname"
-                  value={userInfo.fname}
+                  name="first_name"
+                  value={userInfo.first_name}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                  <label>Last Name</label>
+                <label>Last Name</label>
                 <input className='inp'
                   type="text"
-                  name="lname"
-                  value={userInfo.lname}
+                  name="last_name"
+                  value={userInfo.last_name}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                <label>Email </label>
+                <label>Email</label>
                 <input className='inp'
                   type="email"
                   name="email"
@@ -134,7 +162,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                  <label>Phone</label>
+                <label>Phone</label>
                 <input className='inp'
                   type="text"
                   name="phone"
@@ -144,18 +172,13 @@ function ViewInfo() {
                 />
               </div>
             </div>
-
-         
-
           </div>
-       
-          <div className="profile-card">
-          <h1>Address</h1>
 
-          <div className="profile-section">
-            
+          <div className="profile-card">
+            <h1>Address</h1>
+            <div className="profile-section">
               <div className="info-group">
-                <label>Country</label>
+                <label>Address</label>
                 <input className='inp'
                   type="text"
                   name="address"
@@ -171,7 +194,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                  <label>Postcode</label>
+                <label>Postcode</label>
                 <input className='inp'
                   type="text"
                   name="postcode"
@@ -181,11 +204,17 @@ function ViewInfo() {
                 />
               </div>
             </div>
-            
             {isEditing && (
               <div className="button-group">
                 <button className="btn-primary" onClick={handleUpdate}>Save</button>
                 <button className="btn-secondary" onClick={handleEditToggle}>Cancel</button>
+              </div>
+            )}
+            {/* Display the user info to be sent */}
+            {updateMessage && (
+              <div className="update-message">
+                <h4>Data to be sent:</h4>
+                <pre>{updateMessage}</pre> {/* Display the formatted JSON */}
               </div>
             )}
           </div>

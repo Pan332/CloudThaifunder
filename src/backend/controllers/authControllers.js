@@ -1,4 +1,3 @@
-// controllers/authControllers.js
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import connection from '../db.js';
@@ -7,18 +6,24 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' });
 
 // Function to generate access token
-const jwtGenerate = (user) => jwt.sign(
-  { username: user.username, user_id: user.user_id },
-  process.env.ACCESS_TOKEN_SECRET,
-  { expiresIn: "15m", algorithm: "HS256" }
-);
+const jwtGenerate = (user) => {
+  const expiresIn = Math.floor(Date.now() / 1000) + 15 * 60; // 15 minutes
+  return jwt.sign(
+    { username: user.username, user_id: user.user_id, exp: expiresIn },
+    process.env.ACCESS_TOKEN_SECRET,
+    { algorithm: "HS256" }
+  );
+}
 
 // Function to generate refresh token
-const jwtRefreshTokenGenerate = (user) => jwt.sign(
-  { username: user.username, user_id: user.user_id },
-  process.env.REFRESH_TOKEN_SECRET,
-  { expiresIn: "1d", algorithm: "HS256" }
-);
+const jwtRefreshTokenGenerate = (user) => {
+  const expiresIn = Math.floor(Date.now() / 1000) + 15 * 60 * 60; // 15 hours
+  return jwt.sign(
+    { username: user.username, user_id: user.user_id, exp: expiresIn },
+    process.env.REFRESH_TOKEN_SECRET,
+    { algorithm: "HS256" }
+  );
+}
 
 // Validate the user for token refresh
 export const validateUser = (req, res) => {
@@ -86,6 +91,10 @@ export const login = async (req, res) => {
       if (await bcrypt.compare(password, user.password_hash)) {
         const access_token = jwtGenerate(user);
         const refresh_token = jwtRefreshTokenGenerate(user);
+        
+        // Store user_id in req.user for access in other controllers
+        req.user = { user_id: user.user_id, username: user.username };
+
         return res.status(200).json({ success: true, access_token, refresh_token });
       } else {
         return res.status(401).json({ success: false, message: 'Invalid password' });
@@ -143,19 +152,4 @@ export const register = async (req, res) => {
     console.error('Internal Server Error:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
-};
-
-export const isAuthenticated = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) {
-      return res.status(401).json({ success: false, message: 'Unauthorized' });
-  }
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-      if (err) {
-          return res.status(403).json({ success: false, message: 'Forbidden' });
-      }
-      req.user = user;
-      next();
-  });
 };

@@ -1,6 +1,7 @@
 import express from 'express';
-import { login ,register,jwtValidate ,isAuthenticated} from '../controllers/authControllers.js'
+import { login ,register,jwtValidate} from '../controllers/authControllers.js'
 import { createCampaign } from '../controllers/campaignControllers.js';
+import { isAuthenticated } from '../middleware/isAuth.js'
 const router = express.Router();
 
 router.post('/login', login)

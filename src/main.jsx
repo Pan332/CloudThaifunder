@@ -8,6 +8,9 @@ import ContactPage from './pages/ContactPage.jsx';
 import AboutPage from './pages/AboutPage.jsx';
 import ServicePage from './pages/ServicePage.jsx';
 import ViewInfo from './components/ViewInfo.jsx';
+import SignupForm from './pages/signup.jsx';
+import ProtectedRoute from './backend/routes/protected.js';
+import CampaignManager from './pages/CampaignManager.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <Homepage /> },
@@ -20,7 +23,7 @@ const router = createBrowserRouter([
   { path: '/campaign', element: <ProtectedRoute element={<CampaignManager />} />,},
 ]);
 
-crsignup.jsxeateRoot(document.getElementById('index')).render(
+createRoot(document.getElementById('index')).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>
