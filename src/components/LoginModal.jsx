@@ -4,6 +4,7 @@ const LoginModal = ({ closeModal }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showWelcome, setShowWelcome] = useState(false); // State for welcome message
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -12,8 +13,8 @@ const LoginModal = ({ closeModal }) => {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent form submission
-    setError(''); // Reset error message
+    e.preventDefault();
+    setError('');
 
     if (!username || !password) {
       setError('Please fill in both fields.');
@@ -22,7 +23,7 @@ const LoginModal = ({ closeModal }) => {
 
     try {
       const port = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${port}/auth/login`, { // Updated endpoint to match your backend
+      const response = await fetch(`${port}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,13 +34,14 @@ const LoginModal = ({ closeModal }) => {
       const data = await response.json();
 
       if (response.ok) {
-        // Store tokens in local storage or handle them as needed
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
-        console.log('Login successful:', data);
-        closeModal();
+        setShowWelcome(true); // Show welcome message
+        setTimeout(() => {
+          setShowWelcome(false);
+          closeModal(); // Close modal after welcome message
+        }, 3000); // Hide after 3 seconds
       } else {
-        // Show error message from backend
         setError(data.message || 'Login failed. Please try again.');
       }
     } catch (err) {
@@ -53,9 +55,9 @@ const LoginModal = ({ closeModal }) => {
       <div style={modalStyles.modal}>
         <h2>Login</h2>
         {error && <p style={modalStyles.error}>{error}</p>}
+        {showWelcome && <p style={modalStyles.welcome}>Welcome to Thaifunder!</p>}
         <form onSubmit={handleLogin}>
           <div style={modalStyles.formGroup}>
-            <label htmlFor="username">Username</label>
             <input 
               id="username"
               type="text" 
@@ -67,7 +69,6 @@ const LoginModal = ({ closeModal }) => {
             />
           </div>
           <div style={modalStyles.formGroup}>
-            <label htmlFor="password">Password</label>
             <input 
               id="password"
               type="password" 
@@ -98,7 +99,7 @@ const LoginModal = ({ closeModal }) => {
   );
 };
 
-// Styles for modal and overlay (unchanged)
+// Styles for modal, overlay, and welcome message
 const modalStyles = {
   overlay: {
     position: 'fixed',
@@ -169,6 +170,16 @@ const modalStyles = {
   error: {
     color: 'red',
     marginBottom: '10px',
+  },
+  welcome: {
+    color: 'green',
+    fontSize: '18px',
+    marginBottom: '10px',
+    animation: 'fadeIn 1s ease-in-out', // Add fade-in animation
+  },
+  '@keyframes fadeIn': {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
   },
 };
 
