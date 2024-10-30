@@ -40,7 +40,7 @@ const LoginModal = ({ closeModal }) => {
         setTimeout(() => {
           setShowWelcome(false);
           closeModal(); // Close modal after welcome message
-        }, 3000); // Hide after 3 seconds
+        }, 2000); // Hide after 3 seconds
       } else {
         setError(data.message || 'Login failed. Please try again.');
       }

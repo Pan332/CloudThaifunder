@@ -1,20 +1,15 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import connection from '../db.js';
 import dotenv from 'dotenv';
-import {jwtDecode} from "jwt-decode";
-import fs from 'fs';
-import matter from 'gray-matter';
+import jwt from 'jsonwebtoken';
 
 dotenv.config({path:'../.env'});
-
 
 // Add comment
 export const Reviewcommentdata = async (req, res) => {
     const { accessToken, comment , title } = req.body;
     try {
       // Decode access token to extract username
-      const decoded = jwtDecode(accessToken);
+      const decoded = jwt(accessToken);
       const username = decoded.name; 
        
       // Insert comment into the database along with the username and recipe title
@@ -110,4 +105,3 @@ export const getComments = (req, res) => {
       res.json({ success: true, comments });
   });
 };
-

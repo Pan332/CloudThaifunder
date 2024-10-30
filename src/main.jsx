@@ -9,7 +9,7 @@ import AboutPage from './pages/AboutPage.jsx';
 import ServicePage from './pages/ServicePage.jsx';
 import SignupForm from './pages/RegisterPage.jsx';
 import ViewInfo from './components/ViewInfo.jsx';
-
+import CampaignManager from './pages/CampaignManager.jsx';
 const router = createBrowserRouter([
   { path: '/', element: <Homepage /> },
   { path: '/CharitiesPage', element: <Charities /> },
@@ -17,7 +17,8 @@ const router = createBrowserRouter([
   { path: '/AboutPage', element: <AboutPage /> }, // Adjusted path to be more RESTful
   { path: '/ServicePage', element: <ServicePage /> }, // Adjusted path to be more RESTful
   { path: '/signup', element: <SignupForm /> }, // Fixed the missing comma
-  { path: '/ViewInfo', element: <ViewInfo /> }
+  { path: '/ViewInfo', element: <ViewInfo /> },
+  { path: '/campaign', element: <ProtectedRoute element={<CampaignManager />} />,},
 ]);
 
 createRoot(document.getElementById('index')).render(

@@ -85,7 +85,7 @@ const Navbar = () => {
         </div>
 
         <div className="campaign-section">
-          <a href="/" className="createBtn">Create Campaign</a>
+          <a href="./campaign" className="createBtn">Create Campaign</a>
           {isLoggedIn ? (
             <>
               <Link to="/ViewInfo">
