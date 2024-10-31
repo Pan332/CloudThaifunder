@@ -9,8 +9,11 @@ import AboutPage from './pages/AboutPage.jsx';
 import ServicePage from './pages/ServicePage.jsx';
 import ViewInfo from './components/ViewInfo.jsx';
 import SignupForm from './pages/signup.jsx';
-import ProtectedRoute from './backend/routes/protected.js';
+import ProtectedRoute from './backend/middleware/frontend/protected.js';
 import CampaignManager from './pages/CampaignManager.jsx';
+import BadgeManager from './pages/badgeManager.jsx';
+import ProtectedAdmin from './backend/middleware/frontend/adminonly.js';
+import Unauthorized from './pages/unauthorized.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <Homepage /> },
@@ -21,6 +24,8 @@ const router = createBrowserRouter([
   { path: '/signup', element: <SignupForm /> }, // Fixed the missing comma
   { path: '/ViewInfo', element: <ViewInfo /> },
   { path: '/campaign', element: <ProtectedRoute element={<CampaignManager />} />,},
+  { path: '/badge', element: <ProtectedAdmin element={<BadgeManager />} />,},
+  { path: '/unauthorized', element: <Unauthorized /> }
 ]);
 
 createRoot(document.getElementById('index')).render(

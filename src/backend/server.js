@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.js';
 import checkconnection from './routes/check-connection.js';
 import campaignRoutes from './routes/campaign.js';
 import userView from './routes/view.js';
+import badgeRoutes from './routes/badge.js';
 
 dotenv.config({ path: './.env' });
 
@@ -27,6 +28,7 @@ app.use('/auth', authRoutes);
 app.use('/', checkconnection);
 app.use('/campaign', campaignRoutes);
 app.use('/view',userView);
+app.use('/badge',badgeRoutes);
 
 
 // Error handling middleware
