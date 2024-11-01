@@ -2,8 +2,11 @@
 .trend-campaign,.taking-off,.feature-campaign,.categories{
     text-align: center;
     padding: 10px;
-   
-    
+    border-bottom: 1.5px solid #ddd;
+  }
+.trend-campaign{
+  border-top: 1.5px solid #ddd;
+
 }
 .trend-text,.taking-off-text,.feature-campaign-text,.category-text{
     font-size: 36px;

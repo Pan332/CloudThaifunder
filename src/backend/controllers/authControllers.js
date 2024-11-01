@@ -112,7 +112,7 @@ export const refreshToken = (req, res) => {
 
 // User registration
 export const register = async (req, res) => {
-  const { username, password, email, role } = req.body; // Ensure 'role' is included
+  const { username, email , password , role, phone, firstname, lastname  } = req.body; // Ensure 'role' is included
 
   try {
     // Check for existing username
@@ -128,8 +128,8 @@ export const register = async (req, res) => {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       // Insert new user into the database
-      connection.query('INSERT INTO Users (username, password_hash, email, role) VALUES (?, ?, ?, ?)', 
-        [username, hashedPassword, email, role],
+      connection.query('INSERT INTO Users (username, email, password_hash, role, phone, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+        [username, email, hashedPassword, role, phone, firstname, lastname],
         (err) => {
           if (err) {
             console.error('Error executing insert query:', err);

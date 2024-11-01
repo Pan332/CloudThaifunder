@@ -1,0 +1,76 @@
+.how-it-works {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step:hover {
+  transform: translateY(-10px); /* Moves the step slightly upward */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Adds a larger shadow */
+}
+
+.step-icon {
+  font-size: 2rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.step-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.step-description {
+  font-size: 1rem;
+  color: #666;
+}
+
+.step-button {
+  display: inline-block;
+  margin-top: 20px;
+  margin-bottom: 30px; /* Add space below the button */
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.step-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05); /* Slightly enlarges the button */
+}
+@media (max-width: 768px) {
+  .how-it-works {
+    flex-direction: row; /* Stack horizontally on smaller screens */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px;
+  }
+  
+  .step {
+    min-width: 200px; /* Set a minimum width for each step to fit in a row */
+    margin-right: 15px; /* Space between items */
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+}

@@ -11,11 +11,11 @@ function ServicePage() {
           marginBottom: '30px',
           color: 'black',
           padding: '40px',
+          borderBottom:'1.5px solid #ddd',
         }}>
           <h1 style={{ fontSize: '42px', margin: 0 }}>Our Services</h1>
           <p style={{ fontSize: '20px', marginTop: '10px' }}>Empowering Charities through Crowdfunding</p>
         </header>
-        <hr/>
       <div style={styles.aboutContainer}>
         <div style={styles.content}>
           {/* First Section: Text Left, Image Right */}
@@ -40,7 +40,8 @@ function ServicePage() {
             <div style={styles.textContainerRight}>
               <h1 style={styles.heading}>Zero Fees for Charities</h1>
               <p style={styles.text}>
-              We believe in supporting the mission of charitable organizations, which is why we charge no fees for charity campaigns. All funds raised go directly to the cause, ensuring that every donation makes a difference.              </p>
+              We believe in supporting the mission of charitable organizations, which is why we charge no fees for charity campaigns. All funds raised go directly to the cause, ensuring that every donation makes a difference.
+              </p>
             </div>
             <div style={styles.imageContainerLeft}>
               <img
@@ -65,14 +66,15 @@ function ServicePage() {
                 style={styles.image}
               />
             </div>
-            
           </div>
           <hr />
           <div style={styles.missionSectionReverse}>
             <div style={styles.textContainerRight}>
               <h1 style={styles.heading}>Comprehensive Campaign Tools</h1>
               <p style={styles.text}>
-              <strong>ThaiFunder</strong> offers a suite of tools for charities to create engaging campaigns. From customizable campaign pages to progress tracking and sharing tools, our platform provides everything needed to maximize outreach and achieve success.</p></div>
+              <strong>ThaiFunder</strong> offers a suite of tools for charities to create engaging campaigns. From customizable campaign pages to progress tracking and sharing tools, our platform provides everything needed to maximize outreach and achieve success.
+              </p>
+            </div>
             <div style={styles.imageContainerLeft}>
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNVLMRa9_xS_dSn_FxL9AgK3I-brgrFocy3Q&s"
@@ -86,7 +88,8 @@ function ServicePage() {
             <div style={styles.textContainerLeft}>
               <h1 style={styles.heading}>Global Reach</h1>
               <p style={styles.text}>
-              With our platform, charities can reach donors from across the globe. Our easy-to-use interface and secure payment gateways ensure a smooth donation process, no matter where the supporters are located.              </p>
+              With our platform, charities can reach donors from across the globe. Our easy-to-use interface and secure payment gateways ensure a smooth donation process, no matter where the supporters are located.
+              </p>
             </div>
             <div style={styles.imageContainerRight}>
               <img
@@ -95,14 +98,15 @@ function ServicePage() {
                 style={styles.image}
               />
             </div>
-            
           </div>
           <hr />
           <div style={styles.missionSectionReverse}>
             <div style={styles.textContainerRight}>
               <h1 style={styles.heading}>Secure Payment Processing</h1>
               <p style={styles.text}>
-              We understand the importance of security when it comes to donations. ThaiFunder provides safe and secure payment gateways, ensuring that every transaction is protected. Our platform accepts multiple payment options, making it easy for donors to contribute.</p></div>
+              We understand the importance of security when it comes to donations. ThaiFunder provides safe and secure payment gateways, ensuring that every transaction is protected. Our platform accepts multiple payment options, making it easy for donors to contribute.
+              </p>
+            </div>
             <div style={styles.imageContainerLeft}>
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw4Gvy0T_r3EVZn5Iordx6Zg6-jSmG-hkS2g&s"
@@ -120,7 +124,6 @@ function ServicePage() {
 }
 
 const styles = {
-
   aboutContainer: {
     padding: '20px 20px',
     color: '#333',
@@ -133,30 +136,29 @@ const styles = {
   },
   missionSection: {
     display: 'flex',
-    flexDirection: 'row',  // Default: Text Left, Image Right
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     marginBottom: '60px',
     padding: '40px',
-    
   },
   missionSectionReverse: {
     display: 'flex',
-    flexDirection: 'row-reverse',  // Reverse: Image Left, Text Right
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     marginBottom: '60px',
-    padding: '40px'
+    padding: '40px',
   },
   textContainerLeft: {
     flex: 1,
-    paddingRight: '30px',  // Text padding for left-side alignment
+    paddingRight: '30px',
   },
   textContainerRight: {
     flex: 1,
-    paddingLeft: '30px',  // Text padding for right-side alignment
+    paddingLeft: '30px',
   },
   imageContainerRight: {
     flex: 1,
@@ -182,12 +184,15 @@ const styles = {
     width: '100%',
     borderRadius: '10px',
   },
+  // Responsive styles for smaller screens
   '@media (max-width: 768px)': {
     missionSection: {
       flexDirection: 'column',
+      padding: '20px',
     },
     missionSectionReverse: {
       flexDirection: 'column',
+      padding: '20px',
     },
     textContainerLeft: {
       paddingRight: '0',
@@ -195,9 +200,19 @@ const styles = {
     textContainerRight: {
       paddingLeft: '0',
     },
-    imageContainer: {
+    imageContainerRight: {
       textAlign: 'center',
       marginTop: '20px',
+    },
+    imageContainerLeft: {
+      textAlign: 'center',
+      marginTop: '20px',
+    },
+    heading: {
+      fontSize: '28px',
+    },
+    text: {
+      fontSize: '18px',
     },
   },
 };

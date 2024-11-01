@@ -73,15 +73,16 @@
     background-color: white;
     border-radius:10px ;
     width: 300px;
-    height:23px;
+    height: 23px;
     border: 1px;
 
   }
   .inp {
     border-radius: 10px ;
+    height: 23px;
 
     width: 300px;
-    height:23px;
+
 
 
   }

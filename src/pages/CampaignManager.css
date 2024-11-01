@@ -1,61 +1,171 @@
+/* Global Styles */
 .campaign-manager {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-  }
-  
-  .campaign-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  input,
-  textarea {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error-message {
-    color: red;
-    text-align: center;
-  }
-  
-  .success-message {
-    color: green;
-    text-align: center;
-  }
-  
-  .campaign-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .campaign-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 4px;
-  }
-  
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Title */
+.campaign-manager h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #004085;
+}
+
+/* Form Styling */
+.campaign-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.campaign-form input,
+.campaign-form textarea {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.campaign-form input[type="number"] {
+  max-width: 200px;
+}
+
+.campaign-form button {
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.campaign-form button:hover {
+  background-color: #218838;
+}
+
+/* Success and Error Messages */
+.success-message,
+.error-message {
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Campaign List Styling */
+.campaign-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.campaign-item {
+  background-color: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.campaign-item h3 {
+  color: #0056b3;
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.campaign-item p {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 5px 0;
+}
+
+.campaign-item button {
+  margin-top: 10px;
+  margin-right: 5px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.campaign-item button:first-child {
+  background-color: #17a2b8;
+}
+
+.campaign-item button:first-child:hover {
+  background-color: #138496;
+}
+
+.campaign-item button:last-child {
+  background-color: #dc3545;
+}
+
+.campaign-item button:last-child:hover {
+  background-color: #c82333;
+}
+
+/* Loading Indicator */
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+.campaign-manager {
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 108px;
+  right: 22px;
+  font-size: 24px;
+  color: #ec0dc7;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #ff0000;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+

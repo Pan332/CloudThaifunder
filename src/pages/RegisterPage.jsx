@@ -1,8 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const RegisterPage = () => {
-  
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +19,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const port = import.meta.env.VITE_API_URL; // No need to check again
+    const port = import.meta.env.VITE_API_URL; // Fetching API URL from environment variables
     if (!port) {
       setSignupMessage('API URL is not defined');
       return;
@@ -33,7 +31,7 @@ const RegisterPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, email, password, role }),
+        body: JSON.stringify({ username, email, password, role, phone, firstname, lastname }),
       });
 
       const data = await response.json();
@@ -48,92 +46,83 @@ const RegisterPage = () => {
       setSignupMessage('Error during sign up');
     }
   };
+
   return (
     <div style={styles.container}>
       <div style={styles.formContainer}>
         <h2>Register</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div style={styles.formGroup}>
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={username}
-              placeholder="Username" 
+              placeholder="Username"
               onChange={(e) => setUsername(e.target.value)}
-              style={styles.inputField} 
+              style={styles.inputField}
               required
             />
           </div>
           <div style={styles.formGroup}>
-            <input 
-              type="password" 
-              placeholder="Password" 
-              style={styles.inputField} 
+            <input
+              type="password"
+              placeholder="Password"
+              style={styles.inputField}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-
               required
             />
           </div>
           <div style={styles.formGroup}>
-            <input 
-              type="password" 
-              placeholder="Confirm Password" 
-              style={styles.inputField} 
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              style={styles.inputField}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-
               required
             />
           </div>
           <div style={styles.formGroup}>
-            <input 
-              type="email" 
+            <input
+              type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={styles.inputField}
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <input
+              type="text"
+              placeholder="First Name"
+              style={styles.inputField}
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <input
+              type="text"
+              placeholder="Last Name"
+              style={styles.inputField}
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <input
+              type="text"
+              placeholder="Phone"
+              style={styles.inputField}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+          </div>
 
-              style={styles.inputField} 
-              required
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <input 
-              type="text" 
-              placeholder="First Name" 
-              style={styles.inputField} 
-              required
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <input 
-              type="text" 
-              placeholder="Last Name" 
-              style={styles.inputField} 
-              required
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <input 
-              type="text" 
-              placeholder="Phone" 
-              style={styles.inputField} 
-              required
-            />
-          </div>
-          
-          
-          <div style={styles.formGroup}>
-            <input 
-              type="int" 
-              placeholder="Age" 
-              style={styles.inputField} 
-              required
-              min={0}
-            />
-          </div>
-      
-            
-        
           <div style={styles.buttonGroup}>
             <button id="signupButton" type="submit" style={styles.button}>
               Register
@@ -143,7 +132,6 @@ const RegisterPage = () => {
             <a href="/" style={styles.link}>Go back to Homepage?</a>
           </div>
           <div id="signupMessage">{signupMessage}</div>
-
         </form>
       </div>
     </div>
@@ -157,14 +145,14 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    backgroundImage: 'url("https://images.unsplash.com/photo-1583364481915-dacea3e06d18?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")', // Add your background image URL here
+    backgroundImage: 'url("https://images.unsplash.com/photo-1583364481915-dacea3e06d18?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")', // Background image URL
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    backgroundAttachment: 'fixed', // Optional: makes the background stay fixed while scrolling
+    backgroundAttachment: 'fixed',
   },
   formContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Add slight transparency to the form background
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: '40px',
     borderRadius: '10px',
     width: '400px',

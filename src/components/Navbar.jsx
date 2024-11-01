@@ -58,17 +58,17 @@ const Navbar = () => {
               onMouseEnter={toggleCategoriesDropdown} 
               onMouseLeave={toggleCategoriesDropdown}
             >
-              <a href="#">
+              <Link to="/CategoriesPage">
                 Categories <span className="dropdown-arrow">▼</span>
-              </a>
+              </Link>
               {isCategoriesDropdownOpen && (
                 <ul className="dropdown">
-                  <li><a href="/categories/education">Education</a></li>
-                  <li><a href="/categories/game">Game</a></li>
-                  <li><a href="/categories/music">Music</a></li>
-                  <li><a href="/categories/book">Book</a></li>
-                  <li><a href="/categories/technology">Technology</a></li>
-                  <li><a href="/categories/View all">View all</a></li>
+                  <li><Link to="/EducationPage">Education</Link></li>
+                  <li><Link to="/GamesPage">Game</Link></li>
+                  <li><Link to="/MusicPage">Music</Link></li>
+                  <li><Link to="/BooksPage">Book</Link></li>
+                  <li><Link to="/TechnologyPage">Technology</Link></li>
+                  <li><Link to="/CategoriesPage">View all</Link></li>
                 </ul>
               )}
             </li>
@@ -85,7 +85,7 @@ const Navbar = () => {
         </div>
 
         <div className="campaign-section">
-          <a href="./campaign" className="createBtn">Create Campaign</a>
+          <a href="/CampaignManager" className="createBtn">Create Campaign</a>
           {isLoggedIn ? (
             <>
               <Link to="/ViewInfo">

@@ -91,7 +91,7 @@ const LoginModal = ({ closeModal }) => {
             </button>
           </div>
           <div style={modalStyles.registerLink}>
-            <a href="signup" style={modalStyles.link}>Register</a>
+            <a href="/RegisterPage" style={modalStyles.link}>Register</a>
           </div>
         </form>
       </div>

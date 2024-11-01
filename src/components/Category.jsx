@@ -3,14 +3,14 @@ import { FaGamepad, FaTshirt, FaPenNib, FaFilm, FaMusic, FaPalette, FaFlask, FaB
 
 const Categories = () => {
   const categories = [
-    { icon: <FaGamepad size={40} />, label: 'Games', link: '/games' },
-    { icon: <FaTshirt size={40} />, label: 'Fashion', link: '/fashion' },
-    { icon: <FaPenNib size={40} />, label: 'Design', link: '/design' },
-    { icon: <FaFilm size={40} />, label: 'Film', link: '/film' },
-    { icon: <FaMusic size={40} />, label: 'Music', link: '/music' },
-    { icon: <FaPalette size={40} />, label: 'Art', link: '/art' },
-    { icon: <FaFlask size={40} />, label: 'Technology', link: '/technology' },
-    { icon: <FaBook size={40} />, label: 'Book', link: '/book' },
+    { icon: <FaGamepad size={40} color={'green'} />, label: 'Games', link: '/GamesPage' },
+    { icon: <FaTshirt size={40} color={'Red'} />, label: 'Fashion', link: '/fashion' },
+    { icon: <FaPenNib size={40} color={'Black'} />, label: 'Design', link: '/design' },
+    { icon: <FaFilm size={40} color={'Black'} />, label: 'Film', link: '/film' },
+    { icon: <FaMusic size={40} color={'Pink'} />, label: 'Music', link: '/MusicPage' },
+    { icon: <FaPalette size={40} color={'blue'} />, label: 'Art', link: '/art' },
+    { icon: <FaFlask size={40} color={'purple'} />, label: 'Technology', link: '/TechnologyPage' },
+    { icon: <FaBook size={40} color={'blue'} />, label: 'Book', link: '/BookPage' },
   ];
 
   return (
@@ -21,7 +21,6 @@ const Categories = () => {
             key={index} 
             href={category.link} 
             style={styles.categoryItem} 
-            target="_blank" 
             rel="noopener noreferrer"
           >
             {category.icon}
@@ -55,11 +54,17 @@ const styles = {
     alignItems: 'center',
     textDecoration: 'none',
     color: 'inherit',
+    transition: 'transform 0.3s ease', // Smooth transition for the scale effect
   },
   label: {
     marginTop: '10px',
     fontSize: '16px',
   },
+};
+
+// Add hover effect
+styles.categoryItem[':hover'] = {
+  transform: 'scale(1.1)', // Slightly increase size on hover
 };
 
 export default Categories;

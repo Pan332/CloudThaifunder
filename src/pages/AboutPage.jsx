@@ -24,30 +24,32 @@ const AboutPage = () => {
               />
             </div>
           </div>
-            <hr />
+          <hr />
           {/* Story Section */}
           <div style={styles.storySection}>
             <h2 style={styles.heading}>Founding Story</h2>
             <p style={styles.text}>
-              Thaifunder was born out of the desire to give back to the communities that make Thailand such a vibrant and resilient country. From bustling city centers to rural villages, we recognized the immense potential in the collective power of individuals joining forces to support causes that matter. Our founders, seeing the challenges in traditional fundraising methods, decided to create a platform where anyone, regardless of their background, could raise funds for projects that would make a lasting impact.
-            </p>
-            <p style={styles.text}>
-              In 2024, Thaifunder was officially launched with the goal of connecting people and causes. What started as a small team of passionate individuals has now grown into a thriving community of donors, campaigners, and volunteers who are all dedicated to making a difference. Whether it’s funding a life-saving medical procedure, helping a local school rebuild, or supporting artists in need of a platform to share their work, we’ve been honored to witness the generosity of the Thai people and beyond.
+              Thaifunder was born out of the desire to give back to the communities that make Thailand such a vibrant and resilient country. From bustling city centers to rural villages, we recognized the immense potential in the collective power of individuals joining forces to support causes that matter.
             </p>
             <img
-                src="https://phuketnews.phuketindex.com/wp-content/uploads/2020/01/thai-kids-800x480.jpg"
-                alt="Helping Thailand"
-             
-              />
+              src="https://scx2.b-cdn.net/gfx/news/2024/tourists-evacuated-hot.jpg"
+              alt="Helping Thailand"
+              style={styles.imageLarge}
+            />
             <p style={styles.text}>
-              At Thaifunder, transparency and trust are at the core of everything we do. We strive to ensure that each campaign is vetted for legitimacy, so donors know exactly where their contributions are going. Our platform is user-friendly and accessible, allowing campaigns to reach a broad audience both locally and internationally.
+              In 2024, Thaifunder was officially launched with the goal of connecting people and causes. Whether it’s funding a life-saving medical procedure, helping a local school rebuild, or supporting artists in need, we’ve been honored to witness the generosity of the Thai people and beyond.
             </p>
+            <img
+              src="https://phuketnews.phuketindex.com/wp-content/uploads/2020/01/thai-kids-800x480.jpg"
+              alt="Helping Thailand"
+              style={styles.imageLarge}
+            />
             <p style={styles.text}>
-              We’ve come a long way, but this is just the beginning. In the future, we aim to expand our services to neighboring countries, helping more people raise funds for causes that matter to them. By providing tools for success and maintaining a close connection with our communities, we believe we can inspire positive change across Thailand and beyond.
+              At Thaifunder, transparency and trust are at the core of everything we do. We strive to ensure that each campaign is vetted for legitimacy, so donors know exactly where their contributions are going.
             </p>
             <hr />
             <p style={styles.text}>
-              Join us in our journey to make a positive impact in Thailand, and together, let’s continue to empower individuals and communities to achieve their goals, no matter how big or small.
+              Join us in our journey to make a positive impact in Thailand. Together, let’s continue to empower individuals and communities to achieve their goals.
             </p>
           </div>
         </div>
@@ -80,7 +82,6 @@ const styles = {
   textContainer: {
     flex: 1,
     paddingRight: '30px',
-   
   },
   imageContainer: {
     flex: 1,
@@ -102,9 +103,16 @@ const styles = {
     width: '100%',
     borderRadius: '10px',
   },
+  imageLarge: {
+    maxWidth: '800px',
+    width: '100%',
+    borderRadius: '10px',
+    margin: '20px 0',
+  },
   storySection: {
     marginTop: '40px',
   },
+  // Responsive adjustments
   '@media (max-width: 768px)': {
     missionSection: {
       flexDirection: 'column',
@@ -115,6 +123,18 @@ const styles = {
     imageContainer: {
       textAlign: 'center',
       marginTop: '20px',
+    },
+    heading: {
+      fontSize: '28px',
+    },
+    text: {
+      fontSize: '16px',
+    },
+    image: {
+      maxWidth: '100%',
+    },
+    imageLarge: {
+      maxWidth: '100%',
     },
   },
 };

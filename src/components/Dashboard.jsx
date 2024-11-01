@@ -35,10 +35,6 @@ function Dashboard(){
                  <h2>56</h2>
                 </div>
             </div>
-       
-            
-         <hr/>
-
         </div>
     );
 
