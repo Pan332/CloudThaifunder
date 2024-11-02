@@ -7,6 +7,8 @@ const CampaignManager = () => {
   const [title, setTitle] = useState('');
   const [shortDescription, setShortDescription] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');  // New state for category
+
   const [goalAmount, setGoalAmount] = useState('');
   const [endDate, setEndDate] = useState('');      // New state for end date
   const [editingCampaignId, setEditingCampaignId] = useState(null);
@@ -28,6 +30,7 @@ const CampaignManager = () => {
         setImagePreview(reader.result); // Full Base64 string for preview with MIME type
       };
       reader.readAsDataURL(file); // Trigger Base64 conversion
+
     }
   };
 
@@ -216,8 +219,24 @@ const CampaignManager = () => {
           maxLength="150"
           required 
         />
-        
+    
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
+        <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+          <option value="">Select Category</option>
+          <option value="charities">Charity</option>
+          <option value="medical & healing">Medical & Healing</option>
+          <option value="education">Education</option>
+          <option value="business & startup">Business & Startup</option>
+          <option value="game">Game</option>
+          <option value="fashion">Fashion</option>
+          <option value="design">Design</option>
+          <option value="film">Film</option>
+          <option value="music">Music</option>
+          <option value="art">Art</option>
+          <option value="technology">Technology</option>
+          <option value="book">Book</option>
+          {/* Add more categories as needed */}
+        </select>
         <input type="number" value={goalAmount} onChange={(e) => setGoalAmount(e.target.value)} placeholder="Goal Amount" required />
         
         <label htmlFor="">End Date</label>

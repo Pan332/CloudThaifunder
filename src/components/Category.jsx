@@ -1,16 +1,20 @@
 import React from 'react';
-import { FaGamepad, FaTshirt, FaPenNib, FaFilm, FaMusic, FaPalette, FaFlask, FaBook } from 'react-icons/fa';
+import { FaGamepad, FaTshirt, FaPenNib, FaFilm, FaMusic, FaPalette, FaFlask, FaBook, FaHandHoldingHeart, FaMedkit, FaGraduationCap, FaBriefcase } from 'react-icons/fa';
 
 const Categories = () => {
   const categories = [
-    { icon: <FaGamepad size={40} color={'green'} />, label: 'Games', link: '/GamesPage' },
-    { icon: <FaTshirt size={40} color={'Red'} />, label: 'Fashion', link: '/fashion' },
-    { icon: <FaPenNib size={40} color={'Black'} />, label: 'Design', link: '/design' },
-    { icon: <FaFilm size={40} color={'Black'} />, label: 'Film', link: '/film' },
-    { icon: <FaMusic size={40} color={'Pink'} />, label: 'Music', link: '/MusicPage' },
-    { icon: <FaPalette size={40} color={'blue'} />, label: 'Art', link: '/art' },
-    { icon: <FaFlask size={40} color={'purple'} />, label: 'Technology', link: '/TechnologyPage' },
-    { icon: <FaBook size={40} color={'blue'} />, label: 'Book', link: '/BookPage' },
+    { icon: <FaHandHoldingHeart size={40} color={'#FF4500'} />, label: 'Charities', link: '/charities' },
+    { icon: <FaMedkit size={40} color={'#C71585'} />, label: 'Medical & Healing', link: '/medical' },
+    { icon: <FaGraduationCap size={40} color={'#20B2AA'} />, label: 'Education', link: '/education' },
+    { icon: <FaBriefcase size={40} color={'#FFD700'} />, label: 'Business & Startup', link: '/business' },
+    { icon: <FaGamepad size={40} color={'#4CAF50'} />, label: 'Games', link: '/GamesPage' }, 
+    { icon: <FaTshirt size={40} color={'#FF6347'} />, label: 'Fashion', link: '/fashion' },   
+    { icon: <FaPenNib size={40} color={'#333333'} />, label: 'Design', link: '/design' },    
+    { icon: <FaFilm size={40} color={'#FF8C00'} />, label: 'Film', link: '/film' },          
+    { icon: <FaMusic size={40} color={'#FF1493'} />, label: 'Music', link: '/MusicPage' },   
+    { icon: <FaPalette size={40} color={'#1E90FF'} />, label: 'Art', link: '/art' },         
+    { icon: <FaFlask size={40} color={'#8A2BE2'} />, label: 'Technology', link: '/TechnologyPage' }, 
+    { icon: <FaBook size={40} color={'#4682B4'} />, label: 'Book', link: '/BookPage' },      
   ];
 
   return (

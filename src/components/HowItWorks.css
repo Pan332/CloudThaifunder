@@ -26,7 +26,7 @@
 
 .step-icon {
   font-size: 2rem;
-  color: #007bff;
+  color: #ff6b6b; /* Bright color to make icons stand out */
   margin-bottom: 10px;
 }
 
@@ -34,6 +34,8 @@
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #333;
+
 }
 
 .step-description {
@@ -46,7 +48,7 @@
   margin-top: 20px;
   margin-bottom: 30px; /* Add space below the button */
   padding: 12px 20px;
-  background-color: #007bff;
+  background-color: #e65a5a;
   color: #fff;
   text-decoration: none;
   border-radius: 20px;
@@ -57,8 +59,11 @@
 }
 
 .step-button:hover {
-  background-color: #0056b3;
+  background-color: #e65a5a;
   transform: scale(1.05); /* Slightly enlarges the button */
+}
+.step-button:active {
+  background-color: #cc4f4f;
 }
 @media (max-width: 768px) {
   .how-it-works {

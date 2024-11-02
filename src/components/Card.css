@@ -40,21 +40,32 @@
   margin-bottom: 10px;
 }
 
-/* Make the description smoothly fade in and slide down */
+/* Keyframe for delayed description fade-in */
+@keyframes delayedFadeIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 80px; /* Adjust as needed */
+  }
+}
+
+/* Initial state for description (hidden) */
 .campaign-description {
   font-size: 0.9rem;
   color: #555;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: opacity 0.3s ease, max-height 0.3s ease;
   margin-bottom: 10px;
 }
 
+/* Delayed hover effect */
 .campaign-card:hover .campaign-description {
-  display: block;
-  opacity: 1;
-  max-height: 80px; /* Adjust as needed */
+  animation: delayedFadeIn 0.3s ease forwards;
+  animation-delay: 0.3s; /* 2-second delay */
 }
 
 .campaign-goal {
@@ -107,4 +118,9 @@
   font-size: 0.9rem;
   color: #d32f2f;
   font-weight: bold;
+}
+
+.campaign-card-link {
+  text-decoration: none;
+  color: black;
 }

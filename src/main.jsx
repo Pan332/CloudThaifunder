@@ -19,6 +19,7 @@ import TechnologyPage from './pages/TechnologyPage.jsx';
 import ViewInfo from './components/ViewInfo.jsx';
 import Campaign from './pages/CampaignManager.jsx';
 
+
 const router = createBrowserRouter([
   { path: '/', element: <Homepage /> },
   { path: '/CharitiesPage', element: <Charities /> },

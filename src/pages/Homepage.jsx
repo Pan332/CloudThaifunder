@@ -6,6 +6,7 @@ import Card from "../components/Card.jsx";
 import Categories from "../components/Category.jsx";
 import Footer from '../components/Footer.jsx';
 import HowItWorks from "../components/HowItWorks.jsx";
+import Why from "../components/Why.jsx";
 
 
 
@@ -116,14 +117,18 @@ const Homepage = () => {
           ))}
         </div>
       </div>
-
+      <div className="feature-campaign">
+        <h1 className="feature-campaign-text">Why Thaifunder?</h1>
+        <Why/>
+      </div>
       <div className="feature-campaign">
         <h1 className="feature-campaign-text">How it Works?</h1>
         <HowItWorks/>
       </div>
+   
 
       <div className="categories">
-        <h1 className="category-text">Categories</h1>
+        <h1 className="category-text">Fundraising Categories</h1>
         <Categories />
       </div>
 

@@ -18,7 +18,7 @@ app.use(cors({
   }));
   
   
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({limit: '10mb',  extended: true }));
   app.use(express.json());
 
 // Routes
