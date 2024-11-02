@@ -6,6 +6,11 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });
 
+
+if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
+  throw new Error('Missing token secrets in environment variables');
+}
+
 // Function to generate access token
 const jwtGenerate = (user) => jwt.sign(
   { username: user.username, user_id: user.user_id },

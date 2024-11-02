@@ -8,5 +8,4 @@ router.post('/signup',register)
 router.get('/validate-token', jwtValidate, (req, res) => {
     res.sendStatus(200);
 });
-router.post('/campaign/createcampaign', isAuthenticated, createCampaign);
 export default router;

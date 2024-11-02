@@ -7,11 +7,6 @@ import Categories from "../components/Category.jsx";
 import Footer from '../components/Footer.jsx';
 import HowItWorks from "../components/HowItWorks.jsx";
 import Why from "../components/Why.jsx";
-
-
-
-
-
 import './Homepage.css'; 
 
 const campaigns = [
