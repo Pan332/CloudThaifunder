@@ -46,8 +46,7 @@ export const ProtectedRoute = (props) => {
         : React.createElement(Navigate, { to: '/' });
 };
 
-<<<<<<< HEAD
+
 export default ProtectedRoute;
-=======
-export default ProtectedRoute;
->>>>>>> 6d9184a65caaaa431edcf6efd8a9567c59aa4a50
+
+
