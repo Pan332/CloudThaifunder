@@ -18,4 +18,7 @@ function ProtectedAdmin(props) {
   return isAdmin() ? props.element : React.createElement(Navigate, { to: '/unauthorized', replace: true });
 }
 
+
 export default ProtectedAdmin;
+
+

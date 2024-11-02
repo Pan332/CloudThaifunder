@@ -7,17 +7,30 @@ export const createCampaign = (req, res) => {
     return res.status(401).json({ success: false, message: 'User not authenticated' });
   }
 
+<<<<<<< HEAD
   const { title, description, goal_amount, shortDescription, endDate, imageFile} = req.body;
   const created_by = req.user.user_id; // Assuming you have user information from JWT
 
   // Validate required fields
   if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || !imageFile) {
+=======
+  const { title, description, goal_amount } = req.body;
+  const created_by = req.user.user_id; // Assuming you have user information from JWT
+
+  // Validate required fields
+  if (!title || !description || goal_amount === undefined) {
+>>>>>>> 6d9184a65caaaa431edcf6efd8a9567c59aa4a50
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
   // Insert campaign into the database
+<<<<<<< HEAD
   const query = 'INSERT INTO Campaigns (title, description, goal_amount, created_by, status, short_description, deadline, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
   connection.query(query, [title, description, goal_amount, created_by, 'pending', shortDescription, endDate, imageFile], (err, results) => {
+=======
+  const query = 'INSERT INTO Campaigns (title, description, goal_amount, created_by, status) VALUES (?, ?, ?, ?, ?)';
+  connection.query(query, [title, description, goal_amount, created_by, 'pending'], (err, results) => {
+>>>>>>> 6d9184a65caaaa431edcf6efd8a9567c59aa4a50
     if (err) {
       console.error('Error executing insert query:', err);
       return res.status(500).json({ success: false, message: 'Error executing query', error: err.message });
@@ -74,4 +87,8 @@ export const deleteCampaign = (req, res) => {
     }
     res.status(200).json({ success: true, message: 'Campaign deleted successfully' });
   });
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 6d9184a65caaaa431edcf6efd8a9567c59aa4a50

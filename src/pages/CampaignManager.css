@@ -1,3 +1,4 @@
+
 /* Global Styles */
 .campaign-manager {
   max-width: 800px;
@@ -169,4 +170,38 @@
   border-radius: 8px;
   text-align: center;
 }
+
+
+
+
+  h2 {
+    text-align: center;
+  }
+  
+  .campaign-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .error-message {
+    color: red;
+    text-align: center;
+  }
+  
+  .success-message {
+    color: green;
+    text-align: center;
+  }
+  
+  .campaign-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .campaign-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+  }
+  
 
