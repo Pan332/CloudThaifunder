@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'; 
 import './CampaignManager.css';
 import { useNavigate } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const CampaignManager = () => {
   const [campaigns, setCampaigns] = useState([]);
@@ -33,7 +35,6 @@ const CampaignManager = () => {
 
     }
   };
-
 
   useEffect(() => {
     checkAuthAndFetchCampaigns();
@@ -114,73 +115,6 @@ const CampaignManager = () => {
     }
   };
 
-  const handleUpdateCampaign = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('access_token');
-
-    if (!token) {
-      setError('You are not authenticated. Please log in.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${port}/campaign/updatecampaign`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          goal_amount: goalAmount,
-          campaign_id: editingCampaignId,
-          shortDescription,
-          endDate
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to update campaign');
-
-      resetForm();
-      setSuccess('Campaign updated successfully!');
-      checkAuthAndFetchCampaigns();
-    } catch (error) {
-      console.error('Error updating campaign:', error);
-      setError('An error occurred while updating the campaign.');
-    }
-  };
-
-  const handleDelete = async (campaign_id) => {
-    const token = localStorage.getItem('access_token');
-
-    if (!token) {
-      setError('You are not authenticated. Please log in.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${port}/campaign/deletecampaign`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ campaign_id })
-      });
-
-      if (!response.ok) throw new Error('Failed to delete campaign');
-
-      setSuccess('Campaign deleted successfully!');
-      checkAuthAndFetchCampaigns();
-    } catch (error) {
-      console.error('Error deleting campaign:', error);
-      setError('An error occurred while deleting the campaign.');
-    }
-  };
-
-
-
   const resetForm = () => {
     setTitle('');
     setShortDescription('');
@@ -193,22 +127,23 @@ const CampaignManager = () => {
     setError('');
     setSuccess('');
   };
+
   const handleClose = () => {
     navigate('/');
   };
 
+
+
   return (
     <div className="campaign-manager">
-            <button className="close-button" onClick={handleClose}>&times;</button>
-
+      <button className="close-button" onClick={handleClose}>&times;</button>
       <h2>Create Campaigns</h2>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
 
       <form onSubmit={handleCreateCampaign} className="campaign-form">
-        
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
-        <input type="file" onChange={handleFileChange} accept="image/*"  />
+        <input type="file" onChange={handleFileChange} accept="image/*" />
         {imagePreview && <img src={imagePreview} alt="Selected campaign preview" className="image-preview" />}
 
         <input 
@@ -219,8 +154,10 @@ const CampaignManager = () => {
           maxLength="150"
           required 
         />
-    
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
+        
+        {/* Replace Textarea with ReactQuill */}
+        <ReactQuill value={description} onChange={setDescription} placeholder="Description" />
+
         <select value={category} onChange={(e) => setCategory(e.target.value)} required>
           <option value="">Select Category</option>
           <option value="charities">Charity</option>
@@ -235,31 +172,14 @@ const CampaignManager = () => {
           <option value="art">Art</option>
           <option value="technology">Technology</option>
           <option value="book">Book</option>
-          {/* Add more categories as needed */}
         </select>
+
         <input type="number" value={goalAmount} onChange={(e) => setGoalAmount(e.target.value)} placeholder="Goal Amount" required />
-        
         <label htmlFor="">End Date</label>
         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
-        
 
         <button type="submit">{editingCampaignId ? 'Update' : 'Create'} Campaign</button>
       </form>
-
-      <ul className="campaign-list">
-        {campaigns.map((campaign) => (
-          <li key={campaign.campaign_id} className="campaign-item">
-            <h3>{campaign.title}</h3>
-            <p><strong>Short Description:</strong> {campaign.short_description}</p>
-            <p>{campaign.description}</p>
-            <p>Goal: {campaign.goal_amount}</p>
-            <p>{calculateDaysRemaining(campaign.end_date)}</p> {/* Display days remaining */}
-            {campaign.imageUrl && <img src={campaign.imageUrl} alt={`${campaign.title} image`} className="campaign-image" />}
-            <button onClick={() => handleEdit(campaign)}>Edit</button>
-            <button onClick={() => handleDelete(campaign.campaign_id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };

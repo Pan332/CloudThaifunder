@@ -55,6 +55,7 @@ export const getUserInfo = (req, res) => {
   }
 };
 
+
 // Update user info
 export const updateUserInfo = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -129,5 +130,89 @@ export const updateUserInfo = async (req, res) => {
       console.error('Token verification error:', error);
       res.status(401).json({ success: false, message: 'Invalid token' });
     }
+  };
+
+  // getCampaigninfo for view
+  export const getCampaignInfo = (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+  
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Access token is missing' });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const userId = decoded.user_id;
+  
+      connection.query(
+        'SELECT title, goal_amount, status, deadline FROM campaigns WHERE created_by = ?',
+        [userId],
+        (err, campaignResults) => {
+          if (err) {
+            console.error('Error fetching campaign info:', err);
+            return res.status(500).json({ success: false, message: 'Internal server error' });
+          }
+  
+          connection.query(
+            'SELECT first_name FROM users WHERE user_id = ?',
+            [userId],
+            (err, userResults) => {
+              if (err) {
+                console.error('Error fetching user name:', err);
+                return res.status(500).json({ success: false, message: 'Internal server error' });
+              }
+  
+              const userName = userResults[0]?.first_name || 'User';
+              const data = {
+                campaigns: campaignResults,
+                first_name: userName,
+              };
+  
+              res.json({ success: true, data });
+            }
+          );
+        }
+      );
+    } catch (error) {
+      console.error('Token verification error:', error);
+      res.status(401).json({ success: false, message: 'Invalid token' });
+    }
+  };
+  // allcampaign for card
+  export const getAllCampaign = (req, res) => {
+    // Fetch all campaigns along with the first name of the user who created each campaign
+    const query = `
+    SELECT 
+      campaigns.campaign_id, 
+      campaigns.title, 
+      campaigns.description, 
+      campaigns.short_description, 
+      campaigns.goal_amount, 
+      campaigns.raised_amount, 
+      campaigns.status, 
+      campaigns.deadline,
+      campaigns.image, 
+      users.first_name 
+    FROM 
+      campaigns
+    JOIN 
+      users 
+    ON 
+      campaigns.created_by = users.user_id
+  `;
+  
+  
+    connection.query(query, (err, campaignResults) => {
+      if (err) {
+        console.error('Error fetching campaign info:', err);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+  
+      const data = {
+        campaigns: campaignResults,
+      };
+  
+      res.json({ success: true, data });
+    });
   };
   

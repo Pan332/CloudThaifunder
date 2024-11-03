@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar.jsx";
 import Footer from '../components/Footer.jsx';
 import './ViewInfo.css'; // Import custom CSS for styling
+import { Link } from 'react-router-dom';
 
 function ViewInfo() {
   const port = import.meta.env.VITE_API_URL;
@@ -117,13 +118,11 @@ function ViewInfo() {
       <div className="profile-container">
         <aside className="sidebar">
           <ul>
-            <li>Profile</li>
-            <li>My Campaign</li>
-            <li>Transaction</li>
-            <li>Notification</li>
-            <li>Billing</li>
-            <li>Dashboard</li>
-            <li>Delete Account</li>
+          <li><Link to='/ViewInfo'>Info</Link></li>
+            <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+            <li><Link to='/Transaction'>Transaction</Link></li>
+            <li><Link to='/Dashboard'>Dashboard</Link></li>
+            <li><Link to='/DeleteAccount'>Delete Account</Link></li>
           </ul>
         </aside>
         
@@ -131,12 +130,12 @@ function ViewInfo() {
           <div className="profile-card">
             <div className="profile-header">
               <img src="" alt="" />
-              <h1>{userInfo.first_name || "User Name"}</h1>
+              <h1>User Info</h1>
               <button className="btn-edit" onClick={handleEditToggle}>Edit</button>
             </div>
 
             <div className="profile-section">
-              <h3>Personal Information</h3>
+              <h1>Personal Information</h1>
               <div className="info-group">
                 <label>First Name</label>
                 <input className='inp'
