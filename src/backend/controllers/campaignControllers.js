@@ -7,22 +7,62 @@ export const createCampaign = (req, res) => {
     return res.status(401).json({ success: false, message: 'User not authenticated' });
   }
 
-  const { title, description, goal_amount, shortDescription, endDate, imageFile} = req.body;
-  const created_by = req.user.user_id; // Assuming you have user information from JWT
+  const { title, description, goal_amount, shortDescription, endDate, imageFile, category } = req.body;
+  const created_by = req.user.user_id;
 
   // Validate required fields
-  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || !imageFile) {
+  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || !imageFile || !category) {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
-  // Insert campaign into the database
-  const query = 'INSERT INTO Campaigns (title, description, goal_amount, created_by, status, short_description, deadline, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-  connection.query(query, [title, description, goal_amount, created_by, 'pending', shortDescription, endDate, imageFile], (err, results) => {
+  // Check if the category exists in campaigncategories table
+  const checkCategoryQuery = `SELECT category_id FROM campaigncategories WHERE category_name = ?`;
+  connection.query(checkCategoryQuery, [category], (err, categoryResults) => {
     if (err) {
-      console.error('Error executing insert query:', err);
-      return res.status(500).json({ success: false, message: 'Error executing query', error: err.message });
+      console.error('Error checking category:', err);
+      return res.status(500).json({ success: false, message: 'Error checking category', error: err.message });
     }
-    res.status(201).json({ success: true, message: 'Campaign created successfully', campaign_id: results.insertId });
+
+    if (categoryResults.length === 0) {
+      return res.status(400).json({ success: false, message: 'Invalid category' });
+    }
+
+    const category_id = categoryResults[0].category_id;
+
+    // Insert campaign into the database
+    const insertCampaignQuery = `
+      INSERT INTO campaigns (title, description, goal_amount, created_by, status, short_description, deadline, image)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    connection.query(
+      insertCampaignQuery,
+      [title, description, goal_amount, created_by, 'pending', shortDescription, endDate, imageFile],
+      (err, results) => {
+        if (err) {
+          console.error('Error executing insert query:', err);
+          return res.status(500).json({ success: false, message: 'Error executing query', error: err.message });
+        }
+
+        const campaign_id = results.insertId;
+
+        // Insert category into campaigncategorymapping table
+        const insertCategoryMappingQuery = `
+          INSERT INTO campaigncategorymapping (campaign_id, category_id) VALUES (?, ?)
+        `;
+        connection.query(insertCategoryMappingQuery, [campaign_id, category_id], (err) => {
+          if (err) {
+            console.error('Error inserting category mapping:', err);
+            return res.status(500).json({ success: false, message: 'Error inserting category mapping', error: err.message });
+          }
+
+          res.status(201).json({
+            success: true,
+            message: 'Campaign created successfully',
+            campaign_id: campaign_id
+          });
+        });
+      }
+    );
   });
 };
 
@@ -75,3 +115,4 @@ export const deleteCampaign = (req, res) => {
     res.status(200).json({ success: true, message: 'Campaign deleted successfully' });
   });
 };
+// Get the campaign ID from the URL parameters

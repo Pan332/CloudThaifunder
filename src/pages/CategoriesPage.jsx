@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar.jsx";
 import Footer from '../components/Footer.jsx';
 import Card from "../components/Card.jsx";
+import './CategoriesPage.css';
 
 function CategoriesPage() {
   const port = import.meta.env.VITE_API_URL;
   const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch(`${port}/view/Allcampaign`)
@@ -17,51 +20,59 @@ function CategoriesPage() {
       })
       .then(data => {
         if (data.success) {
-          console.log('Campaigns data:', data.data); // Log the data to console
-          setCampaigns(data.data.campaigns); // Assuming data.data.campaigns contains the array of campaigns
+          setCampaigns(data.data.campaigns);
         } else {
-          console.error(data.message);
+          setError(data.message || 'Failed to load campaigns');
         }
+        setLoading(false);
       })
-      .catch(error => console.error('Error fetching campaigns:', error));
+      .catch(error => {
+        setError(error.message);
+        setLoading(false);
+      });
   }, [port]);
 
-  // Helper function to calculate time remaining from the deadline
   const calculateTimeRemaining = (deadline) => {
     const deadlineDate = new Date(deadline);
     const now = new Date();
     const timeDifference = deadlineDate - now;
-
-    if (timeDifference > 0) {
-      const daysRemaining = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      return `${daysRemaining}`;
-    }
-    return "Campaign ended";
+    return timeDifference > 0
+      ? `${Math.floor(timeDifference / (1000 * 60 * 60 * 24))}`
+      : "Campaign ended";
   };
 
-  // Helper function to convert base64 to image URL
-  const getImageUrl = (base64Image) => {
-    return `data:image/jpeg;base64,${base64Image}`;
-  };
+  const getImageUrl = (base64Image) => `data:image/jpeg;base64,${base64Image}`;
 
   return (
     <>
       <Navbar />
-      <h1>All Categories</h1>
-      <div className="campaigns-container">
-        {campaigns.map((campaign, index) => (
-          <Card
-            key={index}
-            title={campaign.title}
-            name={campaign.first_name} // Assuming first_name is the campaign creator's name
-            image={getImageUrl(campaign.image)} // Convert base64 to image URL
-            description={campaign.short_description}
-            goal={campaign.goal_amount}
-            raised={campaign.raised_amount}
-            timeRemaining={calculateTimeRemaining(campaign.deadline)}
-          />
-        ))}
-      </div>
+      <main className="categories-page">
+        <h1>All Campaigns</h1>
+
+        {loading ? (
+          <p className="loading-message">Loading campaigns...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
+        ) : campaigns.length === 0 ? (
+          <p className="empty-message">No campaigns available at the moment.</p>
+        ) : (
+          <div className="campaigns-container">
+            {campaigns.map((campaign, index) => (
+              <Card
+                key={index}
+                id={campaign.campaign_id}
+                title={campaign.title}
+                name={campaign.first_name} // Assuming first_name is the creator's name
+                image={getImageUrl(campaign.image)} 
+                description={campaign.short_description}
+                goal={campaign.goal_amount}
+                raised={campaign.raised_amount}
+                timeRemaining={calculateTimeRemaining(campaign.deadline)}
+              />
+            ))}
+          </div>
+        )}
+      </main>
       <Footer />
     </>
   );

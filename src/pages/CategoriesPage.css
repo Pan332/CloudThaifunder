@@ -1,0 +1,51 @@
+.campaigns-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust this based on how many cards per row you want */
+    gap: 20px; /* Adds space between the cards */
+    padding: 20px;
+    justify-content: center; /* Center the card horizontally */
+    align-items: center; /* Center the card vertically */
+  }
+  
+  .campaigns-container > * {
+    width: 100%;
+  }
+  .categories-page {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .loading-message,
+  .error-message,
+  .empty-message {
+    font-size: 1.2em;
+    color: #333;
+    margin-top: 20px;
+  }
+  
+  .error-message {
+    color: red;
+  }
+  
+  .campaigns-container > * {
+    width: 100%;
+  }
+  
+
+  @media (max-width: 1024px) {
+    .campaigns-container {
+      grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+      justify-content: center; /* Center the cards horizontally on medium screens */
+    }
+  }
+  
+  /* For small screens (e.g., mobile devices) */
+  @media (max-width: 768px) {
+    .campaigns-container {
+      grid-template-columns: 1fr; /* 1 card per row (vertical layout) */
+      justify-content: center; /* Center the card horizontally on small screens */
+    }
+    .categories-page h1 {
+        font-size: 1.5em;
+      }
+  }

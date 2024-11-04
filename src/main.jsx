@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Homepage from './pages/Homepage.jsx';
 import './index.css';
-import DetailsPage from './pages/DetailsPage.jsx';
+import DetailsPage from './pages/CampaignsDetailsPage.jsx';
 
 import Charities from './pages/CharitiesPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
@@ -21,12 +21,11 @@ import ViewCampaign from './components/ViewCampaign.jsx';
 
 import Campaign from './pages/CampaignManager.jsx';
 import BadgeManager from './pages/BadgeManager.jsx';
-
+import CampaignsDetailsPage from './pages/CampaignsDetailsPage';
 
 const router = createBrowserRouter([
   { path: '/', element: <Homepage /> },
   { path: '/DetailsPage', element: <DetailsPage /> },
-
   { path: '/CharitiesPage', element: <Charities /> },
   { path: '/ContactPage', element: <ContactPage /> }, // Adjusted path to be more RESTful
   { path: '/AboutPage', element: <AboutPage /> }, // Adjusted path to be more RESTful
@@ -34,9 +33,7 @@ const router = createBrowserRouter([
   { path: '/RegisterPage', element: <SignupForm /> }, // Fixed the missing comma
   { path: '/ViewInfo', element: <ViewInfo /> },
   { path: '/ViewCampaign', element: <ViewCampaign /> },
-
   { path: '/BadgeManager', element: <BadgeManager /> },
-
   { path: '/CampaignManager', element: <Campaign /> },
   { path: '/CategoriesPage', element: <CategoriesPage /> },
   { path: '/GamesPage', element: <GamesPage /> },
@@ -44,6 +41,8 @@ const router = createBrowserRouter([
   { path: '/BooksPage', element: <BooksPage /> },
   { path: '/TechnologyPage', element: <TechnologyPage /> },
   { path: '/EducationPage', element: <EducationPage /> },
+  { path: '/CampaignsDetailsPage/:id/:title/:name', element: <CampaignsDetailsPage /> },
+
 
 ]);
 

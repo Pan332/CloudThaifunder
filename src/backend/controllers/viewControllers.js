@@ -215,4 +215,38 @@ export const updateUserInfo = async (req, res) => {
       res.json({ success: true, data });
     });
   };
-  
+  export const getCampaignById = (req, res) => {
+    const { id } = req.params; // Get the campaign ID from URL parameters
+
+    // SQL query to fetch campaign data along with the creator's name
+    const query = `
+      SELECT 
+        campaigns.campaign_id AS id,
+        campaigns.title,
+        campaigns.description,
+        campaigns.short_description,
+        campaigns.goal_amount,
+        campaigns.raised_amount,
+        campaigns.status,
+        campaigns.deadline,
+        campaigns.image,
+        users.first_name AS creator_name
+      FROM campaigns
+      JOIN users ON campaigns.created_by = users.user_id
+      WHERE campaigns.campaign_id = ?
+    `;
+
+    connection.query(query, [id], (err, campaignResults) => {
+        if (err) {
+            console.error('Error fetching campaign info:', err);
+            return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+
+        if (campaignResults.length === 0) {
+            return res.status(404).json({ success: false, message: 'Campaign not found' });
+        }
+
+        // Return the campaign found
+        res.json({ success: true, data: campaignResults[0] });
+    });
+};

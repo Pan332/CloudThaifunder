@@ -7,7 +7,7 @@ function Card({ id, title, name, image, description = '', goal, raised, timeRema
   const progressPercentage = Math.min((raised / goal) * 100, 100);
 
   return (
-    <Link to={`/campaign/${id}`} className="campaign-card-link">
+    <Link to={`/CampaignsDetailsPage/${id}/${title}/${name}`} className="campaign-card-link">
       <div className="campaign-card">
         <img src={image} alt={title} className="campaign-image" />
         <div className="card-content">

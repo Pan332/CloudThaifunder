@@ -8,7 +8,7 @@ import checkconnection from './routes/check-connection.js';
 import campaignRoutes from './routes/campaign.js';
 import userView from './routes/view.js';
 import badgeRoutes from './routes/badge.js';
-
+import router from './routes/view.js';
 
 dotenv.config({ path: './.env' });
 
@@ -20,7 +20,7 @@ app.use(cors({
     credentials: true 
   }));
   
-  
+
   app.use(express.urlencoded({limit: '10mb',  extended: true }));
   app.use(express.json());
 
@@ -31,6 +31,7 @@ app.use('/campaign', campaignRoutes);
 
 app.use('/view',userView);
 app.use('/badge',badgeRoutes);
+app.use('/api', router);
 
 
 

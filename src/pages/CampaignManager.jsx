@@ -10,7 +10,6 @@ const CampaignManager = () => {
   const [shortDescription, setShortDescription] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');  // New state for category
-
   const [goalAmount, setGoalAmount] = useState('');
   const [endDate, setEndDate] = useState('');      // New state for end date
   const [editingCampaignId, setEditingCampaignId] = useState(null);
@@ -100,7 +99,8 @@ const CampaignManager = () => {
           goal_amount: goalAmount,
           shortDescription,
           endDate,
-          imageFile
+          imageFile,
+          category
         }),
       });
 
