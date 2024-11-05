@@ -11,7 +11,7 @@ export const createCampaign = (req, res) => {
   const created_by = req.user.user_id;
 
   // Validate required fields
-  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || !imageFile || !category) {
+  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || imageFile || !category) {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 

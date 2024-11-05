@@ -1,4 +1,6 @@
 import './Dashboard.css'; // Optional: for custom styling
+import Search from "../components/Search.jsx";
+import { CampaignProvider } from '../components/CampaignContext';
 
 function Dashboard(){
     return(
@@ -11,11 +13,11 @@ function Dashboard(){
                     <h1 className='overlay-text'>Fundraiser</h1>
                     <p className='overlay-text2'>For charities No fee.</p>
                         <div className='custom-search-container'>
-                            <input type="text"className='custom-search-input'placeholder='Search campaigns'aria-label='Search'/>
-                            <button className='custom-search-button'>
-                            <i className="fas fa-search"></i>
-                            </button>
+                            <CampaignProvider>
+                                 <Search/>
+                             </CampaignProvider>
                         </div>
+                    
                 </div>
             </div>
         </div>

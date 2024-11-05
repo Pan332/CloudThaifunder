@@ -72,8 +72,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #535252; /* Dark background color */
-    border-radius: 50px; /* Rounded edges */
     padding: 5px 15px; /* Add some padding for space */
     width: 280px; /* Default width for desktop */
     margin: 20px auto; /* Center it on the page */

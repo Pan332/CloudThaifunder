@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from '../components/Footer.jsx';
 import Card from "../components/Card.jsx";
 import './CategoriesPage.css';
+import Search from "../components/Search.jsx";
+import { CampaignProvider } from '../components/CampaignContext';
 
 function CategoriesPage() {
   const port = import.meta.env.VITE_API_URL;
@@ -44,19 +46,25 @@ function CategoriesPage() {
   const getImageUrl = (base64Image) => `data:image/jpeg;base64,${base64Image}`;
 
   return (
-    <>
+    <> 
+    <CampaignProvider>
       <Navbar />
       <main className="categories-page">
         <h1>All Campaigns</h1>
-
+          <Search/>
+      
         {loading ? (
           <p className="loading-message">Loading campaigns...</p>
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : campaigns.length === 0 ? (
           <p className="empty-message">No campaigns available at the moment.</p>
-        ) : (
+        ) : 
+        
+        (
+          
           <div className="campaigns-container">
+         
             {campaigns.map((campaign, index) => (
               <Card
                 key={index}
@@ -70,10 +78,13 @@ function CategoriesPage() {
                 timeRemaining={calculateTimeRemaining(campaign.deadline)}
               />
             ))}
+         
           </div>
+          
         )}
       </main>
       <Footer />
+      </CampaignProvider>
     </>
   );
 }
