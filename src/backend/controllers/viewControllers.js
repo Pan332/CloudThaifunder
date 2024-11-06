@@ -250,3 +250,55 @@ export const updateUserInfo = async (req, res) => {
         res.json({ success: true, data: campaignResults[0] });
     });
 };
+
+// COUNT Campaign
+export const CountAllCampaign = (req, res) => {
+  // SQL query to count all campaigns
+  const query = `
+    SELECT COUNT(campaign_id) AS totalCampaigns FROM campaigns`;
+
+  connection.query(query, (err, campaignResults) => {
+      if (err) {
+          console.error('Error fetching campaign count:', err);
+          return res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+
+      // Return the count of campaigns
+      res.json({ success: true, data: { totalCampaigns: campaignResults[0].totalCampaigns } });
+  });
+};
+
+// COUNT USER
+export const CountAllUser = (req, res) => {
+  // SQL query to count all users
+  const query = `
+    SELECT COUNT(user_id) AS totalUsers FROM users`;
+
+  connection.query(query, (err, userResults) => {
+      if (err) {
+          console.error('Error fetching user count:', err);
+          return res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+
+      // Return the count of users
+      res.json({ success: true, data: { totalUsers: userResults[0].totalUsers } });
+  });
+};
+
+export const CountAllAmount = (req, res) => {
+  // SQL query to sum all donation amounts
+  const query = `
+    SELECT SUM(amount) AS totalAmount FROM donations`;
+
+  connection.query(query, (err, amountResults) => {
+      if (err) {
+          console.error('Error fetching total amount:', err);
+          return res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+
+      // Return the total donation amount
+      res.json({ success: true, data: { totalAmount: amountResults[0].totalAmount } });
+  });
+};
+
+

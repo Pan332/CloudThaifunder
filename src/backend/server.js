@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import checkconnection from './routes/check-connection.js';
 import campaignRoutes from './routes/campaign.js';
+import commentRoutes from './routes/comment.js';
 import userView from './routes/view.js';
 import badgeRoutes from './routes/badge.js';
 import router from './routes/view.js';
@@ -28,10 +29,10 @@ app.use(cors({
 app.use('/auth', authRoutes);
 app.use('/', checkconnection);
 app.use('/campaign', campaignRoutes);
-
 app.use('/view',userView);
 app.use('/badge',badgeRoutes);
 app.use('/api', router);
+app.use('/comment', commentRoutes);
 
 
 

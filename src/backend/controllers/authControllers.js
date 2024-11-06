@@ -12,11 +12,11 @@ if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
 
 // Function to generate access token
 const jwtGenerate = (user) => {
-  const expiresIn = Math.floor(Date.now() / 1000) + 15 * 60; // 15 minutes
+  const expiresIn = Math.floor(Date.now() / 1000) + 30 * 60; // 30 minutes
   return jwt.sign(
     { username: user.username, user_id: user.user_id, role: user.role },
     process.env.ACCESS_TOKEN_SECRET,
-    { algorithm: "HS256", expiresIn: '15m' }
+    { algorithm: "HS256", expiresIn: '30m' }
   );
 }
 

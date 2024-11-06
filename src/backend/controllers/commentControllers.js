@@ -5,27 +5,27 @@ import jwt from 'jsonwebtoken';
 dotenv.config({path:'../.env'});
 
 // Add comment
-export const Reviewcommentdata = async (req, res) => {
-    const { accessToken, comment , title } = req.body;
-    try {
-      // Decode access token to extract username
-      const decoded = jwt(accessToken);
-      const username = decoded.name; 
-       
-      // Insert comment into the database along with the username and recipe title
-      connection.query('INSERT INTO reviews (username, title, comment) VALUES (?, ?, ?)', [username, title, comment], (err, result) => {
-        if (err) {
-          console.error('Error executing query:', err);
-          return res.status(500).json({ success: false, message: 'Error executing query' });
-        }
-        // Check if comment was successfully inserted
-        res.status(201).json({ success: true, message: 'Comment registered successfully' });
-      });
-    } catch (error) {
-      console.error('Error submitting comment:', error);
-      return res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-  };
+export const addComment = (req, res) => {
+  const { campaign_id, comment_text } = req.body;
+  const user_id = req.user.user_id; // User ID from the token
+
+  if (!campaign_id || !comment_text) {
+    return res.status(400).json({ success: false, message: 'Campaign ID and comment text are required' });
+  }
+  const query = `
+      INSERT INTO comments (campaign_id, user_id, comment_text, created_at) 
+      VALUES (?, ?, ?, NOW())`;
+
+  connection.query(query, [campaign_id, user_id, comment_text], (err, results) => {
+      if (err) {
+          console.error('Error adding comment:', err);
+          return res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+
+      res.json({ success: true, message: 'Comment added successfully' });
+  });
+};
+
 
 // Delete a comment by ID
 export const deleteComment = async (req, res) => {
@@ -64,30 +64,19 @@ export const deleteComment = async (req, res) => {
   }
 };
 
-
-  export const DisplayAllComment = (req, res) => {
-    const { title } = req.body; // Extract title from req.body
-    connection.query('SELECT * FROM reviews WHERE title = ?', [title], (err, results) => {
-        if (err) {
-            console.error('Error fetching comments:', err);
-            return res.status(500).json({ success: false, message: 'Error fetching comments' });
-        }
-        return res.json({ success: true, comments: results });
-    });
-};
-
+// commentControllers.js
 export const getComments = (req, res) => {
-  const { title } = req.body;
+  const { campaign_id } = req.params;
 
-  // Use a JOIN query to get comments along with the username
+  // Use a JOIN query to get comments along with the user's first name
   const query = `
-    SELECT reviews.*, users.username, created_at , id
-    FROM reviews
-    JOIN users ON reviews.username = users.username
-    WHERE reviews.title = ?
-`;
+    SELECT comments.comment_text, users.first_name, comments.created_at, comments.comment_id
+    FROM comments
+    JOIN users ON comments.user_id = users.user_id
+    WHERE comments.campaign_id = ?
+  `;
 
-  connection.query(query, [title], (error, results) => {
+  connection.query(query, [campaign_id], (error, results) => {
       if (error) {
           console.error('Error fetching comments:', error);
           return res.status(500).json({ success: false, message: 'Internal server error' });
@@ -96,9 +85,9 @@ export const getComments = (req, res) => {
       // Map the results to include only necessary fields
       const comments = results.map(comment => ({
           commentId: comment.id,
-          comment: comment.comment,
+          commentText: comment.comment_text,
           timestamp: comment.created_at,
-          username: comment.username
+          firstName: comment.first_name
       }));
 
       // Send the comments back as a response

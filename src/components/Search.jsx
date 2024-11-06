@@ -12,7 +12,7 @@ const Search = () => {
 
   // Configure Fuse.js options
   const options = {
-    keys: ['title', 'description', 'category'], // Customize based on your campaign data fields
+    keys: ['title', 'short_description', 'category'], // Customize based on your campaign data fields
     threshold: 0.4, // Adjust sensitivity of search
     minMatchCharLength: 2,
   };
@@ -51,7 +51,7 @@ const Search = () => {
             <a href={`/campaign/${campaign.id}`} className="result-title">
               {campaign.title}
             </a>
-            <p className="result-description">{campaign.description}</p>
+            <p className="result-description">{campaign.short_description}</p>
           </li>
         ))}
       </ul>

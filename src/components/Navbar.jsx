@@ -59,7 +59,7 @@ const Navbar = () => {
               onMouseLeave={toggleCategoriesDropdown}
             >
               <Link to="/CategoriesPage">
-                Categories <span className="dropdown-arrow">▼</span>
+                All campaigns <span className="dropdown-arrow">▼</span>
               </Link>
               {isCategoriesDropdownOpen && (
                 <ul className="dropdown">
