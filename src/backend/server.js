@@ -1,6 +1,4 @@
 import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
@@ -9,7 +7,12 @@ import campaignRoutes from './routes/campaign.js';
 import commentRoutes from './routes/comment.js';
 import userView from './routes/view.js';
 import badgeRoutes from './routes/badge.js';
+import adminRoutes from './routes/admin.js';
+
 import router from './routes/view.js';
+import transactionRoutes from './routes/transaction.js'
+import { isAuthenticated } from './middleware/backend/isAuth.js';
+import { verifyAdmin } from './middleware/backend/isAdmin.js';
 
 dotenv.config({ path: './.env' });
 
@@ -22,7 +25,7 @@ app.use(cors({
   }));
   
 
-  app.use(express.urlencoded({limit: '10mb',  extended: true }));
+  app.use(express.urlencoded({limit: '50mb',  extended: true }));
   app.use(express.json());
 
 // Routes
@@ -31,9 +34,13 @@ app.use('/', checkconnection);
 app.use('/campaign', campaignRoutes);
 app.use('/view',userView);
 app.use('/badge',badgeRoutes);
+app.use('/admin',adminRoutes);
+
 app.use('/api', router);
 app.use('/comment', commentRoutes);
-
+app.use('/badge',verifyAdmin,badgeRoutes);
+app.use('/api/paypal',isAuthenticated, transactionRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 // Error handling middleware

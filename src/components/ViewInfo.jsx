@@ -13,6 +13,8 @@ function ViewInfo() {
     last_name: '',
     email: '',
     phone: '',
+    age:'',
+    gender:'',
     address: '',
     city: '',
     postcode: ''
@@ -117,27 +119,43 @@ function ViewInfo() {
       <Navbar />
       <div className="profile-container">
         <aside className="sidebar">
-          <ul>
-          <li><Link to='/ViewInfo'>Info</Link></li>
-            <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-            <li><Link to='/Transaction'>Transaction</Link></li>
-            <li><Link to='/Dashboard'>Dashboard</Link></li>
-            <li><Link to='/DeleteAccount'>Delete Account</Link></li>
-          </ul>
+        {userInfo.role === 'admin' ? (
+    // Admin sidebar
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/AlluserAdmin'>View all Account</Link></li>
+      <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
+      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/AdminDashboard'>Dashboard</Link></li>
+    </ul>
+  ) : (
+    // Normal user sidebar
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/Dashboard'>Dashboard</Link></li>
+      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+    </ul>
+  )}
         </aside>
         
         <main className="profile-content">
           <div className="profile-card">
+
             <div className="profile-header">
               <img src="" alt="" />
-              <h1>User Info</h1>
-              <button className="btn-edit" onClick={handleEditToggle}>Edit</button>
+         
             </div>
 
             <div className="profile-section">
               <h1>Personal Information</h1>
+              <button className="btn-edit" onClick={handleEditToggle}>Edit</button>
+
               <div className="info-group">
-                <label>First Name</label>
+                <label className='lb'>First Name</label>
                 <input className='inp'
                   type="text"
                   name="first_name"
@@ -145,7 +163,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                <label>Last Name</label>
+                <label className='lb'>Last Name</label>
                 <input className='inp'
                   type="text"
                   name="last_name"
@@ -153,7 +171,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                <label>Email</label>
+                <label className='lb'>Email</label>
                 <input className='inp'
                   type="email"
                   name="email"
@@ -161,7 +179,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                <label>Phone</label>
+                <label className='lb'>Phone</label>
                 <input className='inp'
                   type="text"
                   name="phone"
@@ -169,15 +187,34 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
+                   <label className='lb'>Age</label>
+                <input className='inp'
+                  type="text"
+                  name="age"
+                  value={userInfo.age}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+                   <label className='lb'>Gender</label>
+                <input className='inp'
+                  type="text"
+                  name="gender"
+                  value={userInfo.gender}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+             
               </div>
+            
             </div>
           </div>
 
           <div className="profile-card">
-            <h1>Address</h1>
             <div className="profile-section">
+            <h1>Address</h1>
+
               <div className="info-group">
-                <label>Address</label>
+                <label className='lb'>Address</label>
                 <input className='inp'
                   type="text"
                   name="address"
@@ -185,7 +222,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                <label>City/State</label>
+                <label className='lb'>City/State</label>
                 <input className='inp'
                   type="text"
                   name="city"
@@ -193,7 +230,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                <label>Postcode</label>
+                <label className='lb'>Postcode</label>
                 <input className='inp'
                   type="text"
                   name="postcode"

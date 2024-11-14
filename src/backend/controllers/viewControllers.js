@@ -24,7 +24,7 @@ export const getUserInfo = (req, res) => {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const userId = decoded.user_id;
 
-    connection.query('SELECT user_id, first_name, last_name, email, phone FROM users WHERE user_id = ?', [userId], (err, userResults) => {
+    connection.query('SELECT user_id, first_name, last_name, email, phone, role, age, gender FROM users WHERE user_id = ?', [userId], (err, userResults) => {
       if (err) {
         console.error('Error fetching user info:', err);
         return res.status(500).json({ success: false, message: 'Internal server error' });
@@ -59,13 +59,13 @@ export const getUserInfo = (req, res) => {
 // Update user info
 export const updateUserInfo = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
-    const { first_name, last_name, email, phone, address, city, postcode } = req.body;
+    const { first_name, last_name, email, phone, address, city, postcode, age, gender } = req.body;
   
     if (!token) {
       return res.status(401).json({ success: false, message: 'Access token is missing' });
     }
   
-    if (!first_name && !last_name && !email && !phone && !address && !city && !postcode) {
+    if (!first_name && !last_name && !email && !phone && !address && !city && !postcode && !age && !gender) {
       return res.status(400).json({ success: false, message: 'At least one field must be provided to update' });
     }
   
@@ -74,8 +74,8 @@ export const updateUserInfo = async (req, res) => {
       const userId = decoded.user_id;
   
       const userUpdateResult = await queryDatabase(
-        'UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE user_id = ?',
-        [first_name || null, last_name || null, email || null, phone || null, userId]
+        'UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ?, age = ?, gender = ? WHERE user_id = ?',
+        [first_name || null, last_name || null, email || null, phone || null, age || null, gender || null, userId]
       );
   
       if (userUpdateResult.affectedRows === 0) {
@@ -182,23 +182,34 @@ export const updateUserInfo = async (req, res) => {
   export const getAllCampaign = (req, res) => {
     // Fetch all campaigns along with the first name of the user who created each campaign
     const query = `
-    SELECT 
-      campaigns.campaign_id, 
-      campaigns.title, 
-      campaigns.description, 
-      campaigns.short_description, 
-      campaigns.goal_amount, 
-      campaigns.raised_amount, 
-      campaigns.status, 
-      campaigns.deadline,
-      campaigns.image, 
-      users.first_name 
-    FROM 
-      campaigns
-    JOIN 
-      users 
-    ON 
-      campaigns.created_by = users.user_id
+ SELECT 
+    campaigns.campaign_id, 
+    campaigns.title, 
+    campaigns.description, 
+    campaigns.short_description, 
+    campaigns.goal_amount, 
+    campaigns.raised_amount, 
+    campaigns.status, 
+    campaigns.deadline,
+    campaigns.image, 
+    users.first_name,
+    campaigncategories.category_name AS campaign_tag
+FROM 
+    campaigns
+JOIN 
+    users 
+ON 
+    campaigns.created_by = users.user_id
+LEFT JOIN 
+    campaigncategorymapping 
+ON 
+    campaigns.campaign_id = campaigncategorymapping.campaign_id
+LEFT JOIN 
+    campaigncategories 
+ON 
+    campaigncategorymapping.category_id = campaigncategories.category_id
+WHERE campaigns.status = 'verified';
+
   `;
   
   
@@ -300,5 +311,4 @@ export const CountAllAmount = (req, res) => {
       res.json({ success: true, data: { totalAmount: amountResults[0].totalAmount } });
   });
 };
-
 

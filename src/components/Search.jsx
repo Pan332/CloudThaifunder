@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Fuse from 'fuse.js';
 import { useCampaigns } from './CampaignContext';
+import { Link } from 'react-router-dom';
 
 import './Search.css'; // Assuming you have a CSS file for styling
 
@@ -9,10 +10,9 @@ const Search = () => {
   const { campaigns } = useCampaigns(); // Use the campaigns from the CampaignContext
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-
   // Configure Fuse.js options
   const options = {
-    keys: ['title', 'short_description', 'category'], // Customize based on your campaign data fields
+    keys: ['title', 'short_description', 'first_name'], // Customize based on your campaign data fields
     threshold: 0.4, // Adjust sensitivity of search
     minMatchCharLength: 2,
   };
@@ -47,12 +47,15 @@ const Search = () => {
 
       <ul className="search-results">
         {searchResults.map((campaign, index) => (
-          <li key={index} className="search-result-item">
-            <a href={`/campaign/${campaign.id}`} className="result-title">
-              {campaign.title}
-            </a>
-            <p className="result-description">{campaign.short_description}</p>
-          </li>
+      <li key={index} className="search-result-item">
+      <Link to={`/CampaignsDetailsPage/${campaign.campaign_id}/${campaign.title}/${campaign.first_name}`} className="search-result-link">
+        <p className="result-title">
+          {campaign.title}
+        </p>
+        <p className="result-fname">By {campaign.first_name}</p>
+        <p className="result-description">{campaign.short_description}</p>
+      </Link>
+    </li>
         ))}
       </ul>
     </div>

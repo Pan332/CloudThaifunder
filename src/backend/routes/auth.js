@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { login ,register,jwtValidate} from '../controllers/authControllers.js'
-import { createCampaign } from '../controllers/campaignControllers.js';
 
 
 

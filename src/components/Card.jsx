@@ -22,7 +22,7 @@ function Card({ id, title, name, image, description = '', goal, raised, timeRema
             <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
             <span className="progress-percentage">{Math.round(progressPercentage)}%</span>
           </div>
-          <p className="time-remaining">{timeRemaining} days left</p>
+          <p className="time-remaining">{timeRemaining}</p>
         </div>
       </div>
     </Link>

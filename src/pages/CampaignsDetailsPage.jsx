@@ -33,7 +33,6 @@ function CampaignsDetailsPage() {
         setLoading(false);
       });
   }, [port, id]);
-
   // Calculate time remaining for campaign
   const calculateTimeRemaining = (deadline) => {
     const deadlineDate = new Date(deadline);
@@ -61,7 +60,7 @@ function CampaignsDetailsPage() {
       setCommentsLoading(false);
     }
   };
-
+  console.log(campaign)
   useEffect(() => {
     fetchComments();
   }, [id]);
@@ -116,10 +115,10 @@ function CampaignsDetailsPage() {
             <div className="image-section">
               <h1>{campaign.title}</h1>
               <img
-                src={`data:image/jpeg;base64,${campaign.image}`}
-                alt={campaign.title}
-                className="campaign-images"
-              />
+        src={`${port}/${campaign.image}`}
+          alt={campaign.title}
+           className="campaign-images"
+                  />
             </div>
 
             <div className="info-section">
@@ -131,13 +130,17 @@ function CampaignsDetailsPage() {
 
               <div className="description">
                 <h2>Description</h2>
-                <p>{campaign.description}</p>
-              </div>
+                <p dangerouslySetInnerHTML={{ __html: campaign.description }}></p>
+                </div>
 
               <div className="donation-section">
                 <button className="donate-button">Donate Now</button>
               </div>
-              <form onSubmit={handleCommentSubmit} className="comment-form">
+          
+
+              <div className="comments-section">
+                <h2>Comments</h2>
+                <form onSubmit={handleCommentSubmit} className="comment-form">
                 <textarea
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
@@ -146,9 +149,6 @@ function CampaignsDetailsPage() {
                 />
                 <button type="submit">Post Comment</button>
               </form>
-
-              <div className="comments-section">
-                <h2>Comments</h2>
                 {commentsLoading ? (
                   <p>Loading comments...</p>
                 ) : (

@@ -23,15 +23,11 @@ const CampaignManager = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result.split(",")[1]; // Get only the Base64 part after the comma
-        setImageFile(base64String); // Assign the Base64 string to imageFile for DB storage
-        setImagePreview(reader.result); // Full Base64 string for preview with MIME type
-      };
-      reader.readAsDataURL(file); // Trigger Base64 conversion
-
+    if (file && file.type.startsWith('image/')) {
+      setImagePreview(URL.createObjectURL(file)); 
+      setImageFile(file); 
+    } else {
+      setError('Please select a valid image file.');
     }
   };
 
@@ -79,60 +75,55 @@ const CampaignManager = () => {
 
   const handleCreateCampaign = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('access_token');
-
-    if (!token) {
-      setError('You are not authenticated. Please log in.');
+    if (!title || !shortDescription || !description || !goalAmount || !endDate || !imageFile) {
+      setError('All fields are required');
       return;
     }
 
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('shortDescription', shortDescription);
+    formData.append('description', description);
+    formData.append('goal_amount', goalAmount);
+    formData.append('endDate', endDate);
+    formData.append('category', category);
+    formData.append('imageFile', imageFile);
+
+    setLoading(true);
     try {
       const response = await fetch(`${port}/campaign/createcampaign`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
-        body: JSON.stringify({
-          title,
-          description,
-          goal_amount: goalAmount,
-          shortDescription,
-          endDate,
-          imageFile,
-          category
-        }),
+        body: formData,
       });
 
-      if (!response.ok) throw new Error('Failed to create campaign');
+      const result = await response.json();
 
-      resetForm();
-      setSuccess('Campaign created successfully!');
-      checkAuthAndFetchCampaigns();
+      if (response.status === 200) {
+        setSuccess(result.message);
+        setTitle('');
+        setShortDescription('');
+        setDescription('');
+        setGoalAmount('');
+        setEndDate('');
+        setImageFile(null);
+        setImagePreview('');
+        setError('');
+      } else {
+        setError(result.message || 'Something went wrong');
+      }
     } catch (error) {
-      console.error('Error creating campaign:', error);
-      setError('An error occurred while creating the campaign.');
+      setError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const resetForm = () => {
-    setTitle('');
-    setShortDescription('');
-    setDescription('');
-    setGoalAmount('');
-    setEndDate('');
-    setImageFile(null);
-    setImagePreview(null);
-    setEditingCampaignId(null);
-    setError('');
-    setSuccess('');
   };
 
   const handleClose = () => {
     navigate('/');
   };
-
-
 
   return (
     <div className="campaign-manager">

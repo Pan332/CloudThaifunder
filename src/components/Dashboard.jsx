@@ -84,7 +84,7 @@ function Dashboard() {
                     <h1 className='overlay-text'>Fundraiser</h1>
                     <p className='overlay-text2'>For charities No fee.</p>
                     <div className='pic'>
-                        <h1 className='overlay-text'>Fundraiser</h1>
+                        <h1 className='overlay-text'>Empowering Charities Together</h1>
                         <p className='overlay-text2'>For charities No fee.</p>
                         <div className='custom-search-container'>
                             <CampaignProvider>

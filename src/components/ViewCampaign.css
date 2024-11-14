@@ -1,6 +1,7 @@
 .profile-container {
     display: flex;
     padding: 20px;
+    
   }
   
   .sidebar {
@@ -120,4 +121,3 @@
   .campaign-list p {
     margin: 5px 0;
   }
-  

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BiLogOut } from "react-icons/bi"; // Import BiLogOut icon from react-icons
 import { FaRegUserCircle } from "react-icons/fa"; // Import user icon from react-icons
-
 import LoginModal from './LoginModal';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
@@ -59,7 +58,7 @@ const Navbar = () => {
               onMouseLeave={toggleCategoriesDropdown}
             >
               <Link to="/CategoriesPage">
-                All campaigns <span className="dropdown-arrow">▼</span>
+                All Campaigns <span className="dropdown-arrow">▼</span>
               </Link>
               {isCategoriesDropdownOpen && (
                 <ul className="dropdown">

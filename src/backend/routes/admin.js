@@ -1,0 +1,17 @@
+import express from 'express';
+import { isAuthenticated } from '../middleware/backend/isAuth.js';
+import { verifyAdmin } from '../middleware/backend/isAdmin.js';
+import { getAlluser, editUserInfo, deleteUser, getAllCampaign, hideCampaigns, PendingCampaigns, ValidateCampaigns } from '../controllers/adminControllers.js';
+
+const router = express.Router();
+
+router.get('/getAlluser', verifyAdmin, getAlluser);
+router.put('/editInfo/:id', verifyAdmin, editUserInfo); // Edit user info by ID
+router.delete('/deleteUser/:id', verifyAdmin,  deleteUser); // Delete user by ID
+router.get('/getAllcampaigns', verifyAdmin, getAllCampaign);
+router.put('/hideCampaigns/:id', verifyAdmin, hideCampaigns); // Edit user info by ID
+router.get('/PendingCampaigns', verifyAdmin, PendingCampaigns);
+router.put('/ValidateCampaigns/:id', verifyAdmin, ValidateCampaigns);
+
+
+export default router;

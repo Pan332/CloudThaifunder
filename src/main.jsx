@@ -18,10 +18,15 @@ import BooksPage from './pages/BooksPage.jsx';
 import TechnologyPage from './pages/TechnologyPage.jsx';
 import ViewInfo from './components/ViewInfo.jsx';
 import ViewCampaign from './components/ViewCampaign.jsx';
-
+import AlluserAdmin from './components/AlluserAdmin.jsx';
+import AllcampaignsAdmin from './components/AllcampaignsAdmin.jsx';
+import CampaignsValidate from './components/CampaignsValidate.jsx';
+import AdminDashboard from './components/AdminDashboard.jsx';
+import Unauthorized from './pages/Unauthorized.jsx';
 import Campaign from './pages/CampaignManager.jsx';
 import BadgeManager from './pages/BadgeManager.jsx';
 import CampaignsDetailsPage from './pages/CampaignsDetailsPage';
+import { CampaignProvider } from './components/CampaignContext';
 
 const router = createBrowserRouter([
   { path: '/', element: <Homepage /> },
@@ -33,6 +38,11 @@ const router = createBrowserRouter([
   { path: '/RegisterPage', element: <SignupForm /> }, // Fixed the missing comma
   { path: '/ViewInfo', element: <ViewInfo /> },
   { path: '/ViewCampaign', element: <ViewCampaign /> },
+  { path: '/AlluserAdmin', element: <AlluserAdmin /> },
+  { path: '/AllcampaignsAdmin', element: <AllcampaignsAdmin /> },
+  { path: '/CampaignsValidate', element: <CampaignsValidate /> },
+  { path: '/AdminDashboard', element: <AdminDashboard /> },
+  { path: '/Unauthorized', element: <Unauthorized /> },
   { path: '/BadgeManager', element: <BadgeManager /> },
   { path: '/CampaignManager', element: <Campaign /> },
   { path: '/CategoriesPage', element: <CategoriesPage /> },
@@ -47,7 +57,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('index')).render(
+  <CampaignProvider>
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>
+  </CampaignProvider>
 );

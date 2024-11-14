@@ -94,7 +94,9 @@ export const login = async (req, res) => {
       if (await bcrypt.compare(password, user.password_hash)) {
         const access_token = jwtGenerate(user);
         const refresh_token = jwtRefreshTokenGenerate(user);
-        return res.status(200).json({ success: true, access_token, refresh_token });
+        const role = user.role;
+
+        return res.status(200).json({ success: true, access_token, refresh_token, role });
       } else {
         return res.status(401).json({ success: false, message: 'Invalid password' });
       }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 const LoginModal = ({ closeModal }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -32,15 +33,18 @@ const LoginModal = ({ closeModal }) => {
       });
 
       const data = await response.json();
-
+      console.log(data)
       if (response.ok) {
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
+        localStorage.setItem('role', data.role);
+
+        
         setShowWelcome(true); // Show welcome message
         setTimeout(() => {
           setShowWelcome(false);
           closeModal(); // Close modal after welcome message
-        }, 2000); // Hide after 3 seconds
+        }, 700); // Hide after 3 seconds
       } else {
         setError(data.message || 'Login failed. Please try again.');
       }

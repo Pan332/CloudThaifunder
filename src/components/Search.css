@@ -47,6 +47,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
+    background-color: #4a4a4a;
   }
   
   .result-title {
@@ -59,3 +60,9 @@
     color: #fff;
   }
   
+  .result-fname{
+    color: white;
+  }
+  .search-result-link{
+    text-decoration: none;
+  }

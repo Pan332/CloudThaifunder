@@ -7,11 +7,12 @@ export const createCampaign = (req, res) => {
     return res.status(401).json({ success: false, message: 'User not authenticated' });
   }
 
-  const { title, description, goal_amount, shortDescription, endDate, imageFile, category } = req.body;
+  const { title, description, goal_amount, shortDescription, endDate, category } = req.body;
   const created_by = req.user.user_id;
+  const imagePath = req.body.imagePath;
 
   // Validate required fields
-  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || imageFile || !category) {
+  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || !imagePath || !category) {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
@@ -36,7 +37,7 @@ export const createCampaign = (req, res) => {
     `;
     connection.query(
       insertCampaignQuery,
-      [title, description, goal_amount, created_by, 'pending', shortDescription, endDate, imageFile],
+      [title, description, goal_amount, created_by, 'pending', shortDescription, endDate, imagePath],
       (err, results) => {
         if (err) {
           console.error('Error executing insert query:', err);
@@ -65,7 +66,6 @@ export const createCampaign = (req, res) => {
     );
   });
 };
-
 // Read All Campaigns
 export const getCampaigns = (req, res) => {
   const query = 'SELECT * FROM Campaigns WHERE status = "pending"';
