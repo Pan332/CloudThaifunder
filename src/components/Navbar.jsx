@@ -3,13 +3,14 @@ import { BiLogOut } from "react-icons/bi"; // Import BiLogOut icon from react-ic
 import { FaRegUserCircle } from "react-icons/fa"; // Import user icon from react-icons
 import LoginModal from './LoginModal';
 import './Navbar.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isCategoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
@@ -38,6 +39,8 @@ const Navbar = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     setIsLoggedIn(false);
+    navigate('/');
+
   };
 
   return (

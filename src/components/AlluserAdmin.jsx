@@ -13,7 +13,6 @@ function AlluserAdmin() {
   const [error, setError] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [editingUser, setEditingUser] = useState(null);
   const [editData, setEditData] = useState({
     email: '',
@@ -25,14 +24,17 @@ function AlluserAdmin() {
 
   // State for sorting
   const [sortConfig, setSortConfig] = useState({ key: 'email', direction: 'ascending' });
-
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const rowsPerPage = 12; // Rows per page
+  
+  
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
       navigate('/');
       return;
     }
-
+    
     const userRole = localStorage.getItem('role');
     if (userRole === 'admin') {
       setIsAdmin(true);
@@ -175,6 +177,19 @@ function AlluserAdmin() {
       direction = 'descending';
     }
     setSortConfig({ key, direction });
+  };
+
+
+
+  const paginatedUsers = sortedUsers.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const totalPages = Math.ceil(users.length / rowsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   if (!isAdmin) {
@@ -328,6 +343,30 @@ function AlluserAdmin() {
   from { transform: translateY(-20px); }
   to { transform: translateY(0); }
 }
+  .pagination {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.pagination .btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #2196F3;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination .btn:hover {
+  background-color: #ddd;
+}
+
+.pagination .btn-active {
+  background-color: #2196F3;
+  color: white;
+  border-color: #2196F3;
+}
+
 
           
         `}
@@ -341,7 +380,6 @@ function AlluserAdmin() {
             <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
             <li><Link to='/ViewCampaign'>My Campaign</Link></li>
             <li><Link to='/Transaction'>Transaction</Link></li>
-            <li><Link to='/AdminDashboard'>Dashboard</Link></li>
           </ul>
         </aside>
 
@@ -362,7 +400,7 @@ function AlluserAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {sortedUsers.map((user) => (
+                {paginatedUsers.map((user) => (
                   <tr key={user.user_id} className={editingUser === user.user_id ? 'edit-row' : ''}>
                     {editingUser === user.user_id ? (
                       <>
@@ -415,6 +453,9 @@ function AlluserAdmin() {
       <p><strong>Phone:</strong> {selectedUser.phone || 'N/A'}</p>
       <p><strong>First Name:</strong> {selectedUser.first_name || 'N/A'}</p>
       <p><strong>Last Name:</strong> {selectedUser.last_name || 'N/A'}</p>
+      <p><strong>Age</strong> {selectedUser.age || 'N/A'}</p>
+      <p><strong>Gender:</strong> {selectedUser.gender || 'N/A'}</p>
+
       <p><strong>Address:</strong> {selectedUser.address|| 'N/A'}</p>
       <p><strong>City/State:</strong> {selectedUser.city|| 'N/A'}</p>
       <p><strong>Postcode:</strong> {selectedUser.postcode|| 'N/A'}</p>
@@ -428,7 +469,17 @@ function AlluserAdmin() {
     </div>
   </div>
 )}
-
+ <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                className={`btn ${page === currentPage ? 'btn-active' : ''}`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
 
         </main>
       </div>

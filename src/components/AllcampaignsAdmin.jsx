@@ -12,7 +12,9 @@ function AllcampaignsAdmin() {
   const [campaigns, setCampaigns] = useState([]);
   const [error, setError] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const rowsPerPage = 6;
+  
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
@@ -61,31 +63,38 @@ function AllcampaignsAdmin() {
   }, [isAdmin]);
 
   const handleDeleteCampaign = async (campaignId) => {
-    if (window.confirm('Are you sure you want to delete this campaign?')) {
-      try {
-        const response = await fetch(`${port}/admin/deleteCampaign/${campaignId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        if (data.success) {
-          setCampaigns((prevCampaigns) => prevCampaigns.filter((campaign) => campaign.campaign_id !== campaignId));
-        } else {
-          setError('Failed to delete campaign.');
-        }
-      } catch (err) {
-        console.error('Error deleting campaign:', err.message);
-        setError('An error occurred. Please try again.');
+    try {
+      const response = await fetch(`${port}/admin/deleteCampaign/${campaignId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+        body: JSON.stringify({ status: 'deleted' }), // Set the new status to 'deleted'
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
+  
+      const data = await response.json();
+      if (data.success) {
+        // Update the campaign status to 'deleted' in the UI
+        setCampaigns((prevCampaigns) =>
+          prevCampaigns.map((campaign) =>
+            campaign.campaign_id === campaignId ? { ...campaign, status: 'deleted' } : campaign
+          )
+        );
+      } else {
+        setError('Failed to delete the campaign.');
+      }
+    } catch (err) {
+      console.error('Error deleting campaign:', err.message);
+      setError('An error occurred. Please try again.');
     }
   };
+  
+  
 
   const handleToggleCampaignStatus = async (campaignId, currentStatus) => {
     const newStatus = currentStatus === 'hidden' ? 'verified' : 'hidden';
@@ -98,13 +107,16 @@ function AllcampaignsAdmin() {
         },
         body: JSON.stringify({ status: newStatus }),
       });
-
+  
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
-
+  
       const data = await response.json();
-      if (data.success) {
+      
+      if (data.message === 'This campaign is already deleted') {
+        setError('This campaign has already been deleted.');
+      } else if (data.success) {
         setCampaigns((prevCampaigns) =>
           prevCampaigns.map((campaign) =>
             campaign.campaign_id === campaignId ? { ...campaign, status: newStatus } : campaign
@@ -118,6 +130,7 @@ function AllcampaignsAdmin() {
       setError('An error occurred. Please try again.');
     }
   };
+  
 
   const calculateTimeRemaining = (deadline) => {
     const deadlineDate = new Date(deadline);
@@ -155,6 +168,18 @@ function AllcampaignsAdmin() {
     return sorted;
   }, [campaigns, sortConfig]);
 
+  const paginatedCampaigns = sortedCampaigns.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const totalPages = Math.ceil(campaigns.length / rowsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+
   if (!isAdmin) {
     return null;
   }
@@ -191,7 +216,7 @@ function AllcampaignsAdmin() {
     }
 
     .campaign-table th, .campaign-table td {
-      padding: 12px;
+      padding: 6px;
       border: 1px solid #ddd;
       text-align: center;
     }
@@ -225,41 +250,66 @@ function AllcampaignsAdmin() {
 
     /* Button styles */
 
-.action-button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
+ .btn {
+            margin: 0 1px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+          }
+
+          .btn-more {
+            background-color: #da4308;   
+              text-decoration: none;
+          }
+
+          .btn-edits {
+            background-color: #2196F3;
+          }
+
+          .btn-delete {
+            background-color: #f44336;
+          }
+.action-buttons {
+  display: flex; /* Align buttons horizontally */
+  gap: 2px; /* Space between buttons */
+  justify-content: center; /* Center the buttons */
+}
+
+.action-buttons .btn {
+  padding: 6px 8px; /* Consistent padding */
+  width: 60px; /* Fixed button width */
+  text-align: center; /* Center text */
+  display: inline-block; /* Ensure uniformity between <button> and <a> */
+  line-height: normal; /* Reset line height for links */
+  font-size: 14px; /* Ensure consistent font size */
+}
+
+          
+    .pagination {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.pagination .btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #2196F3;
+  border: 1px solid #ccc;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  margin-right: 8px; /* Increased from 4px to 8px */
+  border-radius: 4px;
 }
 
-.view-button {
-  background-color: #6c757d;
-  color: white;
-  text-decoration: none;
-}
-.view-button:hover {
-  background-color: #5a6268;
+.pagination .btn:hover {
+  background-color: #ddd;
 }
 
-.hide-button {
-  background-color: #ff9800;
+.pagination .btn-active {
+  background-color: #2196F3;
   color: white;
-}
-.hide-button:hover {
-  background-color: #fb8c00;
+  border-color: #2196F3;
 }
 
-.delete-button {
-  background-color: #f44336;
-  color: white;
-}
-.delete-button:hover {
-  background-color: #e53935;
-}
 
   `}
 </style>
@@ -272,7 +322,6 @@ function AllcampaignsAdmin() {
             <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
             <li><Link to='/ViewCampaign'>My Campaign</Link></li>
             <li><Link to='/Transaction'>Transaction</Link></li>
-            <li><Link to='/AdminDashboard'>Dashboard</Link></li>
           </ul>
         </aside>
 
@@ -299,7 +348,7 @@ function AllcampaignsAdmin() {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedCampaigns.map((campaign) => (
+                  {paginatedCampaigns.map((campaign) => (
                     <tr key={campaign.campaign_id}>
                       <td>{campaign.title}</td>
                       <td>{campaign.first_name}</td>
@@ -319,11 +368,26 @@ function AllcampaignsAdmin() {
                         )}
                       </td>
                       <td>
-                        <Link to={`/CampaignsDetailsPage/${campaign.campaign_id}/${campaign.title}/${campaign.first_name}`} className="action-button view-button">View</Link>
-                        <button className={`action-button hide-button`} onClick={() => handleToggleCampaignStatus(campaign.campaign_id, campaign.status)}>
-                          {campaign.status === 'hidden' ? 'Unhide' : 'Hide'}
-                        </button>
-                        <button className="action-button delete-button" onClick={() => handleDeleteCampaign(campaign.campaign_id)}>Delete</button>
+                      <div className="action-buttons">
+    <Link
+      to={`/CampaignsDetailsPage/${campaign.campaign_id}/${campaign.title}/${campaign.first_name}`}
+      className="btn btn-more"
+    >
+      View
+    </Link>
+    <button
+      className="btn btn-edits"
+      onClick={() => handleToggleCampaignStatus(campaign.campaign_id, campaign.status)}
+    >
+      {campaign.status === 'hidden' ? 'Unhide' : 'Hide'}
+    </button>
+    <button
+      className="btn btn-delete"
+      onClick={() => handleDeleteCampaign(campaign.campaign_id)}
+    >
+      Delete
+    </button>
+  </div>
                       </td>
                     </tr>
                   ))}
@@ -332,6 +396,17 @@ function AllcampaignsAdmin() {
             ) : (
               <p>No campaigns found.</p>
             )}
+          </div>
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                className={`btn ${page === currentPage ? 'btn-active' : ''}`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            ))}
           </div>
         </main>
       </div>

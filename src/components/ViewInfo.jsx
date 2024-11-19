@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Navbar from "../components/Navbar.jsx";
 import Footer from '../components/Footer.jsx';
-import './ViewInfo.css'; // Import custom CSS for styling
-import { Link } from 'react-router-dom';
+import './ViewInfo.css';
 
 function ViewInfo() {
   const port = import.meta.env.VITE_API_URL;
@@ -13,17 +12,22 @@ function ViewInfo() {
     last_name: '',
     email: '',
     phone: '',
-    age:'',
-    gender:'',
+    age: '',
+    gender: '',
     address: '',
     city: '',
-    postcode: ''
+    country: '',
+    postcode: '',
+    role: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [updateMessage, setUpdateMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('access_token');
-
+  
   useEffect(() => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
@@ -34,9 +38,7 @@ function ViewInfo() {
         }
       })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch user info');
-        }
+        if (!response.ok) throw new Error('Failed to fetch user info');
         return response.json();
       })
       .then(data => {
@@ -57,6 +59,8 @@ function ViewInfo() {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
+    setUpdateMessage(''); // Clear update message when toggling edit mode
+    setSuccessMessage(''); // Clear success message
   };
 
   const handleInputChange = (e) => {
@@ -68,7 +72,6 @@ function ViewInfo() {
   };
 
   const handleUpdate = () => {
-    console.log('Updating user info with:', userInfo); // Ensure userInfo is correctly populated
     fetch(`${port}/view/update-user-info`, {
       method: 'PUT',
       headers: {
@@ -78,24 +81,24 @@ function ViewInfo() {
       body: JSON.stringify(userInfo)
     })
     .then(response => {
-      console.log('Response Status:', response.status); // Log response status
-      if (!response.ok) {
-        throw new Error('Failed to update user info');
-      }
+      if (!response.ok) throw new Error('Failed to update user info');
       return response.json();
     })
     .then(data => {
-      console.log('Server Response:', data); // Log the response data
       if (data.success) {
         setIsEditing(false);
-        setUpdateMessage('User information updated successfully!');
+        setSuccessMessage('User information updated successfully!');
+        setUpdateMessage(JSON.stringify(userInfo, null, 2)); // Display the formatted JSON of updated data
       } else {
-        console.error(data.message);
+        setUpdateMessage(data.message || 'Failed to update user information');
       }
     })
-    .catch(error => console.error('Error updating user info:', error));
+    .catch(error => setUpdateMessage('Error updating user info: ' + error.message));
   };
 
+
+
+  console.log(userInfo)
   if (!isLoggedIn) {
     return (
       <>
@@ -119,38 +122,33 @@ function ViewInfo() {
       <Navbar />
       <div className="profile-container">
         <aside className="sidebar">
-        {userInfo.role === 'admin' ? (
-    // Admin sidebar
-    <ul>
-      <li><Link to='/ViewInfo'>Info</Link></li>
-      <li><Link to='/AlluserAdmin'>View all Account</Link></li>
-      <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
-      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
-      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
-      <li><Link to='/AdminDashboard'>Dashboard</Link></li>
-    </ul>
-  ) : (
-    // Normal user sidebar
-    <ul>
-      <li><Link to='/ViewInfo'>Info</Link></li>
-      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
-      <li><Link to='/Dashboard'>Dashboard</Link></li>
-      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
-    </ul>
-  )}
+          {userInfo.role === 'admin' ? (
+            <ul>
+              <li><Link to='/ViewInfo'>Info</Link></li>
+              <li><Link to='/AlluserAdmin'>View all Account</Link></li>
+              <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
+              <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+              <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+              <li><Link to='/Transaction'>Transaction</Link></li>
+            </ul>
+          ) : (
+            <ul>
+              <li><Link to='/ViewInfo'>Info</Link></li>
+              <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+              <li><Link to='/Transaction'>Transaction</Link></li>
+              <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+            </ul>
+          )}
         </aside>
-        
+
         <main className="profile-content">
           <div className="profile-card">
-
-            <div className="profile-header">
-              <img src="" alt="" />
-         
-            </div>
+       
+          
 
             <div className="profile-section">
+        
+              <p>{successMessage}</p>
               <h1>Personal Information</h1>
               <button className="btn-edit" onClick={handleEditToggle}>Edit</button>
 
@@ -187,7 +185,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                   <label className='lb'>Age</label>
+                <label className='lb'>Age</label>
                 <input className='inp'
                   type="text"
                   name="age"
@@ -195,7 +193,7 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-                   <label className='lb'>Gender</label>
+                <label className='lb'>Gender</label>
                 <input className='inp'
                   type="text"
                   name="gender"
@@ -203,22 +201,27 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
-             
               </div>
-            
             </div>
           </div>
 
           <div className="profile-card">
             <div className="profile-section">
-            <h1>Address</h1>
-
+              <h1>Address</h1>
               <div className="info-group">
                 <label className='lb'>Address</label>
                 <input className='inp'
                   type="text"
                   name="address"
                   value={userInfo.address}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+                   <label className='lb'>Country</label>
+                <input className='inp'
+                  type="text"
+                  name="country"
+                  value={userInfo.country}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
@@ -238,19 +241,21 @@ function ViewInfo() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
+                
               </div>
             </div>
+
             {isEditing && (
               <div className="button-group">
                 <button className="btn-primary" onClick={handleUpdate}>Save</button>
                 <button className="btn-secondary" onClick={handleEditToggle}>Cancel</button>
               </div>
             )}
-            {/* Display the user info to be sent */}
+
+            {successMessage && <p className="success-message">{successMessage}</p>}
             {updateMessage && (
               <div className="update-message">
-                <h4>Data to be sent:</h4>
-                <pre>{updateMessage}</pre> {/* Display the formatted JSON */}
+                <pre>{updateMessage}</pre>
               </div>
             )}
           </div>

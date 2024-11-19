@@ -60,47 +60,49 @@ export const jwtRefreshTokenValidate = (req, res, next) => {
 };
 
 // Validate the user for token refresh
-export const validateUser = (req, res) => {
-  const user = users.find(e => e.user_id === req.user.user_id && e.username === req.user.username);
-  const userIndex = users.findIndex(e => e.refresh === req.user.token);
+export const validateUser = async (req, res) => {
+  try {
+    const [users] = await connection.execute('SELECT * FROM Users WHERE user_id = ? AND username = ?', 
+      [req.user.user_id, req.user.username]);
 
-  if (!user || userIndex < 0) return res.sendStatus(401);
+    if (!users.length) return res.sendStatus(401);
 
-  const access_token = jwtGenerate(user);
-  const refresh_token = jwtRefreshTokenGenerate(user);
-  users[userIndex].refresh = refresh_token;
+    const [userIndex] = await connection.execute('SELECT * FROM Users WHERE refresh = ?', [req.user.token]);
+    if (!userIndex.length) return res.sendStatus(401);
 
-  return res.json({
-    access_token,
-    refresh_token,
-  });
+    const user = users[0];
+    const access_token = jwtGenerate(user);
+    const refresh_token = jwtRefreshTokenGenerate(user);
+    await connection.execute('UPDATE Users SET refresh = ? WHERE user_id = ?', [refresh_token, user.user_id]);
+
+    return res.json({
+      access_token,
+      refresh_token,
+    });
+  } catch (err) {
+    console.error('Error in validateUser:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
 };
 
 // User login
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    connection.query('SELECT * FROM Users WHERE username = ?', [username], async (err, results) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ success: false, message: 'Error executing query' });
-      }
+    const [results] = await connection.execute('SELECT * FROM Users WHERE username = ?', [username]);
 
-      if (results.length === 0) {
-        return res.status(401).json({ success: false, message: 'User not found' });
-      }
+    if (results.length === 0) {
+      return res.status(401).json({ success: false, message: 'User not found' });
+    }
 
-      const user = results[0];
-      if (await bcrypt.compare(password, user.password_hash)) {
-        const access_token = jwtGenerate(user);
-        const refresh_token = jwtRefreshTokenGenerate(user);
-        const role = user.role;
-
-        return res.status(200).json({ success: true, access_token, refresh_token,role });
-      } else {
-        return res.status(401).json({ success: false, message: 'Invalid password' });
-      }
-    });
+    const user = results[0];
+    if (await bcrypt.compare(password, user.password_hash)) {
+      const access_token = jwtGenerate(user);
+      const refresh_token = jwtRefreshTokenGenerate(user);
+      return res.status(200).json({ success: true, access_token, refresh_token });
+    } else {
+      return res.status(401).json({ success: false, message: 'Invalid password' });
+    }
   } catch (error) {
     console.error('Internal server error:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
@@ -108,16 +110,17 @@ export const login = async (req, res) => {
 };
 
 // Refresh token
-export const refreshToken = (req, res) => {
+export const refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) return res.status(401).json({ success: false, message: 'Refresh token not provided' });
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    if (err) return res.status(403).json({ success: false, message: 'Invalid refresh token' });
-
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const accessToken = jwtGenerate(decoded);
     res.status(200).json({ success: true, accessToken });
-  });
+  } catch (err) {
+    return res.status(403).json({ success: false, message: 'Invalid refresh token' });
+  }
 };
 
 // User registration
@@ -125,29 +128,19 @@ export const register = async (req, res) => {
   const { username, email, password, role, phone, firstname, lastname } = req.body;
 
   try {
-    // Check if username or email already exists
-    connection.query('SELECT * FROM Users WHERE username = ? OR email = ?', [username, email], async (err, results) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ success: false, message: 'Error executing query' });
-      }
-      if (results.length > 0) {
-        return res.status(400).json({ success: false, message: 'Username or email already exists' });
-      }
+    const [results] = await connection.execute('SELECT * FROM Users WHERE username = ?', [username]);
 
-      // Hash password and insert new user
-      const hashedPassword = await bcrypt.hash(password, 10);
-      connection.query('INSERT INTO Users (username, email, password_hash, role, phone, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)', 
-        [username, email, hashedPassword, role, phone, firstname, lastname],
-        (err) => {
-          if (err) {
-            console.error('Error executing insert query:', err);
-            return res.status(500).json({ success: false, message: 'Error executing query' });
-          }
-          res.status(201).json({ success: true, message: 'User registered successfully' });
-        }
-      );
-    });
+    if (results.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await connection.execute(
+      'INSERT INTO Users (username, email, password_hash, role, phone, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+      [username, email, hashedPassword, role, phone, firstname, lastname]
+    );
+
+    res.status(201).json({ success: true, message: 'User registered successfully' });
   } catch (error) {
     console.error('Internal Server Error:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });

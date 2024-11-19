@@ -7,12 +7,12 @@ export const createCampaign = (req, res) => {
     return res.status(401).json({ success: false, message: 'User not authenticated' });
   }
 
-  const { title, description, goal_amount, shortDescription, endDate, category } = req.body;
+  const { title, description, goal_amount, shortDescription, endDate, category, phone_number  } = req.body;
   const created_by = req.user.user_id;
   const imagePath = req.body.imagePath;
 
   // Validate required fields
-  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || !imagePath || !category) {
+  if (!title || !description || goal_amount === undefined || !shortDescription || !endDate || !imagePath || !category || !phone_number) {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
@@ -32,12 +32,12 @@ export const createCampaign = (req, res) => {
 
     // Insert campaign into the database
     const insertCampaignQuery = `
-      INSERT INTO campaigns (title, description, goal_amount, created_by, status, short_description, deadline, image)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO campaigns (title, description, goal_amount, created_by, status, short_description, deadline, image, phone_number)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     connection.query(
       insertCampaignQuery,
-      [title, description, goal_amount, created_by, 'pending', shortDescription, endDate, imagePath],
+      [title, description, goal_amount, created_by, 'pending', shortDescription, endDate, imagePath, phone_number],
       (err, results) => {
         if (err) {
           console.error('Error executing insert query:', err);

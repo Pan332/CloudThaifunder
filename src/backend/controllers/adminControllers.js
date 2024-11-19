@@ -12,6 +12,8 @@ export const getAlluser = (req, res) => {
     u.phone, 
     u.first_name, 
     u.last_name,
+    u.age,
+    u.gender,
     a.address,
     a.city,
     a.postcode,
@@ -129,33 +131,60 @@ ON
   };
  
   export const hideCampaigns = (req, res) => {
-    const { id } = req.params; // Get user ID from route parameters
-    const {status} = req.body;
-    // SQL query to update the user info
-    const query = `
-      UPDATE campaigns
-      SET status = ?
-      WHERE campaign_id = ?`;
+    const { id } = req.params; // Get campaign ID from route parameters
+    const { status } = req.body;
   
-    connection.query(query, [status, id], (err, result) => {
+    // Validate that status is provided
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status is required' });
+    }
+  
+    // Check if the campaign is already deleted
+    const checkQuery = 'SELECT status FROM campaigns WHERE campaign_id = ?';
+    
+    connection.query(checkQuery, [id], (err, result) => {
       if (err) {
-        console.error('Error hiding Campaign :', err);
+        console.error('Error checking campaign status:', err);
         return res.status(500).json({ success: false, message: 'Internal server error' });
       }
-      res.json({ success: true, message: 'hiding Campaign successfully' });
+      if (result.length === 0) {
+        return res.status(404).json({ success: false, message: 'Campaign not found' });
+      }
+  
+      const currentStatus = result[0].status;
+      
+      if (currentStatus === 'deleted') {
+        // If the campaign is already marked as deleted, reject further updates
+        return res.status(400).json({ success: false, message: 'This campaign is already deleted' });
+      }
+  
+      // Proceed to update the campaign status
+      const query = `
+        UPDATE campaigns
+        SET status = ?
+        WHERE campaign_id = ?`;
+    
+      connection.query(query, [status, id], (err, result) => {
+        if (err) {
+          console.error('Error hiding campaign:', err);
+          return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+        res.json({ success: true, message: 'Campaign status updated successfully' });
+      });
     });
   };
-
-  export const deleteCampaign = (req, res) => {
-    const { campaign_id } = req.body;
   
+  export const deleteCampaign = (req, res) => {
+    const { id } = req.params;
+    const {status} = req.body;
+
     // Validate required fields
-    if (!campaign_id) {
+    if (!id) {
       return res.status(400).json({ success: false, message: 'Missing campaign ID' });
     }
   
-    const query = 'UPDATE Campaigns SET status = "deleted" WHERE campaign_id = ?'; // Soft delete
-    connection.query(query, [campaign_id], (err, results) => {
+    const query = 'UPDATE Campaigns SET status = ? WHERE campaign_id = ?'; // Soft delete
+    connection.query(query, [status , id], (err, results) => {
       if (err) {
         console.error('Error deleting campaign:', err);
         return res.status(500).json({ success: false, message: 'Error deleting campaign' });
@@ -163,10 +192,40 @@ ON
       res.status(200).json({ success: true, message: 'Campaign deleted successfully' });
     });
   };
-export const PendingCampaigns = (req, res) => {
+
+
+  export const PendingCampaigns = (req, res) => {
     // Fetch all campaigns along with the first name of the user who created each campaign
     const query = `
- SELECT * FROM campaigns WHERE status = 'pending'
+ SELECT 
+    campaigns.campaign_id, 
+    campaigns.title, 
+    campaigns.description, 
+    campaigns.short_description, 
+    campaigns.goal_amount, 
+    campaigns.raised_amount, 
+    campaigns.status, 
+    campaigns.deadline,
+    campaigns.image, 
+    users.first_name,
+    campaigncategories.category_name AS campaign_tag
+FROM 
+    campaigns
+JOIN 
+    users 
+ON 
+    campaigns.created_by = users.user_id
+LEFT JOIN 
+    campaigncategorymapping 
+ON 
+    campaigns.campaign_id = campaigncategorymapping.campaign_id
+LEFT JOIN 
+    campaigncategories 
+ON 
+    campaigncategorymapping.category_id = campaigncategories.category_id
+WHERE 
+    campaigns.status = 'pending';
+
  `;
   
   

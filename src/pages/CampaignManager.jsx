@@ -12,6 +12,7 @@ const CampaignManager = () => {
   const [category, setCategory] = useState('');  // New state for category
   const [goalAmount, setGoalAmount] = useState('');
   const [endDate, setEndDate] = useState('');      // New state for end date
+  const [phone_number, setphone_number] = useState('');
   const [editingCampaignId, setEditingCampaignId] = useState(null);
   const [imageFile, setImageFile] = useState('');
   const [imagePreview, setImagePreview] = useState('');
@@ -79,7 +80,11 @@ const CampaignManager = () => {
       setError('All fields are required');
       return;
     }
-
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone_number)) {
+      setError('Please enter a valid 10-digit phone number.');
+      return;
+    }
     const formData = new FormData();
     formData.append('title', title);
     formData.append('shortDescription', shortDescription);
@@ -87,6 +92,8 @@ const CampaignManager = () => {
     formData.append('goal_amount', goalAmount);
     formData.append('endDate', endDate);
     formData.append('category', category);
+    formData.append('phone_number', phone_number);
+
     formData.append('imageFile', imageFile);
 
     setLoading(true);
@@ -110,6 +117,8 @@ const CampaignManager = () => {
         setEndDate('');
         setImageFile(null);
         setImagePreview('');
+        setphone_number(''); // Clear phone number input after success
+
         setError('');
       } else {
         setError(result.message || 'Something went wrong');
@@ -164,7 +173,18 @@ const CampaignManager = () => {
           <option value="technology">Technology</option>
           <option value="book">Book</option>
         </select>
-
+        <input
+      type="text"
+      value={phone_number}
+      onChange={(e) => setphone_number(e.target.value)}
+      placeholder="Phone Number (10 digits)"
+      required
+    />
+    
+    {/* Prompt to double-check phone number */}
+    <div className="phone-number-warning">
+      Please check the phone number carefully. It is for your PromptPay ID.
+    </div>
         <input type="number" value={goalAmount} onChange={(e) => setGoalAmount(e.target.value)} placeholder="Goal Amount" required />
         <label htmlFor="">End Date</label>
         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />

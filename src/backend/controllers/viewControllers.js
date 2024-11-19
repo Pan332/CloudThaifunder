@@ -36,13 +36,15 @@ export const getUserInfo = (req, res) => {
 
       const userInfo = { ...userResults[0] };
 
-      connection.query('SELECT address, city, postcode FROM address WHERE user_id = ?', [userId], (err, addressResults) => {
+      connection.query('SELECT address, country, city, postcode FROM address WHERE user_id = ?', [userId], (err, addressResults) => {
         if (err) {
           console.error('Error fetching address info:', err);
           return res.status(500).json({ success: false, message: 'Internal server error' });
         }
 
         userInfo.address = addressResults.length > 0 ? addressResults[0].address : null;
+        userInfo.country = addressResults.length > 0 ? addressResults[0].country : null;
+
         userInfo.city = addressResults.length > 0 ? addressResults[0].city : null;
         userInfo.postcode = addressResults.length > 0 ? addressResults[0].postcode : null;
 
@@ -59,13 +61,13 @@ export const getUserInfo = (req, res) => {
 // Update user info
 export const updateUserInfo = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
-    const { first_name, last_name, email, phone, address, city, postcode, age, gender } = req.body;
+    const { first_name, last_name, email, phone, address, city, postcode, age, gender, country } = req.body;
   
     if (!token) {
       return res.status(401).json({ success: false, message: 'Access token is missing' });
     }
   
-    if (!first_name && !last_name && !email && !phone && !address && !city && !postcode && !age && !gender) {
+    if (!first_name && !last_name && !email && !phone && !address && !city && !postcode && !age && !gender && !country) {
       return res.status(400).json({ success: false, message: 'At least one field must be provided to update' });
     }
   
@@ -91,14 +93,14 @@ export const updateUserInfo = async (req, res) => {
       if (addressResults.length > 0) {
         // Update address info if it exists
         await queryDatabase(
-          'UPDATE address SET address = ?, city = ?, postcode = ? WHERE user_id = ?',
-          [address || null, city || null, postcode || null, userId]
+          'UPDATE address SET address = ?, country = ?, city = ?, postcode = ? WHERE user_id = ?',
+          [address || null, country || null, city || null, postcode || null, userId]
         );
       } else {
         // Create a new address entry if it does not exist
         await queryDatabase(
-          'INSERT INTO address (user_id, address, city, postcode) VALUES (?, ?, ?, ?)',
-          [userId, address || null, city || null, postcode || null]
+          'INSERT INTO address (user_id, address, country, city, postcode) VALUES (?, ?, ?, ?, ?)',
+          [userId, address || null, country || null, city || null, postcode || null]
         );
       }
   
@@ -132,7 +134,7 @@ export const updateUserInfo = async (req, res) => {
     }
   };
 
-  // getCampaigninfo for view
+  // getCampaigninfo made by each user
   export const getCampaignInfo = (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
   
@@ -145,7 +147,7 @@ export const updateUserInfo = async (req, res) => {
       const userId = decoded.user_id;
   
       connection.query(
-        'SELECT title, goal_amount, status, deadline FROM campaigns WHERE created_by = ?',
+        'SELECT campaign_id, title, goal_amount, status, deadline, image FROM campaigns WHERE created_by = ?',
         [userId],
         (err, campaignResults) => {
           if (err) {
@@ -226,7 +228,9 @@ WHERE campaigns.status = 'verified';
       res.json({ success: true, data });
     });
   };
-  export const getCampaignById = (req, res) => {
+
+
+export const getCampaignById = (req, res) => {
     const { id } = req.params; // Get the campaign ID from URL parameters
 
     // SQL query to fetch campaign data along with the creator's name

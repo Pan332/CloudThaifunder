@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 const LoginModal = ({ closeModal }) => {
@@ -6,6 +7,7 @@ const LoginModal = ({ closeModal }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showWelcome, setShowWelcome] = useState(false); // State for welcome message
+  const navigate = useNavigate();
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -38,7 +40,7 @@ const LoginModal = ({ closeModal }) => {
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
         localStorage.setItem('role', data.role);
-
+        navigate('/');
         
         setShowWelcome(true); // Show welcome message
         setTimeout(() => {

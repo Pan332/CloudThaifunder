@@ -260,7 +260,6 @@ function CampaignsValidate() {
             <li><Link to='/ViewInfo'>Pending Campaigns</Link></li>
             <li><Link to='/ViewCampaign'>My Campaign</Link></li>
             <li><Link to='/Transaction'>Transaction</Link></li>
-            <li><Link to='/AdminDashboard'>Dashboard</Link></li>
           </ul>
         </aside>
 

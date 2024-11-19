@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Navbar from "../components/Navbar.jsx";
 import Footer from '../components/Footer.jsx';
 import './ViewInfo.css'; // Import custom CSS for styling
-import { Link } from 'react-router-dom';
 
 function ViewCampaign() {
   const port = import.meta.env.VITE_API_URL;
@@ -22,21 +21,21 @@ function ViewCampaign() {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch campaign info');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          setCampaigns(data.data.campaigns);
-          setFirstName(data.data.first_name);
-        } else {
-          console.error(data.message);
-        }
-      })
-      .catch(error => console.error('Error fetching campaign info:', error));
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch campaign info');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            setCampaigns(data.data.campaigns);
+            setFirstName(data.data.first_name);
+          } else {
+            console.error(data.message);
+          }
+        })
+        .catch(error => console.error('Error fetching campaign info:', error));
     }
   }, [isLoggedIn, port]);
 
@@ -44,6 +43,16 @@ function ViewCampaign() {
     setIsModalVisible(false);
     navigate('/');
   };
+
+  const getImageUrl = (image) => {
+    // If the image is a base64 string
+    if (image.startsWith("data:image")) {
+      return image;
+    }
+    // If the image is a file path
+    return `${port}/${image}`;
+  };
+
 
   if (!isLoggedIn) {
     return (
@@ -72,7 +81,6 @@ function ViewCampaign() {
             <li><Link to='/ViewInfo'>Info</Link></li>
             <li><Link to='/ViewCampaign'>My Campaign</Link></li>
             <li><Link to='/Transaction'>Transaction</Link></li>
-            <li><Link to='/Dashboard'>Dashboard</Link></li>
             <li><Link to='/DeleteAccount'>Delete Account</Link></li>
           </ul>
         </aside>
@@ -87,10 +95,20 @@ function ViewCampaign() {
               {campaigns.length > 0 ? (
                 campaigns.map((campaign, index) => (
                   <div key={index} className="campaign-item">
-                    <h2>{campaign.title}</h2>
-                    <p>Goal Amount: {campaign.goal_amount}฿</p>
-                    <p>Status: {campaign.status}</p>
-                    <p>Deadline: {new Date(campaign.deadline).toLocaleDateString()}</p>
+                    <Link 
+                      to={`/CampaignsDetailsPage/${campaign.campaign_id}/${campaign.title}/${campaign.name}`}
+                      className="campaign-link"
+                    >
+                      <img 
+                        src={getImageUrl(campaign.image)} 
+                        alt={`${campaign.title} Thumbnail`} 
+                        className="campaign-image" 
+                      />
+                      <h2 className="campaign-title">{campaign.title}</h2>
+                      <p className="campaign-goal">Goal Amount: {campaign.goal_amount}฿</p>
+                      <p className="campaign-status">Status: {campaign.status}</p>
+                      <p className="campaign-deadline">Deadline: {new Date(campaign.deadline).toLocaleDateString()}</p>
+                    </Link>
                   </div>
                 ))
               ) : (

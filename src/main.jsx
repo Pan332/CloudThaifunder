@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Homepage from './pages/Homepage.jsx';
 import './index.css';
 import DetailsPage from './pages/CampaignsDetailsPage.jsx';
-
 import Charities from './pages/CharitiesPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import AboutPage from './pages/AboutPage.jsx';
@@ -21,13 +20,13 @@ import ViewCampaign from './components/ViewCampaign.jsx';
 import AlluserAdmin from './components/AlluserAdmin.jsx';
 import AllcampaignsAdmin from './components/AllcampaignsAdmin.jsx';
 import CampaignsValidate from './components/CampaignsValidate.jsx';
-import AdminDashboard from './components/AdminDashboard.jsx';
 import Unauthorized from './pages/Unauthorized.jsx';
 import Campaign from './pages/CampaignManager.jsx';
 import BadgeManager from './pages/BadgeManager.jsx';
 import CampaignsDetailsPage from './pages/CampaignsDetailsPage';
 import { CampaignProvider } from './components/CampaignContext';
-
+import ProtectedAdmin from './backend/middleware/frontend/adminonly.js';
+import ProtectedRoute from './backend/middleware/frontend/protected.js';
 const router = createBrowserRouter([
   { path: '/', element: <Homepage /> },
   { path: '/DetailsPage', element: <DetailsPage /> },
@@ -41,10 +40,9 @@ const router = createBrowserRouter([
   { path: '/AlluserAdmin', element: <AlluserAdmin /> },
   { path: '/AllcampaignsAdmin', element: <AllcampaignsAdmin /> },
   { path: '/CampaignsValidate', element: <CampaignsValidate /> },
-  { path: '/AdminDashboard', element: <AdminDashboard /> },
   { path: '/Unauthorized', element: <Unauthorized /> },
   { path: '/BadgeManager', element: <BadgeManager /> },
-  { path: '/CampaignManager', element: <Campaign /> },
+  { path: '/CampaignManager', element: <ProtectedRoute element={ <Campaign />}/>, },
   { path: '/CategoriesPage', element: <CategoriesPage /> },
   { path: '/GamesPage', element: <GamesPage /> },
   { path: '/MusicPage', element: <MusicPage /> },

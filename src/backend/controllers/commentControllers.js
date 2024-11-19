@@ -1,13 +1,12 @@
 import connection from '../db.js';
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
 
 dotenv.config({path:'../.env'});
 
 // Add comment
 export const addComment = (req, res) => {
   const { campaign_id, comment_text } = req.body;
-  const user_id = req.user.user_id; // User ID from the token
+  const user_id = req.user.user_id; 
 
   if (!campaign_id || !comment_text) {
     return res.status(400).json({ success: false, message: 'Campaign ID and comment text are required' });
@@ -27,56 +26,79 @@ export const addComment = (req, res) => {
 };
 
 
-// Delete a comment by ID
-export const deleteComment = async (req, res) => {
-  const commentId = decodeURIComponent(req.query.comment); // Get commentId from URL route parameter
-  try {
-    // Check if the comment exists
-    const commentExistsQuery = 'SELECT * FROM reviews WHERE id = ?';
-    connection.query(commentExistsQuery, [commentId], (err, rows) => {
+export const editComment = (req, res) => {
+  const { comment_text } = req.body;
+  const { commentId } = req.params;
+  const user_id = req.user.user_id;
+
+  if (!comment_text) {
+    return res.status(400).json({ success: false, message: 'Comment text is required' });
+  }
+
+  const checkOwnerQuery = 'SELECT * FROM comments WHERE comment_id = ? AND user_id = ?';
+  connection.query(checkOwnerQuery, [commentId, user_id], (err, rows) => {
+    if (err) {
+      console.error('Error checking ownership:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+
+    if (rows.length === 0) {
+      return res.status(403).json({ success: false, message: 'You are not authorized to edit this comment' });
+    }
+
+    const updateQuery = 'UPDATE comments SET comment_text = ? WHERE comment_id = ?';
+    connection.query(updateQuery, [comment_text, commentId], (err, result) => {
       if (err) {
-        console.error('Error checking if comment exists:', err);
-        return res.status(500).json({ success: false, message: 'Error checking if comment exists' });
-      }
-      // If comment does not exist, return an error response
-      if (rows.length === 0) {
-        return res.status(404).json({ success: false, message: 'Comment not found' });
+        console.error('Error updating comment:', err);
+        return res.status(500).json({ success: false, message: 'Error updating comment' });
       }
 
-      // Delete the comment
-      const deleteCommentQuery = 'DELETE FROM reviews WHERE id = ?';
-      connection.query(deleteCommentQuery, [commentId], (err, result) => {
-        if (err) {
-          console.error('Error deleting comment:', err);
-          return res.status(500).json({ success: false, message: 'Error deleting comment' });
-        }
-        // Check if the comment was successfully deleted
-        if (result.affectedRows === 0) {
-          return res.status(404).json({ success: false, message: 'Comment not found' });
-        }
-        // Comment deleted successfully
-        res.status(200).json({ success: true, message: 'Comment deleted successfully' });
-      });
+      res.status(200).json({ success: true, message: 'Comment updated successfully' });
     });
-  } catch (error) {
-    console.error('Error deleting comment:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
+  });
 };
 
+// Delete a comment by ID
+export const deleteComment = (req, res) => {
+  const { commentId } = req.params;
+  const user_id = req.user.user_id;
+
+  const checkOwnerQuery = 'SELECT * FROM comments WHERE comment_id = ? AND user_id = ?';
+  connection.query(checkOwnerQuery, [commentId, user_id], (err, rows) => {
+    if (err) {
+      console.error('Error checking ownership:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+
+    if (rows.length === 0) {
+      return res.status(403).json({ success: false, message: 'You are not authorized to delete this comment' });
+    }
+
+    const deleteQuery = 'DELETE FROM comments WHERE comment_id = ?';
+    connection.query(deleteQuery, [commentId], (err, result) => {
+      if (err) {
+        console.error('Error deleting comment:', err);
+        return res.status(500).json({ success: false, message: 'Error deleting comment' });
+      }
+
+      res.status(200).json({ success: true, message: 'Comment deleted successfully' });
+    });
+  });
+};
 // commentControllers.js
 export const getComments = (req, res) => {
-  const { campaign_id } = req.params;
+  const { commentId } = req.params;
+  
 
   // Use a JOIN query to get comments along with the user's first name
   const query = `
-    SELECT comments.comment_text, users.first_name, comments.created_at, comments.comment_id
+    SELECT comments.comment_text, users.first_name, comments.created_at, comments.comment_id, comments.user_id
     FROM comments
     JOIN users ON comments.user_id = users.user_id
     WHERE comments.campaign_id = ?
   `;
 
-  connection.query(query, [campaign_id], (error, results) => {
+  connection.query(query, [commentId], (error, results) => {
       if (error) {
           console.error('Error fetching comments:', error);
           return res.status(500).json({ success: false, message: 'Internal server error' });
@@ -84,10 +106,11 @@ export const getComments = (req, res) => {
 
       // Map the results to include only necessary fields
       const comments = results.map(comment => ({
-          commentId: comment.id,
+          commentId: comment.comment_id,
           commentText: comment.comment_text,
           timestamp: comment.created_at,
-          firstName: comment.first_name
+          firstName: comment.first_name,
+          userId: comment.user_id
       }));
 
       // Send the comments back as a response
