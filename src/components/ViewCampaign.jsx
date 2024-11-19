@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from "../components/Navbar.jsx";
 import Footer from '../components/Footer.jsx';
-import './ViewInfo.css'; // Import custom CSS for styling
+import './ViewCampaigns.css'; // Import custom CSS for styling
 
 function ViewCampaign() {
   const port = import.meta.env.VITE_API_URL;
