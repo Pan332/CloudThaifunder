@@ -15,7 +15,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Adjust this based on how many cards per row you want */
     gap: 20px; /* Adds space between the cards */
-    padding: 20px;
+    padding: 10px;
     justify-content: center; /* Center the card horizontally */
     align-items: center; /* Center the card vertically */
 }
@@ -25,6 +25,7 @@
   .card-container {
     grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
     justify-content: center; /* Center the cards horizontally on medium screens */
+
   }
 }
 

@@ -47,7 +47,7 @@ const Navbar = () => {
     <>
       <nav className="navbar">
         <div className="navbar-logo">
-          <Link to='/'>Thaifunder</Link>
+          <Link to='/'><img className="logo" src="\public\logo.png" alt="" /></Link>
         </div>
 
         <div className="navbar-center">

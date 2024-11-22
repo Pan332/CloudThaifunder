@@ -7,6 +7,8 @@ import './CategoriesPage.css';
 import Search from "../components/Search.jsx";
 
 function GamesPage() {
+  const port = import.meta.env.VITE_API_URL;
+
   const { campaigns } = useCampaigns();
   console.log(campaigns)
   const calculateTimeRemaining = (deadline) => {
@@ -14,10 +16,18 @@ function GamesPage() {
     const now = new Date();
     const timeDifference = deadlineDate - now;
     return timeDifference > 0
-      ? `${Math.floor(timeDifference / (1000 * 60 * 60 * 24))}`
+      ? `${Math.floor(timeDifference / (1000 * 60 * 60 * 24))} day left`
       : "Campaign ended";
   };
-  const getImageUrl = (base64Image) => `data:image/jpeg;base64,${base64Image}`;
+  const getImageUrl = (image) => {
+    // If the image is a base64 string
+    if (image.startsWith("data:image")) {
+      return image;
+    }
+    // If the image is a file path
+    return `${port}/${image}`;
+  };
+
 
   return (
   <>

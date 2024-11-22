@@ -12,6 +12,7 @@ function CampaignsValidate() {
   const [campaigns, setCampaigns] = useState([]);
   const [error, setError] = useState('');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // New state for success popup
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
@@ -20,16 +21,16 @@ function CampaignsValidate() {
       return;
     }
 
-    const userRole = localStorage.getItem('role');
-    if (userRole === 'admin') {
-      setIsAdmin(true);
-    } else {
+    const role = localStorage.getItem('role');
+    setUserRole(role);
+
+    if (role !== 'admin' && role !== 'validator') {
       navigate('/Unauthorized');
     }
   }, [navigate]);
 
   useEffect(() => {
-    if (isAdmin) {
+    if (userRole === 'admin' || userRole === 'validator') {
       const fetchCampaigns = async () => {
         try {
           const response = await fetch(`${port}/admin/PendingCampaigns`, {
@@ -58,7 +59,7 @@ function CampaignsValidate() {
 
       fetchCampaigns();
     }
-  }, [isAdmin]);
+  }, [userRole]);
 
   const handleVerifyCampaign = async (campaignId) => {
     if (window.confirm("Are you sure you want to verify this campaign?")) { // Confirmation popup
@@ -103,7 +104,7 @@ function CampaignsValidate() {
       : "Campaign ended";
   };
 
-  if (!isAdmin) {
+  if (userRole === '') {
     return null;
   }
 
@@ -252,16 +253,33 @@ function CampaignsValidate() {
 </style>
 
       <div className="profile-container">
-        <aside className="sidebar">
-          <ul>
-            <li><Link to='/ViewInfo'>Info</Link></li>
-            <li><Link to='/AlluserAdmin'>View all Account</Link></li>
-            <li><Link to='/AllCampaignsAdmin'>View all Campaigns</Link></li>
-            <li><Link to='/ViewInfo'>Pending Campaigns</Link></li>
-            <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-            <li><Link to='/Transaction'>Transaction</Link></li>
-          </ul>
-        </aside>
+      <aside className="sidebar">
+  {userRole === 'admin' ? (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/AlluserAdmin'>View all Account</Link></li>
+      <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
+      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+    </ul>
+  ) : userRole === 'validator' ? (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+    </ul>
+  ) : (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+    </ul>
+  )}
+</aside>
 
         <main className="profile-content">
           <h1>Validate Campaigns</h1>

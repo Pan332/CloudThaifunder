@@ -3,7 +3,7 @@ import { isAuthenticated } from '../middleware/backend/isAuth.js';
 import { verifyAdmin } from '../middleware/backend/isAdmin.js';
 import uploadAndConvert from '../middleware/multer.js';
 
-import { getUserInfo, updateUserInfo, getCampaignInfo, getAllCampaign, getCampaignById, CountAllCampaign, CountAllUser, CountAllAmount } from '../controllers/viewControllers.js';
+import { getUserInfo, updateUserInfo, getCampaignInfo, getAllCampaign, getCampaignById, CountAllCampaign, CountAllUser, CountAllAmount, deleteUser } from '../controllers/viewControllers.js';
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.get('/CampaignById/:id', getCampaignById); //for detailpage
 router.get('/CountCampaigns', CountAllCampaign); //dashboard
 router.get('/CountUser', CountAllUser); //dashboard
 router.get('/CountAmount', CountAllAmount); //dashboard
+router.delete('/deleteUser/:id', isAuthenticated,  deleteUser); // Delete user by ID
 
 
 export default router;

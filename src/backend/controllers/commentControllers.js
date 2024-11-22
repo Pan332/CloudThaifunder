@@ -117,3 +117,58 @@ export const getComments = (req, res) => {
       res.json({ success: true, comments });
   });
 };
+
+
+// Reply to a comment
+export const replyComment = (req, res) => {
+  const { campaign_id, comment_text, parent_comment_id } = req.body;
+  const user_id = req.user.user_id;
+
+  // Validation for required fields
+  if (!campaign_id || !comment_text || !parent_comment_id) {
+    return res.status(400).json({
+      success: false,
+      message: 'Campaign ID, comment text, and parent comment ID are required.',
+    });
+  }
+
+  // Check if parent comment exists
+  const checkParentQuery = `
+    SELECT * FROM comments WHERE comment_id = ? AND campaign_id = ?
+  `;
+  connection.query(checkParentQuery, [parent_comment_id, campaign_id], (err, results) => {
+    if (err) {
+      console.error('Error verifying parent comment:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid parent comment ID or campaign ID.',
+      });
+    }
+
+    // Insert the reply
+    const insertQuery = `
+      INSERT INTO comments (campaign_id, user_id, comment_text, created_at, parent_id)
+      VALUES (?, ?, ?, NOW(), ?)
+    `;
+    connection.query(
+      insertQuery,
+      [campaign_id, user_id, comment_text, parent_comment_id],
+      (err, results) => {
+        if (err) {
+          console.error('Error adding reply:', err);
+          return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+
+        res.json({
+          success: true,
+          message: 'Reply added successfully',
+          replyId: results.insertId,
+        });
+      }
+    );
+  });
+};

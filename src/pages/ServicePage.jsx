@@ -104,7 +104,7 @@ function ServicePage() {
             <div style={styles.textContainerRight}>
               <h1 style={styles.heading}>Secure Payment Processing</h1>
               <p style={styles.text}>
-              We understand the importance of security when it comes to donations. ThaiFunder provides safe and secure payment gateways, ensuring that every transaction is protected. Our platform accepts multiple payment options, making it easy for donors to contribute.
+              We understand the importance of security when it comes to donations. ThaiFunder provides safe and secure payment gateways, ensuring that every transaction is protected.
               </p>
             </div>
             <div style={styles.imageContainerLeft}>

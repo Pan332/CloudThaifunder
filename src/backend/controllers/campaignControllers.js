@@ -66,6 +66,48 @@ export const createCampaign = (req, res) => {
     );
   });
 };
+
+// Edit Campaign (Specific Fields)
+export const editCampaign = (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ success: false, message: 'User not authenticated' });
+  }
+  const id = parseInt(req.params.id, 10);
+if (isNaN(id)) {
+    return res.status(400).json({ success: false, message: 'Invalid campaign ID' });
+}
+
+  const { title, shortDescription, description, phone_number } = req.body; // Get fields from request body
+
+  console.log('Request body:', req.body);
+  console.log('Request params:', req.params);
+  
+  
+  // Validate required fields
+  if (!title && !shortDescription && !description && !phone_number) {
+    return res.status(400).json({ success: false, message: 'At least one field is required for update' });
+  }
+
+  const query = `
+    UPDATE Campaigns 
+    SET title = ?, short_description = ?, description = ?, phone_number = ?
+    WHERE campaign_id = ?
+  `;
+
+  connection.query(query, [title, shortDescription, description, phone_number, id], (err, results) => {
+    if (err) {
+      console.error('Error updating campaign:', err);
+      return res.status(500).json({ success: false, message: 'Error updating campaign', error: err.message });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Campaign not found' });
+    }
+
+    res.status(200).json({ success: true, message: 'Campaign updated successfully' });
+  });
+};
+
 // Read All Campaigns
 export const getCampaigns = (req, res) => {
   const query = 'SELECT * FROM Campaigns WHERE status = "pending"';
@@ -78,24 +120,6 @@ export const getCampaigns = (req, res) => {
   });
 };
 
-// Update Campaign
-export const updateCampaign = (req, res) => {
-  const { campaign_id, title, description, goal_amount } = req.body;
-
-  // Validate required fields
-  if (!campaign_id || !title || !description || goal_amount === undefined) {
-    return res.status(400).json({ success: false, message: 'Missing required fields' });
-  }
-
-  const query = 'UPDATE Campaigns SET title = ?, description = ?, goal_amount = ? WHERE campaign_id = ?';
-  connection.query(query, [title, description, goal_amount, campaign_id], (err, results) => {
-    if (err) {
-      console.error('Error updating campaign:', err);
-      return res.status(500).json({ success: false, message: 'Error updating campaign' });
-    }
-    res.status(200).json({ success: true, message: 'Campaign updated successfully' });
-  });
-};
 
 // Delete Campaign
 export const deleteCampaign = (req, res) => {
@@ -115,4 +139,4 @@ export const deleteCampaign = (req, res) => {
     res.status(200).json({ success: true, message: 'Campaign deleted successfully' });
   });
 };
-// Get the campaign ID from the URL parameters
+

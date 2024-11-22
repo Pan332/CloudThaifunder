@@ -30,6 +30,31 @@
   .campaigns-container > * {
     width: 100%;
   }
+
+   .pagination {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.pagination .btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #2196F3;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination .btn:hover {
+  background-color: #ddd;
+}
+
+.pagination .btn-active {
+  background-color: #2196F3;
+  color: white;
+  border-color: #2196F3;
+}
+
   
 
   @media (max-width: 1024px) {

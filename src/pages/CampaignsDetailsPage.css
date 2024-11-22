@@ -48,6 +48,28 @@
     border-radius: 10px;
   }
   
+  .edit-section{
+    display: flex;
+    gap: 10px;
+    justify-content: center
+  }
+  .edit-campaign-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 1rem;
+   
+}
+
+.edit-campaign-button:hover {
+    background-color: #0056b3;
+}
+
+  
   .donation-section {
     display: flex;
     gap: 10px;

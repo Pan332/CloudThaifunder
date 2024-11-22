@@ -4,7 +4,8 @@ import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import './CampaignsDetailsPage.css';
 import QRCodeGenerator from '../components/SlipandQRmodal.jsx';
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 function CampaignsDetailsPage() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -21,8 +22,33 @@ function CampaignsDetailsPage() {
     const [editedText, setEditedText] = useState('');
     const isLoggedIn = !!localStorage.getItem('access_token');
     const [currentUserId, setCurrentUserId] = useState(null); // Store current user's ID
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingCampaignData, setEditingCampaignData] = useState(null);
+    const [title, setTitle] = useState('');
+    const [shortDescription, setShortDescription] = useState('');
+    const [description, setDescription] = useState(''); // Fix here
+    const [phone_number, setphone_number] = useState('');
+    const [showLoginPromptModal, setShowLoginPromptModal] = useState(false);
 
-    const toggleDonateModal = () => setShowDonateModal(!showDonateModal);
+  
+
+    const handleEditClick = (campaign) => {
+        setEditingCampaignData(campaign);
+        setIsEditModalOpen(true);
+      };
+      
+    
+      const toggleDonateModal = () => {
+        if (isLoggedIn) {
+            setShowDonateModal(!showDonateModal);
+        } else {
+            setShowLoginPromptModal(true);
+        }
+    };
+    
+    const closeLoginPromptModal = () => {
+        setShowLoginPromptModal(false);
+    };
     
     useEffect(() => {
       const fetchCampaign = async () => {
@@ -150,7 +176,7 @@ function CampaignsDetailsPage() {
             setError('An error occurred while adding the comment.');
         }
     };
-
+   
     const handleCommentEdit = (commentId) => {
         setEditingCommentId(commentId);
         const comment = comments.find((c) => c.commentId === commentId);
@@ -222,6 +248,111 @@ function CampaignsDetailsPage() {
             setError('An error occurred while deleting the comment.');
         }
     };
+    const handleUpdateCampaign = async (editedData) => {
+
+        try {
+           
+            const token = localStorage.getItem('access_token');
+            if (!token) throw new Error('Unauthorized access.');
+
+            const response = await fetch(`${port}/campaign/editCampaign/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ...editedData}),
+            });
+
+            if (!response.ok) throw new Error('Failed to update campaign');
+
+            const data = await response.json();
+            if (data.success) {
+                setSuccess('Campaign updated successfully!');
+                setIsEditModalOpen(false); // Close the modal
+                setCampaign({ ...campaign, ...editedData });
+            } else {
+                setError(data.message || 'Failed to update campaign');
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    const EditModal = ({ campaign, onClose, onSave }) => {
+        const [title, setLocalTitle] = useState('');
+        const [short_description, setLocalShortDescription] = useState('');
+        const [description, setLocalDescription] = useState('');
+        const [phone_number, setLocalPhoneNumber] = useState('');
+    
+        useEffect(() => {
+            if (campaign) {
+                setLocalTitle(campaign.title || '');
+                setLocalShortDescription(campaign.short_description || '');
+                setLocalDescription(campaign.description || '');
+                setLocalPhoneNumber(campaign.phone_number || '');
+            }
+        }, [campaign]);
+    
+        const handleSave = () => {
+            // Pass the local state values to the parent onSave method
+            onSave({
+                title: title,
+                shortDescription: short_description,
+                description: description,
+                phone_number: phone_number,
+            });
+        };
+    
+        return (
+            <div className="modal-overlay">
+                <div className="modal-content">
+                    <button className="close-button" onClick={onClose}>
+                        &times;
+                    </button>
+                    <h3>Edit Campaign</h3>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleSave();
+                        }}
+                    >
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setLocalTitle(e.target.value)}
+                            placeholder="Title"
+                            required
+                        />
+                        <input
+                            type="text"
+                            value={short_description}
+                            onChange={(e) => setLocalShortDescription(e.target.value)}
+                            placeholder="Short Description"
+                            maxLength="150"
+                            required
+                        />
+                        <ReactQuill
+                            value={description}
+                            onChange={setLocalDescription}
+                            placeholder="Description"
+                        />
+                        <input
+                            type="text"
+                            value={phone_number}
+                            onChange={(e) => setLocalPhoneNumber(e.target.value)}
+                            placeholder="Phone Number (10 digits)"
+                            required
+                        />
+                        <button  type="submit">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        );
+    };
+    
+   
+
     return (
         <>
             <Navbar />
@@ -252,9 +383,20 @@ function CampaignsDetailsPage() {
                                 <p dangerouslySetInnerHTML={{ __html: campaign.description }}></p>
                             </div>
 
+                            {isLoggedIn && currentUserId === campaign.created_by && ( 
+                                  <div className="edit-section">
+                          <button className="edit-campaign-button" onClick={() => handleEditClick(campaign)}> Edit Campaign </button> 
+                           </div>)}
+                           {isEditModalOpen && (
+                 <EditModal  campaign={editingCampaignData} onClose={() => setIsEditModalOpen(false)}  onSave={handleUpdateCampaign} />)}
+                         
                             <div className="donation-section">
-                                <button className="donate-button" onClick={toggleDonateModal}>Donate Now</button>
-                            </div>
+                       {currentUserId !== campaign.created_by ? ( 
+                       <button className="donate-button" onClick={toggleDonateModal}>Donate Now</button>
+                             ) : ( <p></p> )}
+                         </div>
+                    
+
 
                             <div className="comments-section">
                                 <h2>Comments</h2>
@@ -303,6 +445,18 @@ function CampaignsDetailsPage() {
                     </div>
                 )}
             </div>
+            {showLoginPromptModal && (
+    <div className="modal-overlay" onClick={closeLoginPromptModal}>
+        <div className="modals-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeLoginPromptModal}>
+                &times;
+            </button>
+            <h2>Login Required</h2>
+            <p>You must log in before making a donation.</p>
+        </div>
+    </div>
+)}
+
 
             {showDonateModal && (
                 <div className="modal-overlay" onClick={toggleDonateModal}>

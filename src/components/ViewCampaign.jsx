@@ -11,7 +11,19 @@ function ViewCampaign() {
   const [firstName, setFirstName] = useState('');
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('access_token');
+  const [userRole, setUserRole] = useState('');
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem('access_token');
+  
+
+    const role = localStorage.getItem('role');
+    setUserRole(role);
+
+    if (role !== 'admin' && role !== 'validator' && role !== 'user') {
+      navigate('/Unauthorized');
+    }
+  }, [navigate]);
   useEffect(() => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
@@ -76,14 +88,35 @@ function ViewCampaign() {
     <>
       <Navbar />
       <div className="profile-container">
-        <aside className="sidebar">
-          <ul>
-            <li><Link to='/ViewInfo'>Info</Link></li>
-            <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-            <li><Link to='/Transaction'>Transaction</Link></li>
-            <li><Link to='/DeleteAccount'>Delete Account</Link></li>
-          </ul>
-        </aside>
+      <aside className="sidebar">
+  {userRole === 'admin' ? (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/AlluserAdmin'>View all Account</Link></li>
+      <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
+      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+
+
+    </ul>
+  ) : userRole === 'validator' ? (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+    </ul>
+  ) : (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+    </ul>
+  )}
+</aside>
         
         <main className="profile-content">
           <div className="profile-card">

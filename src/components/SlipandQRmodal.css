@@ -1,0 +1,63 @@
+/* Styles for the QRCodeGenerator component */
+.qr-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .qr-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .qr-input {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .qr-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .qr-button:hover {
+    background-color: #218838;
+  }
+  
+  .qr-modal-content {
+    text-align: center;
+  }
+  
+  .qr-image {
+    width: 300px;
+    object-fit: contain;
+    margin-top: 10px;
+  }
+  
+  .qr-error-message {
+    color: red;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  
+  .qr-amount-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .qr-popup {
+    margin-top: 20px;
+    color: red;
+    text-align: center;
+    font-size: 16px;
+  }
+  

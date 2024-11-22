@@ -3,18 +3,18 @@ import { FaGamepad, FaTshirt, FaPenNib, FaFilm, FaMusic, FaPalette, FaFlask, FaB
 
 const Categories = () => {
   const categories = [
-    { icon: <FaHandHoldingHeart size={40} color={'#FF4500'} />, label: 'Charities', link: '/charities' },
-    { icon: <FaMedkit size={40} color={'#C71585'} />, label: 'Medical & Healing', link: '/medical' },
-    { icon: <FaGraduationCap size={40} color={'#20B2AA'} />, label: 'Education', link: '/education' },
-    { icon: <FaBriefcase size={40} color={'#FFD700'} />, label: 'Business & Startup', link: '/business' },
+    { icon: <FaHandHoldingHeart size={40} color={'#FF4500'} />, label: 'Charities', link: '/CharitiesPage' },
+    { icon: <FaMedkit size={40} color={'#C71585'} />, label: 'Medical & Healing', link: '/MedicalPage' },
+    { icon: <FaGraduationCap size={40} color={'#20B2AA'} />, label: 'Education', link: '/EducationPage' },
+    { icon: <FaBriefcase size={40} color={'#FFD700'} />, label: 'Business & Startup', link: '/BusinessPage' },
     { icon: <FaGamepad size={40} color={'#4CAF50'} />, label: 'Games', link: '/GamesPage' }, 
-    { icon: <FaTshirt size={40} color={'#FF6347'} />, label: 'Fashion', link: '/fashion' },   
-    { icon: <FaPenNib size={40} color={'#333333'} />, label: 'Design', link: '/design' },    
-    { icon: <FaFilm size={40} color={'#FF8C00'} />, label: 'Film', link: '/film' },          
+    { icon: <FaTshirt size={40} color={'#FF6347'} />, label: 'Fashion', link: '/FashionPage' },   
+    { icon: <FaPenNib size={40} color={'#333333'} />, label: 'Design', link: '/DesignPage' },    
+    { icon: <FaFilm size={40} color={'#FF8C00'} />, label: 'Film', link: '/FilmPage' },          
     { icon: <FaMusic size={40} color={'#FF1493'} />, label: 'Music', link: '/MusicPage' },   
-    { icon: <FaPalette size={40} color={'#1E90FF'} />, label: 'Art', link: '/art' },         
+    { icon: <FaPalette size={40} color={'#1E90FF'} />, label: 'Art', link: '/ArtPage' },         
     { icon: <FaFlask size={40} color={'#8A2BE2'} />, label: 'Technology', link: '/TechnologyPage' }, 
-    { icon: <FaBook size={40} color={'#4682B4'} />, label: 'Book', link: '/BookPage' },      
+    { icon: <FaBook size={40} color={'#4682B4'} />, label: 'Book', link: '/BooksPage' },      
   ];
 
   return (

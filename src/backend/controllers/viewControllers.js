@@ -62,7 +62,7 @@ export const getUserInfo = (req, res) => {
 export const updateUserInfo = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
     const { first_name, last_name, email, phone, address, city, postcode, age, gender, country } = req.body;
-  
+    console.log('Request body:', req.body);
     if (!token) {
       return res.status(401).json({ success: false, message: 'Access token is missing' });
     }
@@ -134,6 +134,23 @@ export const updateUserInfo = async (req, res) => {
     }
   };
 
+
+  export const deleteUser = (req, res) => {
+    const { id } = req.params; // Get user ID from route parameters
+  
+    // SQL query to delete the user
+    const query = `
+      DELETE FROM users WHERE user_id = ?`;
+  
+    connection.query(query, [id], (err, result) => {
+      if (err) {
+        console.error('Error deleting user:', err);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+      res.json({ success: true, message: 'User deleted successfully' });
+    });
+  };
+
   // getCampaigninfo made by each user
   export const getCampaignInfo = (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -194,6 +211,9 @@ export const updateUserInfo = async (req, res) => {
     campaigns.status, 
     campaigns.deadline,
     campaigns.image, 
+    campaigns.created_by,
+    campaigns.phone_number,
+
     users.first_name,
     campaigncategories.category_name AS campaign_tag
 FROM 
@@ -244,7 +264,10 @@ export const getCampaignById = (req, res) => {
         campaigns.raised_amount,
         campaigns.status,
         campaigns.deadline,
+        campaigns.created_by,
         campaigns.image,
+        campaigns.phone_number,
+
         users.first_name AS creator_name
       FROM campaigns
       JOIN users ON campaigns.created_by = users.user_id

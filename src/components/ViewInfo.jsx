@@ -121,25 +121,35 @@ function ViewInfo() {
     <>
       <Navbar />
       <div className="profile-container">
-        <aside className="sidebar">
-          {userInfo.role === 'admin' ? (
-            <ul>
-              <li><Link to='/ViewInfo'>Info</Link></li>
-              <li><Link to='/AlluserAdmin'>View all Account</Link></li>
-              <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
-              <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
-              <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-              <li><Link to='/Transaction'>Transaction</Link></li>
-            </ul>
-          ) : (
-            <ul>
-              <li><Link to='/ViewInfo'>Info</Link></li>
-              <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-              <li><Link to='/Transaction'>Transaction</Link></li>
-              <li><Link to='/DeleteAccount'>Delete Account</Link></li>
-            </ul>
-          )}
-        </aside>
+      <aside className="sidebar">
+  {userInfo.role === 'admin' ? (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/AlluserAdmin'>View all Account</Link></li>
+      <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
+      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+
+
+    </ul>
+  ) : userInfo.role === 'validator' ? (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+    </ul>
+  ) : (
+    <ul>
+      <li><Link to='/ViewInfo'>Info</Link></li>
+      <li><Link to='/ViewCampaign'>My Campaign</Link></li>
+      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/DeleteAccount'>Delete Account</Link></li>
+    </ul>
+  )}
+</aside>
 
         <main className="profile-content">
           <div className="profile-card">

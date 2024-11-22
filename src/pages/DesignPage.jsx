@@ -6,7 +6,7 @@ import Card from "../components/Card.jsx";
 import './CategoriesPage.css';
 import Search from "../components/Search.jsx";
 
-function MusicPage() {
+function DesignPage() {
   const port = import.meta.env.VITE_API_URL;
 
   const { campaigns } = useCampaigns();
@@ -33,10 +33,10 @@ function MusicPage() {
   <>
   <Navbar/>
   <main className="categories-page">
-  <h1>Music</h1>
+  <h1>Design</h1>
   <Search/>
           <div className="campaigns-container">
-            {campaigns.filter((campaign) => campaign.campaign_tag === 'music').map((campaign, index) => (
+            {campaigns.filter((campaign) => campaign.campaign_tag === 'design').map((campaign, index) => (
               <Card
                 key={index}
                 id={campaign.campaign_id}
@@ -57,5 +57,4 @@ function MusicPage() {
   )
 }
 
-
-export default MusicPage;
+export default DesignPage;

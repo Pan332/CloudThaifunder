@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Modal from './modal.jsx';
 import SlipUploader from './Slip.jsx';
+import './SlipandQRmodal.css'; // Import the CSS file
 
 function QRCodeGenerator() {
     const [amount, setAmount] = useState('');
@@ -60,15 +61,15 @@ function QRCodeGenerator() {
     };
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <h1>Generate PromptPay QR Code</h1>
-            <input
+        <div className="qr-container">
+            <h1 className="qr-title">Generate PromptPay QR Code</h1>
+            <input  className="qr-input"
                 type="text"
                 value={amount}
                 placeholder="Amount"
                 onChange={(e) => setAmount(e.target.value)}
             />
-            <button onClick={genQR}>Generate</button>
+            <button  className="qr-button" onClick={genQR}>Generate</button>
 
             {/* Show modal only if QR code is generated */}
             {qrImage && (
@@ -77,18 +78,15 @@ function QRCodeGenerator() {
                     onClose={() => setIsModalOpen(false)}
                 >
                     <SlipUploader expectedAmount={parseFloat(amount)} />
-                    <div style={{ textAlign: 'center' }}>
-                        <p style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                    <div className="qr-modal-content">
+                        <p className="qr-amount-text">
                             Amount: ฿{amount}
                         </p>
                         <img
+                          className="qr-image"
                             src={qrImage}
                             alt="PromptPay QR Code"
-                            style={{
-                                width: '300px',
-                                objectFit: 'contain',
-                                marginTop: '10px',
-                            }}
+                           
                         />
                     </div>
                 </Modal>
@@ -96,7 +94,7 @@ function QRCodeGenerator() {
 
             {/* Show message if QR code has expired */}
             {!qrImage && isModalOpen && (
-                <div style={{ textAlign: 'center', color: 'red', marginTop: '20px' }}>
+                 <div className="qr-popup">
                     <p>QR code expired. Please generate a new one.</p>
                 </div>
             )}

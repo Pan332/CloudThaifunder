@@ -11,7 +11,8 @@ function CategoriesPage() {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const rowsPerPage = 8;
   useEffect(() => {
     fetch(`${port}/view/Allcampaign`)
       .then(response => {
@@ -53,6 +54,16 @@ function CategoriesPage() {
     return `${port}/${image}`;
   };
 
+  const paginatedCampaigns = campaigns.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const totalPages = Math.ceil(campaigns.length / rowsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   return (
     <> 
     <CampaignProvider>
@@ -73,7 +84,7 @@ function CategoriesPage() {
           
           <div className="campaigns-container">
          
-            {campaigns.map((campaign, index) => (
+            {paginatedCampaigns.map((campaign, index) => (
               <Card
                 key={index}
                 id={campaign.campaign_id}
@@ -91,6 +102,17 @@ function CategoriesPage() {
           
         )}
       </main>
+      <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                className={`btn ${page === currentPage ? 'btn-active' : ''}`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
       <Footer />
       </CampaignProvider>
     </>

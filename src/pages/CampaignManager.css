@@ -203,6 +203,10 @@
     margin: 10px 0;
     border-radius: 4px;
   }
-  
+  .phone-number-warning {
+    font-size: 0.9rem;
+    color: #e67e22;
+    margin-bottom: 10px;
+  }
   
 

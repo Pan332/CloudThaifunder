@@ -125,6 +125,24 @@
       gap: 20px; /* Reduced gap between items */
       
     }
+    .overlay-text {
+      position: absolute;
+      top: 12%; /* Vertically center the text */
+      left: 50%; /* Horizontally center the text */
+      transform: translate(-50%, -50%); /* Ensure it's centered perfectly */
+      font-size: 32px;
+      color: white;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds shadow for better contrast */
+    }
+    .overlay-text2 {
+      position: absolute;
+      top: 35%; /* Vertically center the text */
+      left: 50%; /* Horizontally center the text */
+      transform: translate(-50%, -50%); /* Ensure it's centered perfectly */
+      font-size: 16px;
+      color: white;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds shadow for better contrast */
+    }
   
     .main-text {
       font-size: 36px; /* Adjust the heading size */
@@ -164,6 +182,7 @@
       font-size: 18px; /* Reduce font size to fit on smaller screens */
       width: 100%; /* Full width on very small screens */
       padding: 15px; /* Adjust padding for smaller screens */
+      width: 200px;
     }
     .custom-search-container {
       width: 200px; /* Adjust width for smaller screens */
