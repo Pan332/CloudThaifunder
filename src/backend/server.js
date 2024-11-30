@@ -150,3 +150,4 @@ if (process.env.NODE_ENV === 'production') {
       res.cookie('access_token', accesstoken, cookieOptions);
       next();
     })
+export default  app;

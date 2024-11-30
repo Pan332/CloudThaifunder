@@ -88,7 +88,33 @@ function ContactPage() {
               </div>
             </div>
           ))}
+          
         </div>
+      </div>
+      <div className="btn section" style={{ textAlign: "center"}}>
+        <a 
+          className="feedbackBtn" 
+          href="" // Replace with your actual link or keep blank for now
+          target='blank'
+          style={{
+            display: "inline-block",
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            textDecoration: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            transition: "background-color 0.3s ease",
+            position: "relative",
+            bottom: "170px"
+            
+          }}
+          onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"}
+          onMouseOut={(e) => e.target.style.backgroundColor = "#007BFF"}
+        >
+          Send Feedback
+        </a>
       </div>
       <Footer />
     </>

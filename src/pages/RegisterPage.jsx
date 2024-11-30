@@ -10,6 +10,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('user'); // Default to 'user'
   const [signupMessage, setSignupMessage] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,8 +37,7 @@ const RegisterPage = () => {
 
       const data = await response.json();
       if (data.success) {
-        alert('Sign up Successful');
-        setSignupMessage('Sign up successful');
+        setIsModalVisible(true); // Show the modal on successful signup
       } else {
         setSignupMessage(data.message);
       }
@@ -131,9 +131,23 @@ const RegisterPage = () => {
           <div style={styles.loginLink}>
             <a href="/" style={styles.link}>Go back to Homepage?</a>
           </div>
-          <div id="signupMessage">{signupMessage}</div>
         </form>
       </div>
+
+      {isModalVisible && (
+        <div style={styles.modal}>
+          <div style={styles.modalContent}>
+            <h3>Signup Successful!</h3>
+            <p>Welcome, {firstname} {lastname}! Your account has been created.</p>
+            <button
+              style={styles.closeButton}
+              onClick={() => setIsModalVisible(false)} // Close modal
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -192,6 +206,33 @@ const styles = {
     color: '#007BFF',
     textDecoration: 'none',
     fontSize: '14px',
+  },
+  modal: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '10px',
+    textAlign: 'center',
+    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+  },
+  closeButton: {
+    marginTop: '15px',
+    padding: '10px 20px',
+    backgroundColor: '#007BFF',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
   },
 };
 

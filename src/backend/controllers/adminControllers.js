@@ -22,7 +22,8 @@ export const getAlluser = (req, res) => {
 
     COALESCE(SUM(c.status = 'pending'), 0) AS pending_campaigns,
     COALESCE(SUM(c.status = 'verified'), 0) AS verified_campaigns,
-    COALESCE(SUM(c.status = 'completed'), 0) AS completed_campaigns
+    COALESCE(SUM(c.status = 'completed'), 0) AS completed_campaigns,
+    COALESCE(SUM(c.status = 'ended'), 0) AS ended_campaigns
 
     FROM users u
     LEFT JOIN address a ON u.user_id = a.user_id

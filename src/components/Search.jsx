@@ -10,6 +10,8 @@ const Search = () => {
   const { campaigns } = useCampaigns(); // Use the campaigns from the CampaignContext
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const port = import.meta.env.VITE_API_URL;
+
   // Configure Fuse.js options
   const options = {
     keys: ['title', 'short_description', 'first_name'], // Customize based on your campaign data fields
@@ -30,6 +32,14 @@ const Search = () => {
     } else {
       setSearchResults([]); // Clear results when search is empty
     }
+  };
+  const getImageUrl = (image) => {
+    // If the image is a base64 string
+    if (image.startsWith("data:image")) {
+      return image;
+    }
+    // If the image is a file path
+    return `${port}/${image}`;
   };
 
   return (
@@ -52,6 +62,7 @@ const Search = () => {
         <p className="result-title">
           {campaign.title}
         </p>
+        <img className='searchimg' src={getImageUrl(campaign.image)} alt="" />
         <p className="result-fname">By {campaign.first_name}</p>
         <p className="result-description">{campaign.short_description}</p>
       </Link>

@@ -81,7 +81,7 @@ const Navbar = () => {
               <Link to='/ServicePage'>Services</Link>
             </li>
             <li className="navbar-item">
-              <Link to='/ContactPage'>Contact</Link>
+              <Link to='/ContactPage'>Contact us</Link>
             </li>
           </ul>
         </div>

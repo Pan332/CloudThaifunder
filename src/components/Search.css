@@ -2,6 +2,7 @@
 
 .search-campaigns {
     position: relative;
+    margin-top: 20px; /* Add some margin if it's too close to other elements */
   }
   
   .search-bar {
@@ -39,6 +40,10 @@
   .search-results {
     list-style-type: none;
     padding: 0;
+    position: relative;
+    z-index: 10;
+    width: 350px;
+
 
   }
   
@@ -65,4 +70,7 @@
   }
   .search-result-link{
     text-decoration: none;
+  }
+  .searchimg{ 
+    width:200px;
   }

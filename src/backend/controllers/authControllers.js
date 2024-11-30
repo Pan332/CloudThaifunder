@@ -80,6 +80,12 @@ export const validateUser = (req, res) => {
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    // Ensure username and password are provided
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Username and password are required' });
+    }
+
     connection.query('SELECT * FROM Users WHERE username = ?', [username], async (err, results) => {
       if (err) {
         console.error('Database error:', err);
@@ -91,12 +97,18 @@ export const login = async (req, res) => {
       }
 
       const user = results[0];
-      if (await bcrypt.compare(password, user.password_hash)) {
-        const access_token = jwtGenerate(user);
-        const refresh_token = jwtRefreshTokenGenerate(user);
-        const role = user.role;
+      const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
-        return res.status(200).json({ success: true, access_token, refresh_token,role });
+      if (isPasswordValid) {
+        const access_token = jwtGenerate(user); // Generate JWT token (replace with your token generation method)
+        const refresh_token = jwtRefreshTokenGenerate(user); // Generate refresh token
+
+        return res.status(200).json({
+          success: true,
+          access_token,
+          refresh_token,
+          role: user.role,
+        });
       } else {
         return res.status(401).json({ success: false, message: 'Invalid password' });
       }
@@ -106,6 +118,7 @@ export const login = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+
 
 // Refresh token
 export const refreshToken = (req, res) => {

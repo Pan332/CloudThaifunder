@@ -27,9 +27,8 @@ const styles = {
     color: '#fff',
     textAlign: 'center',
     padding: '20px 0',
-    left: 0,
-    bottom: 0,
     width: '100%',
+    marginTop: 'auto', // This will ensure the footer sticks to the bottom of the page
   },
   socialIcons: {
     marginBottom: '10px',

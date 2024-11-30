@@ -24,6 +24,7 @@ import TechnologyPage from './pages/TechnologyPage.jsx';
 import ViewInfo from './components/ViewInfo.jsx';
 import ViewCampaign from './components/ViewCampaign.jsx';
 import AlluserAdmin from './components/AlluserAdmin.jsx';
+import ViewTransaction from './components/ViewTransaction.jsx';
 import AllcampaignsAdmin from './components/AllcampaignsAdmin.jsx';
 import CampaignsValidate from './components/CampaignsValidate.jsx';
 import DeleteAccount from './components/DeleteAccount.jsx';
@@ -44,6 +45,8 @@ const router = createBrowserRouter([
   { path: '/RegisterPage', element: <SignupForm /> }, // Fixed the missing comma
   { path: '/ViewInfo', element: <ViewInfo /> },
   { path: '/ViewCampaign', element: <ViewCampaign /> },
+  { path: '/ViewTransaction', element: <ViewTransaction /> },
+
   { path: '/AlluserAdmin', element: <AlluserAdmin /> },
   { path: '/AllcampaignsAdmin', element: <AllcampaignsAdmin /> },
   { path: '/CampaignsValidate', element: <CampaignsValidate /> },
@@ -55,7 +58,6 @@ const router = createBrowserRouter([
   { path: '/CategoriesPage', element: <CategoriesPage /> },
   { path: '/GamesPage', element: <GamesPage /> },
   { path: '/BusinessPage', element: <BusinessPage /> },
-
   { path: '/MusicPage', element: <MusicPage /> },
   { path: '/BooksPage', element: <BooksPage /> },
   { path: '/MedicalPage', element: <MedicalPage /> },

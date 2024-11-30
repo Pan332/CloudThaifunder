@@ -379,7 +379,7 @@ function AlluserAdmin() {
             <li><Link to='/AllCampaignsAdmin'>View all Campaigns</Link></li>
             <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
             <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-            <li><Link to='/Transaction'>Transaction</Link></li>
+            <li><Link to='/ViewTransaction'>Transaction</Link></li>
           </ul>
         </aside>
 
@@ -444,30 +444,82 @@ function AlluserAdmin() {
 
           {/* Modal for additional user info */}
           {isModalOpen && (
-  <div className="modal">
-    <div className="modal-content">
-      <span className="close" onClick={() => setIsModalOpen(false)}>&times;</span>
-      <h2>User Details</h2>
-      <p><strong>Email:</strong> {selectedUser.email}</p>
-      <p><strong>Role:</strong> {selectedUser.role}</p>
-      <p><strong>Phone:</strong> {selectedUser.phone || 'N/A'}</p>
-      <p><strong>First Name:</strong> {selectedUser.first_name || 'N/A'}</p>
-      <p><strong>Last Name:</strong> {selectedUser.last_name || 'N/A'}</p>
-      <p><strong>Age</strong> {selectedUser.age || 'N/A'}</p>
-      <p><strong>Gender:</strong> {selectedUser.gender || 'N/A'}</p>
-
-      <p><strong>Address:</strong> {selectedUser.address|| 'N/A'}</p>
-      <p><strong>City/State:</strong> {selectedUser.city|| 'N/A'}</p>
-      <p><strong>Postcode:</strong> {selectedUser.postcode|| 'N/A'}</p>
-
-      <p><strong>Total Campaigns:</strong> {selectedUser.total_campaigns || '0'}</p>
-      <p><strong>Pendings Campaigns:</strong> {selectedUser.pending_campaigns || '0'}</p>
-      <p><strong>verified Campaigns:</strong> {selectedUser.verified_campaigns || '0'}</p>
-      <p><strong>Completed Campaigns:</strong> {selectedUser.completed_campaigns || '0'}</p>
-
-      <p><strong>Total Earned:</strong> {selectedUser.total_earnings || '0'}</p>
-    </div>
+            <div className="user-modal">
+  <div className="user-modal-content">
+    <span className="user-modal-close" onClick={() => setIsModalOpen(false)}>&times;</span>
+    <h2>User Details</h2>
+    <table className="user-details-table">
+      <tbody>
+        <tr>
+          <td><strong>Email:</strong></td>
+          <td>{selectedUser.email}</td>
+        </tr>
+        <tr>
+          <td><strong>Role:</strong></td>
+          <td>{selectedUser.role}</td>
+        </tr>
+        <tr>
+          <td><strong>Phone:</strong></td>
+          <td>{selectedUser.phone || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>First Name:</strong></td>
+          <td>{selectedUser.first_name || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>Last Name:</strong></td>
+          <td>{selectedUser.last_name || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>Age:</strong></td>
+          <td>{selectedUser.age || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>Gender:</strong></td>
+          <td>{selectedUser.gender || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>Address:</strong></td>
+          <td>{selectedUser.address || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>City/State:</strong></td>
+          <td>{selectedUser.city || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>Postcode:</strong></td>
+          <td>{selectedUser.postcode || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>Total Campaigns:</strong></td>
+          <td>{selectedUser.total_campaigns || '0'}</td>
+        </tr>
+        <tr>
+          <td><strong>Pending Campaigns:</strong></td>
+          <td>{selectedUser.pending_campaigns || '0'}</td>
+        </tr>
+        <tr>
+          <td><strong>Verified Campaigns:</strong></td>
+          <td>{selectedUser.verified_campaigns || '0'}</td>
+        </tr>
+        <tr>
+          <td><strong>Completed Campaigns:</strong></td>
+          <td>{selectedUser.completed_campaigns || '0'}</td>
+        </tr>
+        <tr>
+          <td><strong>Ended Campaigns:</strong></td>
+          <td>{selectedUser.ended_campaigns || '0'}</td>
+        </tr>
+        <tr>
+          <td><strong>Total Earned:</strong></td>
+          <td>{selectedUser.total_earnings || '0'}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+</div>
+
+
 )}
  <div className="pagination">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (

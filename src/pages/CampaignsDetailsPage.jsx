@@ -29,8 +29,10 @@ function CampaignsDetailsPage() {
     const [description, setDescription] = useState(''); // Fix here
     const [phone_number, setphone_number] = useState('');
     const [showLoginPromptModal, setShowLoginPromptModal] = useState(false);
+    const [donations, setDonations] = useState([]);
+    const [topDonations, setTopDonations] = useState([]);
 
-  
+    console.log(donations)
 
     const handleEditClick = (campaign) => {
         setEditingCampaignData(campaign);
@@ -130,6 +132,8 @@ function CampaignsDetailsPage() {
 
       fetchComments();
   }, [port, id]);
+
+
 
     const calculateTimeRemaining = (deadline) => {
         const deadlineDate = new Date(deadline);
@@ -278,6 +282,90 @@ function CampaignsDetailsPage() {
             setError(error.message);
         }
     };
+    useEffect(() => {
+        const fetchDonations = async () => {
+            try {
+                const response = await fetch(`${port}/view/getDonationsByCampaign/${id}`);
+                if (!response.ok) {
+                    setDonations([]);
+                    throw new Error('Failed to fetch donations');
+                }
+    
+                const data = await response.json();
+    
+                if (!data.donations || data.donations.length === 0) {
+                    setDonations([]);
+                    return;
+                }
+    
+                // Aggregate donations by user but show all individual donations
+                const aggregatedDonations = data.donations.map(donation => {
+                    // Convert the created_at date to a readable format
+                    const date = new Date(donation.created_at);
+                    const readableDate = date.toLocaleString('en-US', {
+                        weekday: 'long', // "Monday"
+                        year: 'numeric', // "2024"
+                        month: 'long', // "November"
+                        day: 'numeric', // "28"
+                        hour: '2-digit', // "09"
+                        minute: '2-digit', // "20"
+                        second: '2-digit', // "55"
+                        timeZoneName: 'short' // "GMT"
+                    });
+    
+                    return {
+                        firstName: donation.donor_first_name,
+                        lastName: donation.donor_last_name,
+                        amount: parseInt(donation.amount, 10) || 0,
+                        date: readableDate, // Store the formatted date
+                    };
+                });
+    
+                setDonations(aggregatedDonations);
+    
+            } catch (error) {
+                setError(error.message);
+                setDonations([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchDonations();
+    }, [id, port]);
+    
+    useEffect(() => {
+        const fetchTopDonations = async () => {
+            try {
+                const response = await fetch(`${port}/view/getTopContributors/${id}`);
+                if (!response.ok) {
+                    setTopDonations([]);
+                    throw new Error('Failed to fetch donations');
+                }
+
+                const data = await response.json();
+
+                // If there are no donations or the data doesn't match expectations, clear the donations
+                if (!data.top_contributors || data.top_contributors.length === 0) {
+                    setTopDonations([]);
+                    return;
+                }
+
+                // Successfully set top contributors
+                setTopDonations(data.top_contributors);
+            } catch (error) {
+                setError(error.message);
+                setTopDonations([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTopDonations();
+    }, [id, port]);
+    
+    
+    
 
     const EditModal = ({ campaign, onClose, onSave }) => {
         const [title, setLocalTitle] = useState('');
@@ -306,51 +394,64 @@ function CampaignsDetailsPage() {
     
         return (
             <div className="modal-overlay">
-                <div className="modal-content">
-                    <button className="close-button" onClick={onClose}>
-                        &times;
-                    </button>
-                    <h3>Edit Campaign</h3>
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            handleSave();
-                        }}
-                    >
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setLocalTitle(e.target.value)}
-                            placeholder="Title"
-                            required
-                        />
-                        <input
-                            type="text"
-                            value={short_description}
-                            onChange={(e) => setLocalShortDescription(e.target.value)}
-                            placeholder="Short Description"
-                            maxLength="150"
-                            required
-                        />
-                        <ReactQuill
-                            value={description}
-                            onChange={setLocalDescription}
-                            placeholder="Description"
-                        />
-                        <input
-                            type="text"
-                            value={phone_number}
-                            onChange={(e) => setLocalPhoneNumber(e.target.value)}
-                            placeholder="Phone Number (10 digits)"
-                            required
-                        />
-                        <button  type="submit">Save Changes</button>
-                    </form>
-                </div>
-            </div>
+                
+                        
+    <div className="modal-content">
+    <button className="close-button" onClick={onClose}>
+            &times;
+        </button>
+        <form
+            className="modal-form"
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleSave();
+            }}
+        >
+            <input
+                className="modal-input"
+                type="text"
+                value={title}
+                onChange={(e) => setLocalTitle(e.target.value)}
+                placeholder="Title"
+                required
+            />
+            <input
+                className="modal-input"
+                type="text"
+                value={short_description}
+                onChange={(e) => setLocalShortDescription(e.target.value)}
+                placeholder="Short Description"
+                maxLength="150"
+                required
+            />
+            <ReactQuill
+                className="modal-editor"
+                value={description}
+                onChange={setLocalDescription}
+                placeholder="Description"
+            />
+            <input
+                className="modal-input"
+                type="text"
+                value={phone_number}
+                onChange={(e) => setLocalPhoneNumber(e.target.value)}
+                placeholder="Phone Number (10 digits)"
+                required
+            />
+            <button className="modal-save-button" type="submit">
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
         );
     };
-    
+    const [isOpen, setIsOpen] = useState(false); // Track whether the section is open or closed
+
+    const toggleSection = () => {
+        setIsOpen(!isOpen); // Toggle the state on click
+    };
    
 
     return (
@@ -370,7 +471,9 @@ function CampaignsDetailsPage() {
                                  className="campaign-images"
                   />
                         </div>
-
+                        {success && <p className="success-message">{success}</p>}
+                        
+                         <h1 className='createdby'>By {campaign.firstname} {campaign.lastname} </h1>
                         <div className="info-section">
                             <div className="stats">
                                 <p><strong>Goal Amount:</strong> {campaign.goal_amount}฿</p>
@@ -389,13 +492,46 @@ function CampaignsDetailsPage() {
                            </div>)}
                            {isEditModalOpen && (
                  <EditModal  campaign={editingCampaignData} onClose={() => setIsEditModalOpen(false)}  onSave={handleUpdateCampaign} />)}
-                         
-                            <div className="donation-section">
-                       {currentUserId !== campaign.created_by ? ( 
-                       <button className="donate-button" onClick={toggleDonateModal}>Donate Now</button>
-                             ) : ( <p></p> )}
-                         </div>
-                    
+                         <hr />
+                         <div className="donation-section">
+    {campaign.raised_amount >= campaign.goal_amount ? (
+        <p className="goal-reached-message">🎉 The fundraising goal has been reached! Thank you for your support. 🎉</p>
+    ) : currentUserId !== campaign.created_by ? (
+        <button className="donate-button" onClick={toggleDonateModal}>Donate Now</button>
+    ) : (
+        <p></p>
+    )}
+</div>
+
+                
+
+<div className="donator-section">
+    <h2>Contributor</h2>
+    {donations.length > 0 ? (
+        <div className="donation-table-container">
+            <table className="donation-table">
+                <thead>
+                    <tr>
+                        <th>Donator</th>
+                        <th>Amount Donated</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {donations.slice(0, 5).map((donation, index) => (
+                        <tr key={index}>
+                            <td>{donation.firstName} {donation.lastName}</td>
+                            <td>{donation.amount}฿</td>
+                            <td>{donation.date}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    ) : (
+        <p>No donations yet.</p>
+    )}
+</div>
 
 
                             <div className="comments-section">
@@ -415,21 +551,23 @@ function CampaignsDetailsPage() {
                                         comments.length > 0 ? (
                                             comments.map((comment, index) => (
                                                 <div key={index} className="comment">
-                                                    <p><strong>{comment.firstName || 'Anonymous'}</strong> </p>
+                                                    <h3><strong>{comment.firstName || 'Anonymous'}</strong> </h3>
                                                     <p>{comment.commentText}</p>
                                                     <p><small>{new Date(comment.timestamp).toLocaleString()}</small></p>
                                                     { editingCommentId === comment.commentId ? (
-                                                        <div>
-                                                            <textarea
+                                                        <div className='editsection'>
+                                                            <textarea className='editarea'
                                                                 value={editedText}
                                                                 onChange={(e) => setEditedText(e.target.value)}
                                                             />
-                                                            <button onClick={() => handleCommentSaveEdit(comment.commentId)}>Save</button>
+                                                            <button className='saveedit' onClick={() => handleCommentSaveEdit(comment.commentId)}>Save</button>
                                                         </div>
                                                     ) :isLoggedIn && comment.userId === currentUserId && (
                                                         <>
                                                             <div className="buttons-container">
+
                                                                 <button className="edit" onClick={() => handleCommentEdit(comment.commentId)}>Edit</button>
+
                                                                 <button className="delete" onClick={() => handleCommentDelete(comment.commentId)}>Delete</button>
                                                             </div>
                                                         </>
@@ -456,9 +594,7 @@ function CampaignsDetailsPage() {
         </div>
     </div>
 )}
-
-
-            {showDonateModal && (
+                  {showDonateModal && (
                 <div className="modal-overlay" onClick={toggleDonateModal}>
                     <div className="modals-content" onClick={(e) => e.stopPropagation()}>
                         <button className="modal-close" onClick={toggleDonateModal}>X</button>
@@ -468,6 +604,33 @@ function CampaignsDetailsPage() {
                     </div>
                 </div>
             )}
+
+<div className="top-contributors">
+            <div className="header" onClick={toggleSection}>
+                <h3>Top Contributors</h3>
+                <span className={`arrow ${isOpen ? 'open' : ''}`}>&#9660;</span> {/* Arrow icon */}
+            </div>
+            {isOpen && (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Donated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {topDonations.map((contributor, index) => (
+                            <tr key={index}>
+                                <td>{contributor.donor_first_name}</td>
+                                <td>{contributor.donor_last_name}</td>
+                                <td>{contributor.total_donated}฿</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+        </div>
 
             <Footer />
         </>

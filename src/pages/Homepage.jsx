@@ -19,7 +19,6 @@ function Homepage()  {
   const port = import.meta.env.VITE_API_URL;
 
   const { campaigns } = useCampaigns();
-  console.log(campaigns)
   const calculateTimeRemaining = (deadline) => {
     const deadlineDate = new Date(deadline);
     const now = new Date();
@@ -44,7 +43,7 @@ function Homepage()  {
       </div>
 
       <div className="trend-campaign">
-        <h1 className="trend-text">Charities</h1>
+        <h1 className="trend-text">Emergencies</h1>
         <div className="card-container">
         {campaigns.filter((campaign) => campaign.campaign_tag === 'charities').slice(0, 4).map((campaign, index) => (
               <Card

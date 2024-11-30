@@ -18,6 +18,10 @@
   .image-section {
     text-align: center;
   }
+  .createdby{
+    text-align: center;
+  }
+  
  
   .campaign-images {
     width: 100%;
@@ -140,18 +144,18 @@
 
 .comment p {
   margin: 5px 0;
-}
-
-.comment p strong {
-  font-weight: bold;
   color: #333;
 }
 
-.comment small {
-  color: #888;
-  font-size: 12px;
+.comment p strong {
+  font-size: 16px;
+  color: #000;
 }
 
+.comment small {
+  color: #666;
+  font-size: 12px;
+}
 /* Error and Success Messages */
 .error-message, .success-message {
   padding: 10px;
@@ -241,9 +245,12 @@
   padding: 10px;
   margin: 30px 0;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 15px;
   background-color: #f9f9f9;
+  
 }
+
+
 
 .comment .edit, .comment .delete {
   padding: 5px 10px;
@@ -278,8 +285,366 @@
 /* Align buttons to the right */
 .comment .buttons-container {
   position: absolute;
-  top: 59px;
-  right: 10px;
+  top: 90px;
+  right: 14px;
   display: flex;
   gap: 5px;
+}
+.editarea {
+  width: 100%;
+  max-width: 500px; /* Limits the width for better control */
+  min-height: 100px; /* Sets a reasonable height */
+  padding: 10px; /* Adds padding inside the textarea */
+  font-size: 16px; /* Improves readability */
+  border: 1px solid #ccc; /* Adds a light border */
+  border-radius: 4px; /* Rounds the corners */
+  resize: vertical; /* Allows resizing only vertically */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+}
+
+.saveedit {
+  margin-top: 10px; /* Adds space between the textarea and the button */
+  padding: 10px 20px; /* Adjusts button size */
+  font-size: 16px; /* Makes text readable */
+  color: #fff; /* Sets text color to white */
+  background-color: #007BFF; /* Primary button color */
+  border: none; /* Removes default border */
+  border-radius: 4px; /* Rounds button corners */
+  cursor: pointer; /* Changes cursor to pointer */
+  transition: background-color 0.3s ease; /* Adds hover animation */
+}
+
+.saveedit:hover {
+  background-color: #0056b3; /* Darkens the button color on hover */
+}
+
+.editsection {
+  display: flex;
+  flex-direction: column; /* Stacks textarea and button vertically */
+  align-items: flex-start; /* Aligns elements to the left */
+  gap: 10px; /* Adds space between elements */
+  margin: 20px 0; /* Adds space around the container */
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+/* Modal Content */
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  max-width: 700px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  max-height: 90vh;
+  overflow-y: auto;
+
+}
+
+/* Modal Title */
+.modal-title {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+/* Modal Form */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Input Fields */
+.modal-input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-input:focus {
+  border-color: #05a8e9;
+  outline: none;
+  box-shadow: 0 0 5px rgba(5, 168, 233, 0.5);
+}
+
+
+/* Save Button */
+.modal-save-button {
+  background-color: #05a8e9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-save-button:hover {
+  background-color: #047bb3;
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+/* Modal Animation */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: scale(0.9);
+  }
+  to {
+      opacity: 1;
+      transform: scale(1);
+  }
+}
+.goal-reached-message {
+  font-size: 1.2rem;
+  color: green;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+}
+/* Ensure responsive layout for stats section */
+.details-page .description img {
+  width: 800px; /* Limit the width to the container size */
+  height: auto;    /* Maintain aspect ratio */
+  display: block;      /* Makes the image a block element */
+    margin: 0 auto;      /* Centers the image horizontally */
+    max-width: 100%;     /* Limit the width to the container size */
+    height: auto;        /* Maintain aspect ratio */
+    max-height: 400px;  /* Optionally limit the height */
+}
+
+
+.donation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the table */
+  background-color: #ffffff; /* Set a white background */
+  border-radius: 10px; /* Optional: Round the corners of the table */
+  overflow: hidden; /* Ensure rounded corners work */
+}
+
+.donation-table th,
+.donation-table td {
+  padding: 12px 20px; /* Add padding for more spacious cells */
+  text-align: left;
+  border-bottom: 1px solid #ddd; /* Soft border for separation */
+}
+
+.donation-table th {
+  background-color: #f9f9f9; /* Lighter background for headers */
+  font-weight: 600; /* Bold headers */
+  color: #333; /* Dark text for headers */
+  font-size: 1.1em; /* Slightly larger font size */
+}
+
+.donation-table td {
+  font-size: 1em; /* Normal font size */
+  color: #555; /* Slightly lighter color for the content */
+}
+
+.donation-table tr:hover {
+  background-color: #f1f1f1; /* Slightly darker background when hovering */
+}
+
+.donation-table tr:nth-child(odd) {
+  background-color: #f9f9f9; /* Zebra striping for better readability */
+}
+
+.donation-table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.donation-table th,
+.donation-table td {
+  border-radius: 5px; /* Rounded corners for table cells */
+}
+
+.donator-section p {
+  text-align: center;
+  color: #555;
+}
+
+.donation-table-container {
+  max-height: 200px;
+  overflow-y: auto; /* Enable scrolling when there are many rows */
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 10px; /* Add some space around the table */
+  background-color: #fafafa; /* Background color for the table container */
+}
+
+.donation-table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.donation-table-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.donation-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+/* Style for No donations message */
+.donator-section p {
+  font-size: 1.2em;
+  color: #888;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+
+.top-contributors {
+  position: absolute; /* Change to absolute for fixed positioning */
+  top: 200px; /* Adjust this value to position it below the navbar */
+  right: 30px; /* Adjust the right side as per your preference */
+  background-color: rgba(255, 255, 255, 0.9); /* Optional: slightly transparent background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 350px; /* Optional: Set a maximum width */
+  overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+.top-contributors table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.top-contributors th, .top-contributors td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.top-contributors th {
+  background-color: #f2f2f2;
+}
+
+.top-contributors p {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  font-style: italic;
+}
+.top-contributors h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+.top-contributors .arrow {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  margin-left: 60px; /* Add space between text and arrow */
+  text-align: center; /* Ensures the arrow is centered in the available space */
+
+}
+.top-contributors .arrow.open {
+ 
+  text-align: center;
+  margin-left: 120px; /* Add space between text and arrow */
+
+}
+@media (max-width: 768px) {
+  .top-contributors table th, .top-contributors table td {
+      font-size: 14px;
+      padding: 8px;
+  }
+
+  .top-contributors table {
+      font-size: 14px;
+  }
+
+  .top-contributors h3 {
+      font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-contributors table th, .top-contributors table td {
+      font-size: 12px;
+      padding: 6px;
+  }
+
+  .top-contributors h3 {
+      font-size: 14px;
+  }
+}
+/* Media Queries for responsiveness */
+@media screen and (max-width: 768px) {
+  .donation-table {
+    font-size: 0.9em; /* Slightly reduce font size for smaller screens */
+  }
+
+  .donation-table th,
+  .donation-table td {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .donation-table-container {
+    max-height: 150px; /* Adjust the max height for small screens */
+  }
+
+  .donator-section h2 {
+    font-size: 1.3em; /* Adjust header size for smaller screens */
+  }
+}
+/* Media Queries for responsiveness */
+
+
+/* Adjust layout for small screens (e.g., max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .stats {
+      flex-direction: column; /* Explicitly set vertical layout */
+      align-items: flex-start; /* Align items to the start */
+      gap: 15px; /* Space between items */
+      padding: 20px;
+      align-items: center;
+
+  }
+
+  .stats p {
+      margin: 0;
+  }
 }

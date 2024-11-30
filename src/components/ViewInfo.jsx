@@ -129,7 +129,7 @@ function ViewInfo() {
       <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
       <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
       <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/ViewTransaction'>Transaction</Link></li>
 
 
     </ul>
@@ -138,14 +138,14 @@ function ViewInfo() {
       <li><Link to='/ViewInfo'>Info</Link></li>
       <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
       <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/ViewTransaction'>Transaction</Link></li>
       <li><Link to='/DeleteAccount'>Delete Account</Link></li>
     </ul>
   ) : (
     <ul>
       <li><Link to='/ViewInfo'>Info</Link></li>
       <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/ViewTransaction'>Transaction</Link></li>
       <li><Link to='/DeleteAccount'>Delete Account</Link></li>
     </ul>
   )}
@@ -157,8 +157,11 @@ function ViewInfo() {
           
 
             <div className="profile-section">
-        
-              <p>{successMessage}</p>
+            {successMessage && <p className="success-message">{successMessage}</p>}
+            {updateMessage && (
+              <div className="update-message">
+              </div>
+            )}
               <h1>Personal Information</h1>
               <button className="btn-edit" onClick={handleEditToggle}>Edit</button>
 
@@ -170,6 +173,7 @@ function ViewInfo() {
                   value={userInfo.first_name}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  required
                 />
                 <label className='lb'>Last Name</label>
                 <input className='inp'
@@ -178,6 +182,7 @@ function ViewInfo() {
                   value={userInfo.last_name}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  required
                 />
                 <label className='lb'>Email</label>
                 <input className='inp'
@@ -186,6 +191,7 @@ function ViewInfo() {
                   value={userInfo.email}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  required
                 />
                 <label className='lb'>Phone</label>
                 <input className='inp'
@@ -262,12 +268,7 @@ function ViewInfo() {
               </div>
             )}
 
-            {successMessage && <p className="success-message">{successMessage}</p>}
-            {updateMessage && (
-              <div className="update-message">
-                <pre>{updateMessage}</pre>
-              </div>
-            )}
+        
           </div>
         </main>
       </div>

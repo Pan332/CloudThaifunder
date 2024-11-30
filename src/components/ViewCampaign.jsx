@@ -96,7 +96,7 @@ function ViewCampaign() {
       <li><Link to='/AllcampaignsAdmin'>View all Campaigns</Link></li>
       <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
       <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/ViewTransaction'>Transaction</Link></li>
 
 
     </ul>
@@ -105,14 +105,14 @@ function ViewCampaign() {
       <li><Link to='/ViewInfo'>Info</Link></li>
       <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
       <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/ViewTransaction'>Transaction</Link></li>
       <li><Link to='/DeleteAccount'>Delete Account</Link></li>
     </ul>
   ) : (
     <ul>
       <li><Link to='/ViewInfo'>Info</Link></li>
       <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-      <li><Link to='/Transaction'>Transaction</Link></li>
+      <li><Link to='/ViewTransaction'>Transaction</Link></li>
       <li><Link to='/DeleteAccount'>Delete Account</Link></li>
     </ul>
   )}

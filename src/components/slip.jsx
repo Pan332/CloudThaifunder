@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { fetchAllConfig } from '../aUtils/getenv';
 
-const SLIP_API_TOKEN = import.meta.env.VITE_SLIP_API_TOKEN;
-const SLIP_COOKIE = import.meta.env.VITE_SLIP_COOKIE;
-const SLIP_API_LINK = import.meta.env.VITE_SLIP_API_LINK;
+const { VITE_SLIP_API_TOKEN, VITE_SLIP_COOKIE, VITE_SLIP_API_LINK } = await fetchAllConfig();
+
 const BACKEND_API_LINK = import.meta.env.VITE_API_URL;
 
 function SlipUploader({ expectedAmount }) {
@@ -28,11 +28,11 @@ function SlipUploader({ expectedAmount }) {
         formData.append('file', file, file.name);
 
         try {
-            const response = await fetch(SLIP_API_LINK, {
+            const response = await fetch(VITE_SLIP_API_LINK, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${SLIP_API_TOKEN}`,
-                    'Cookie': SLIP_COOKIE,
+                    'Authorization': `Bearer ${VITE_SLIP_API_TOKEN}`,
+                    'Cookie': VITE_SLIP_COOKIE,
                 },
                 body: formData,
             });

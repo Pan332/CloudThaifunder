@@ -268,7 +268,9 @@ export const getCampaignById = (req, res) => {
         campaigns.image,
         campaigns.phone_number,
 
-        users.first_name AS creator_name
+        users.first_name AS firstname,
+        users.last_name AS lastname
+
       FROM campaigns
       JOIN users ON campaigns.created_by = users.user_id
       WHERE campaigns.campaign_id = ?
@@ -339,3 +341,99 @@ export const CountAllAmount = (req, res) => {
   });
 };
 
+export const getDonations = (req, res) => {
+  const { id } = req.params;// Extract user_id from route parameters
+  // SQL query to fetch donations for the given user_id
+  const query = `
+    SELECT 
+      d.donation_id AS donation_id,
+      d.campaign_id,
+      d.amount,
+      d.transaction_id,
+      d.created_at,
+      c.title AS campaign_title,
+      c.goal_amount,
+      c.raised_amount
+    FROM donations d
+    JOIN campaigns c ON d.campaign_id = c.campaign_id
+    WHERE d.user_id = ?
+    ORDER BY d.created_at DESC
+  `;
+
+  connection.execute(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching donations by user:', err);
+      return res.status(500).json({ message: 'Database query failed' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'No donations found for this user' });
+    }
+
+    res.status(200).json({
+      message: 'Donations retrieved successfully',
+      donations: results,
+    });
+  });
+};
+
+export const getDonationsByCampaign = (req, res) => {
+  const { id } = req.params; // Extract campaignId from route parameters
+
+  const query = `
+    SELECT 
+      d.donation_id,
+      d.amount,
+      d.transaction_id,
+      d.created_at,
+      u.first_name AS donor_first_name,
+      u.last_name AS donor_last_name
+    FROM donations d
+    JOIN users u ON d.user_id = u.user_id
+    WHERE d.campaign_id = ?
+    ORDER BY d.created_at DESC;
+  `;
+
+  connection.execute(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching donations for campaign:', err);
+      return res.status(500).json({ message: 'Database query failed' });
+    }
+
+    // Return all donations, even if there are no donations
+    res.status(200).json({
+      message: 'Donations retrieved successfully',
+      donations: results, // This will return all donations for the campaign
+    });
+  });
+};
+
+export const getTopContributors = (req, res) => {
+  const { id } = req.params; // Extract campaignId from route parameters
+
+  const query = `
+    SELECT 
+      u.first_name AS donor_first_name,
+      u.last_name AS donor_last_name,
+      SUM(d.amount) AS total_donated
+    FROM donations d
+    JOIN users u ON d.user_id = u.user_id
+    WHERE d.campaign_id = ?
+    GROUP BY d.user_id
+    ORDER BY total_donated DESC
+    LIMIT 8;
+  `;
+
+  connection.execute(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching top contributors for campaign:', err);
+      return res.status(500).json({ message: 'Database query failed' });
+    }
+
+    // Return the top 8 contributors
+    res.status(200).json({
+      message: 'Top contributors retrieved successfully',
+      top_contributors: results, // This will return the top 8 contributors
+    });
+  });
+};

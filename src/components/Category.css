@@ -1,0 +1,44 @@
+/* Categories.css */
+
+.container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .categoriesGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
+  .categoryItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease; /* Smooth transition for the scale effect */
+  }
+  
+  .categoryItem:hover {
+    transform: scale(1.1); /* Slightly increase size on hover */
+  }
+  
+  .label {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+  
+  /* Media Query for Smaller Screens */
+  @media (max-width: 768px) {
+    .categoriesGrid {
+      grid-template-columns: repeat(2, 1fr); /* 2 items per row for smaller screens */
+    }
+  }
+  

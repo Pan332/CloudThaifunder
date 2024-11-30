@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaGamepad, FaTshirt, FaPenNib, FaFilm, FaMusic, FaPalette, FaFlask, FaBook, FaHandHoldingHeart, FaMedkit, FaGraduationCap, FaBriefcase } from 'react-icons/fa';
+import './Category.css';  // Import the external CSS file
 
 const Categories = () => {
   const categories = [
@@ -18,57 +19,22 @@ const Categories = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <div style={styles.categoriesGrid}>
+    <div className="container">
+      <div className="categoriesGrid">
         {categories.map((category, index) => (
           <a 
             key={index} 
             href={category.link} 
-            style={styles.categoryItem} 
+            className="categoryItem" 
             rel="noopener noreferrer"
           >
             {category.icon}
-            <p style={styles.label}>{category.label}</p>
+            <p className="label">{category.label}</p>
           </a>
         ))}
       </div>
     </div>
   );
-};
-
-// Styles for the categories section
-const styles = {
-  container: {
-    textAlign: 'center',
-    padding: '20px',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    marginBottom: '20px',
-  },
-  categoriesGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '20px',
-  },
-  categoryItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    textDecoration: 'none',
-    color: 'inherit',
-    transition: 'transform 0.3s ease', // Smooth transition for the scale effect
-  },
-  label: {
-    marginTop: '10px',
-    fontSize: '16px',
-  },
-};
-
-// Add hover effect
-styles.categoryItem[':hover'] = {
-  transform: 'scale(1.1)', // Slightly increase size on hover
 };
 
 export default Categories;

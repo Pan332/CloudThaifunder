@@ -321,7 +321,7 @@ function AllcampaignsAdmin() {
             <li><Link to='/AllCampaignsAdmin'>View all Campaigns</Link></li>
             <li><Link to='/CampaignsValidate'>Pending Campaigns</Link></li>
             <li><Link to='/ViewCampaign'>My Campaign</Link></li>
-            <li><Link to='/Transaction'>Transaction</Link></li>
+            <li><Link to='/ViewTransaction'>Transaction</Link></li>
           </ul>
         </aside>
 

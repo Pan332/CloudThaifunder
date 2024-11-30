@@ -10,7 +10,7 @@ function QRCodeGenerator() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const port = import.meta.env.VITE_API_URL;
     const { id } = useParams();
-    const timeoutDuration = 60000; // 1 minute
+    const timeoutDuration = 120000; // 1 minute
 
     // Clear QR code after timeout
     useEffect(() => {
