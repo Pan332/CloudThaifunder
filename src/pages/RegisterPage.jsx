@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import GoogleLogin from '../components/Oauth2google';
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -132,6 +132,10 @@ const RegisterPage = () => {
             <a href="/" style={styles.link}>Go back to Homepage?</a>
           </div>
         </form>
+        <div  style={styles.googlelogin}></div>
+         <GoogleLogin />
+
+
       </div>
 
       {isModalVisible && (
@@ -205,7 +209,7 @@ const styles = {
   link: {
     color: '#007BFF',
     textDecoration: 'none',
-    fontSize: '14px',
+    fontSize: '16px',
   },
   modal: {
     position: 'fixed',
@@ -234,6 +238,10 @@ const styles = {
     borderRadius: '5px',
     cursor: 'pointer',
   },
+  googlelogin:{
+    marginTop: '15px',
+    textAlign: 'center',
+  }
 };
 
 export default RegisterPage;

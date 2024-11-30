@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import GoogleLogin from '../components/Oauth2google';
 
 
 const LoginModal = ({ closeModal }) => {
@@ -86,7 +87,7 @@ const LoginModal = ({ closeModal }) => {
             />
           </div>
           <div style={modalStyles.buttonGroup}>
-            <button type="submit" style={modalStyles.button}>
+            <button type="submit" style={modalStyles.buttons}>
               Login
             </button>
             <button 
@@ -100,6 +101,11 @@ const LoginModal = ({ closeModal }) => {
             <a href="/RegisterPage" style={modalStyles.link}>Register</a>
           </div>
         </form>
+        <div style={modalStyles.google}>
+        <GoogleLogin />
+
+        </div>
+
       </div>
     </div>
   );
@@ -144,7 +150,7 @@ const modalStyles = {
     justifyContent: 'space-between',
     marginTop: '15px',
   },
-  button: {
+  buttons: {
     width: '48%',
     padding: '10px',
     backgroundColor: '#007BFF',
@@ -171,7 +177,7 @@ const modalStyles = {
   link: {
     color: '#007BFF',
     textDecoration: 'none',
-    fontSize: '14px',
+    fontSize: '18px',
   },
   error: {
     color: 'red',
@@ -182,6 +188,10 @@ const modalStyles = {
     fontSize: '18px',
     marginBottom: '10px',
     animation: 'fadeIn 1s ease-in-out', // Add fade-in animation
+  },
+  google:{
+    marginTop: '15px',
+    textAlign: 'center',
   },
   '@keyframes fadeIn': {
     from: { opacity: 0 },

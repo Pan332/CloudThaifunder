@@ -32,6 +32,7 @@ function BusinessPage() {
   <main className="categories-page">
   <h1>Business & Start up</h1>
   <Search/>
+ 
           <div className="campaigns-container">
             {campaigns.filter((campaign) => campaign.campaign_tag === 'business & startup').map((campaign, index) => (
               <Card

@@ -15,8 +15,8 @@ import { verifyAdmin } from './middleware/backend/isAdmin.js';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
-import getEnv from './routes/getenv.js'
-
+import getEnv from './routes/getenv.js';
+import google from './routes/Oauth2.js';
 
 dotenv.config({ path: './.env' });
 
@@ -71,6 +71,14 @@ app.use(cors({
       next();
     });
 
+    app.use('/Oauth2/google/*', (req, res, next) => {
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      next();
+    });
+
 
 // Routes
 app.use('/auth',loginLimiter, authRoutes);
@@ -84,7 +92,8 @@ app.use('/comment', commentRoutes);
 app.use('/badge',verifyAdmin,badgeRoutes);
 app.use('/promptpay', transactionRoutes);
 app.use('/uploads', express.static('uploads'));
-app.use('/getenv',getEnv)
+app.use('/getenv',getEnv);
+app.use('/Oauth2',google);
 
 
 
