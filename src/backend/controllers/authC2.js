@@ -62,18 +62,18 @@ export const jwtRefreshTokenValidate = (req, res, next) => {
 // Validate the user for token refresh
 export const validateUser = async (req, res) => {
   try {
-    const [users] = await connection.execute('SELECT * FROM Users WHERE user_id = ? AND username = ?', 
+    const [users] = await connection.execute('SELECT * FROM users WHERE user_id = ? AND username = ?', 
       [req.user.user_id, req.user.username]);
 
     if (!users.length) return res.sendStatus(401);
 
-    const [userIndex] = await connection.execute('SELECT * FROM Users WHERE refresh = ?', [req.user.token]);
+    const [userIndex] = await connection.execute('SELECT * FROM users WHERE refresh = ?', [req.user.token]);
     if (!userIndex.length) return res.sendStatus(401);
 
     const user = users[0];
     const access_token = jwtGenerate(user);
     const refresh_token = jwtRefreshTokenGenerate(user);
-    await connection.execute('UPDATE Users SET refresh = ? WHERE user_id = ?', [refresh_token, user.user_id]);
+    await connection.execute('UPDATE users SET refresh = ? WHERE user_id = ?', [refresh_token, user.user_id]);
 
     return res.json({
       access_token,
@@ -89,7 +89,7 @@ export const validateUser = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    const [results] = await connection.execute('SELECT * FROM Users WHERE username = ?', [username]);
+    const [results] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
 
     if (results.length === 0) {
       return res.status(401).json({ success: false, message: 'User not found' });
@@ -128,7 +128,7 @@ export const register = async (req, res) => {
   const { username, email, password, role, phone, firstname, lastname } = req.body;
 
   try {
-    const [results] = await connection.execute('SELECT * FROM Users WHERE username = ?', [username]);
+    const [results] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
 
     if (results.length > 0) {
       return res.status(400).json({ success: false, message: 'Username already exists' });
@@ -136,7 +136,7 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await connection.execute(
-      'INSERT INTO Users (username, email, password_hash, role, phone, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+      'INSERT INTO users (username, email, password_hash, role, phone, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)', 
       [username, email, hashedPassword, role, phone, firstname, lastname]
     );
 

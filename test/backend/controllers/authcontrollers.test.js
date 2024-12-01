@@ -47,7 +47,7 @@ describe('Auth Controller Tests', () => {
     };
   
     connection.query.mockImplementation((sql, params, callback) => {
-    if (sql.includes('SELECT * FROM Users WHERE username = ?')) {
+    if (sql.includes('SELECT * FROM users WHERE username = ?')) {
       // Ensure this callback returns a user with the correct password hash
       callback(null, [{ username: 'testuser', password_hash: 'hashedPassword', role: 'user' }]);
     } else {

@@ -86,7 +86,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Username and password are required' });
     }
 
-    connection.query('SELECT * FROM Users WHERE username = ?', [username], async (err, results) => {
+    connection.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
       if (err) {
         console.error('Database error:', err);
         return res.status(500).json({ success: false, message: 'Error executing query' });
@@ -139,7 +139,7 @@ export const register = async (req, res) => {
 
   try {
     // Check if username or email already exists
-    connection.query('SELECT * FROM Users WHERE username = ? OR email = ?', [username, email], async (err, results) => {
+    connection.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], async (err, results) => {
       if (err) {
         console.error('Error executing query:', err);
         return res.status(500).json({ success: false, message: 'Error executing query' });
@@ -150,7 +150,7 @@ export const register = async (req, res) => {
 
       // Hash password and insert new user
       const hashedPassword = await bcrypt.hash(password, 10);
-      connection.query('INSERT INTO Users (username, email, password_hash, role, phone, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+      connection.query('INSERT INTO users (username, email, password_hash, role, phone, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)', 
         [username, email, hashedPassword, role, phone, firstname, lastname],
         (err) => {
           if (err) {
