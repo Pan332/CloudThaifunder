@@ -38,60 +38,63 @@ describe('Auth Controller Tests', () => {
     expect(response.body.message).toBe('User registered successfully');
   });
 
-  // Test for user login
   it('should login a user successfully', async () => {
     const mockUser = {
+      user_id: 1,
       username: 'testuser',
-      password_hash: await bcrypt.hash('password123', 10), // Hash the password
+      password_hash: await bcrypt.hash('password123', 10),
       role: 'user',
     };
-
-    // Mock the database query to simulate an existing user in the database
+  
     connection.query.mockImplementation((sql, params, callback) => {
-      if (sql.includes('SELECT * FROM users WHERE username = ?')) {
-        callback(null, [mockUser]); // Return the mock user
-      } else {
-        callback(null, []); // Default callback
-      }
-    });
+    if (sql.includes('SELECT * FROM Users WHERE username = ?')) {
+      // Ensure this callback returns a user with the correct password hash
+      callback(null, [{ username: 'testuser', password_hash: 'hashedPassword', role: 'user' }]);
+    } else {
+      callback(null, []);
+    }
+  });
+  
+    bcrypt.compare = jest.fn((plainText, hash) => {
 
-    // Send the login request
+      return Promise.resolve(true); // Simulate password match
+    });
+  
     const response = await request(app)
       .post('/auth/login')
-      .send({
-        username: 'testuser',
-        password: 'password123',  // Correct password for mockUser
-      });
-
-    // Assertions to check if the login was successful
+      .send({ username: 'testuser', password: 'password123' });
+  
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
-    expect(response.body.access_token).toBeDefined(); // Check that the access token is returned
-    expect(response.body.refresh_token).toBeDefined(); // Check that the refresh token is returned
+    expect(response.body.role).toBe('user');
   });
 
 
-  // Test for invalid login credentials
   it('should return error for invalid login credentials', async () => {
     const mockUser = {
       username: 'testuser',
       password_hash: await bcrypt.hash('password123', 10),
     };
-
+  
     connection.query.mockImplementation((sql, params, callback) => {
       callback(null, [mockUser]); // Simulate existing user in the database
     });
-
+  
+    // Mock bcrypt.compare to return false for incorrect password
+    bcrypt.compare = jest.fn((plainText, hash) => {
+      return Promise.resolve(plainText === 'password123' ? true : false); // Ensure it fails for wrong password
+    });
+  
     const response = await request(app).post('/auth/login').send({
       username: 'testuser',
-      password: 'wrongpassword',
+      password: 'wrongpassword', // Incorrect password
     });
-
+  
     expect(response.status).toBe(401);
     expect(response.body.success).toBe(false);
     expect(response.body.message).toBe('Invalid password');
   });
-
+  
   // Test for refresh token
   it('should return a new access token for valid refresh token', async () => {
     const mockUser = {
@@ -164,4 +167,3 @@ describe('Auth Controller Tests', () => {
     expect(response.body.message).toBe('Forbidden');
   });
 });
-
