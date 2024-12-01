@@ -394,7 +394,7 @@ const port = process.env.PORT;
 const accesstoken = process.env.ACCESS_TOKEN_SECRET;
 &nbsp;
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://23.22.78.84:5173',
     credentials: true 
   }));
   
@@ -425,7 +425,7 @@ app.use(cors({
   });
   
   app.options('*', <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');</span>
+<span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:5173');</span>
 <span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS'); </span>
 <span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Credentials', 'true'); </span>
 <span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); </span>
@@ -433,7 +433,7 @@ app.use(cors({
     });  
   
   app.use('/uploads', <span class="fstat-no" title="function not covered" >(r</span>eq, res, next) =&gt; {
-<span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');</span>
+<span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:5173');</span>
 <span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');</span>
 <span class="cstat-no" title="statement not covered" >      res.setHeader('Access-Control-Allow-Credentials', 'true');</span>
 <span class="cstat-no" title="statement not covered" >      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');</span>
@@ -465,7 +465,7 @@ app.use(<span class="fstat-no" title="function not covered" >(e</span>rr, req, r
 });
 &nbsp;
 app.listen(port, () =&gt; {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://23.22.78.84:${port}`);
 });
 &nbsp;
 &nbsp;
@@ -491,7 +491,7 @@ app.listen(port, () =&gt; {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "http://localhost:4321", "data:"],
+      imgSrc: ["'self'", "http://23.22.78.84:4321", "data:"],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],

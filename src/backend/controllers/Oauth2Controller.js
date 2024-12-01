@@ -18,10 +18,10 @@ const queryDatabase = (query, params) => {
 };
 
 export const GoogleAuth = async function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Origin', 'http://23.22.78.84:5173');
     res.header('Referrer-Policy', 'no-referrer-when-downgrade');
 
-    const redirecturl = `http://localhost:${port}/Oauth2/google/callback/`;
+    const redirecturl = `http://23.22.78.84:${port}/Oauth2/google/callback/`;
 
     const oAuth2Client = new OAuth2Client(
         process.env.GOOGLE_CLIENT_ID,
@@ -41,7 +41,7 @@ export const GoogleAuth = async function (req, res, next) {
 export const GoogleCallback = async function (req, res, next) {
     const code = req.query.code;
     try {
-        const redirecturl = `http://localhost:${port}/Oauth2/google/callback/`;
+        const redirecturl = `http://23.22.78.84:${port}/Oauth2/google/callback/`;
         const oAuth2Client = new OAuth2Client(
             process.env.GOOGLE_CLIENT_ID,
             process.env.GOOGLE_CLIENT_SECRET,
@@ -65,7 +65,7 @@ export const GoogleCallback = async function (req, res, next) {
             const user = users;
             const accessToken = jwtGenerate(user);
             const refreshToken = jwtRefreshTokenGenerate(user);
-            res.redirect(`http://localhost:5173?token1=${accessToken}&token2=${refreshToken}`);
+            res.redirect(`http://23.22.78.84:5173?token1=${accessToken}&token2=${refreshToken}`);
         } else {
             // Check if the username already exists
             let newUsername = name;
@@ -100,7 +100,7 @@ export const GoogleCallback = async function (req, res, next) {
             const accessToken = jwtGenerate(newUser);
             const refreshToken = jwtRefreshTokenGenerate(newUser);
 
-            res.redirect(`http://localhost:5173?token1=${accessToken}&token2=${refreshToken}`);
+            res.redirect(`http://23.22.78.84:5173?token1=${accessToken}&token2=${refreshToken}`);
         }
     } catch (err) {
         console.error('Error signing in with Google:', err);

@@ -25,7 +25,7 @@ const port = process.env.PORT;
 const accesstoken = process.env.ACCESS_TOKEN_SECRET;
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://23.22.78.84:5173',
     credentials: true 
   }));
   
@@ -56,7 +56,7 @@ app.use(cors({
   });
   
   app.options('*', (req, res) => {
-      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:5173');
       res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS'); 
       res.setHeader('Access-Control-Allow-Credentials', 'true'); 
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); 
@@ -64,7 +64,7 @@ app.use(cors({
     });  
   
   app.use('/uploads', (req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:5173');
       res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
@@ -72,7 +72,7 @@ app.use(cors({
     });
 
     app.use('/Oauth2/google/*', (req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:5173');
       res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
@@ -105,7 +105,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://23.22.78.84:${port}`);
 });
 
 
@@ -131,7 +131,7 @@ if (process.env.NODE_ENV === 'production') {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "http://localhost:4321", "data:"],
+      imgSrc: ["'self'", "http://23.22.78.84:4321", "data:"],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
