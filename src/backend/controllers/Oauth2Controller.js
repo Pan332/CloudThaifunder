@@ -18,7 +18,7 @@ const queryDatabase = (query, params) => {
 };
 
 export const GoogleAuth = async function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://23.22.78.84:5173');
+    res.header('Access-Control-Allow-Origin', 'http://23.22.78.84:80');
     res.header('Referrer-Policy', 'no-referrer-when-downgrade');
 
     const redirecturl = `http://23.22.78.84:${port}/Oauth2/google/callback/`;
@@ -65,7 +65,7 @@ export const GoogleCallback = async function (req, res, next) {
             const user = users;
             const accessToken = jwtGenerate(user);
             const refreshToken = jwtRefreshTokenGenerate(user);
-            res.redirect(`http://23.22.78.84:5173?token1=${accessToken}&token2=${refreshToken}`);
+            res.redirect(`http://23.22.78.84:80?token1=${accessToken}&token2=${refreshToken}`);
         } else {
             // Check if the username already exists
             let newUsername = name;
@@ -100,7 +100,7 @@ export const GoogleCallback = async function (req, res, next) {
             const accessToken = jwtGenerate(newUser);
             const refreshToken = jwtRefreshTokenGenerate(newUser);
 
-            res.redirect(`http://23.22.78.84:5173?token1=${accessToken}&token2=${refreshToken}`);
+            res.redirect(`http://23.22.78.84:80?token1=${accessToken}&token2=${refreshToken}`);
         }
     } catch (err) {
         console.error('Error signing in with Google:', err);

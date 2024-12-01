@@ -1,6 +1,6 @@
 const logToServer = async (message) => {
     try {
-      await fetch('http://23.22.78.84:4321/log', {
+      await fetch('http://23.22.78.84:3000/log', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
