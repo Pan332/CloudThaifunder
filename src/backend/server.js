@@ -25,14 +25,18 @@ const port = process.env.PORT;
 const accesstoken = process.env.ACCESS_TOKEN_SECRET;
 
 app.use(cors({
-    origin: 'http://23.22.78.84:80',
+    origin: 'http://54.204.61.104:80',
     credentials: true 
   }));
   
   app.use(helmet());
-
   app.use(express.urlencoded({limit: '5mb',  extended: true }));
   app.use(express.json());
+
+  app.use((req, res, next) => {
+        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+        next();
+    });
   
   
   const loginLimiter = rateLimit({
@@ -56,7 +60,7 @@ app.use(cors({
   });
   
   app.options('*', (req, res) => {
-      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:80');
+      res.setHeader('Access-Control-Allow-Origin', 'http://54.204.61.104:80');
       res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS'); 
       res.setHeader('Access-Control-Allow-Credentials', 'true'); 
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); 
@@ -64,7 +68,7 @@ app.use(cors({
     });  
   
   app.use('/uploads', (req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:80');
+      res.setHeader('Access-Control-Allow-Origin', 'http://54.204.61.104:80');
       res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
@@ -72,7 +76,7 @@ app.use(cors({
     });
 
     app.use('/Oauth2/google/*', (req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', 'http://23.22.78.84:80');
+      res.setHeader('Access-Control-Allow-Origin', 'http://54.204.61.104:80');
       res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
@@ -105,7 +109,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://23.22.78.84:${port}`);
+    console.log(`Server is running on http://54.204.61.104:${port}`);
 });
 
 
@@ -118,20 +122,13 @@ if (process.env.NODE_ENV === 'production') {
     });
   }
   
-  // HSTS - HTTP Strict Transport Security
-  app.use(helmet.hsts({
-    maxAge: 31536000,         // 1 year
-    includeSubDomains: true,  // Apply to all subdomains
-    preload: true,            // Preload this policy in browsers
-  }));
-  
   // Content Security Policy (CSP)
   app.use(helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "http://23.22.78.84:3000", "data:"],
+      imgSrc: ["'self'", "http://54.204.61.104:3000", "data:"],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
